@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "results" / "certificate_cost_study.json"
+METRICS = ROOT / "paper_mpc" / "generated" / "metrics.tex"
 
 
 def test_certificate_cost_ledger_is_complete() -> None:
@@ -32,3 +33,27 @@ def test_certificate_cost_ledger_is_complete() -> None:
         assert scenario["certificate_cost_exact_call_units"] == units
         assert scenario["one_shot_self_financing"] is (units <= saved)
         assert scenario["minimum_offline_reuses"] == max(1, ceil(units / saved))
+
+
+def test_manuscript_cost_macros_use_the_frozen_total() -> None:
+    payload = json.loads(PAYLOAD.read_text(encoding="utf-8"))
+    scenarios = {
+        row["exact_oracle_seconds"]: row for row in payload["scenarios"]
+    }
+    metrics = METRICS.read_text(encoding="utf-8")
+    expected = {
+        "CertificateUnitsTinyOracle": (
+            f"{scenarios[0.0001]['certificate_cost_exact_call_units'] / 10**4:.3f}"
+        ),
+        "CertificateUnitsOneSecond": (
+            f"{scenarios[1.0]['certificate_cost_exact_call_units']:.3f}"
+        ),
+        "CertificateUnitsTenSecond": (
+            f"{scenarios[10.0]['certificate_cost_exact_call_units']:.3f}"
+        ),
+        "CertificateUnitsSixtySecond": (
+            f"{scenarios[60.0]['certificate_cost_exact_call_units']:.3f}"
+        ),
+    }
+    for name, value in expected.items():
+        assert f"\\newcommand{{\\{name}}}{{{value}}}" in metrics

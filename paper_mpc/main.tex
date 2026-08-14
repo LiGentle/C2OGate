@@ -926,6 +926,12 @@ inequalities, and the derived trace bound
 \[
  4R^2+4(R+97/100)^2+R^2+(97/100)^2<27.
 \]
+Indeed, $L=1$ and nonexpansiveness of both gradient-descent trajectories give
+four gradient-atom bounds by $R$, four by $R+97/100$, while the minimizer and
+proposal atoms are bounded by $R$ and $97/100$, respectively.  Summing their
+squared norms gives the displayed strict bound.  Hence the trace inequality is
+a redundant consequence of the original cell constraints and does not change
+the feasible set or the cell semantics.
 The stored nonnegative rational multipliers and one free equality multiplier
 satisfy exact stationarity for the nine function values and $\tau$.  Their
 dual objective is the right-hand side of \eqref{eq:generic-dual-bound}.  The
@@ -1039,9 +1045,10 @@ tightness.
 \subsection{Measured certificate cost and self-financing threshold}
 \label{sec:certificate-cost}
 
-We timed the complete $H=3$ generic path above, including the conic search,
-rational reconstruction, and five independent verifier processes.  On the
-recorded machine, search plus the median verification charge took
+We timed the $H=3$ conic search and rational reconstruction once and ran the
+independent verifier in five separate processes to estimate its median charge.
+Every accounting entry below uses one common total: search and rational
+recovery plus one median complete verification.  On the recorded machine this took
 \CertificateCostSeconds{} seconds; the median verifier process itself took
 \CertificateVerifyMillis{} ms.  This timing is descriptive and hash-bound,
 whereas the rational certificate remains machine independent.
@@ -1060,16 +1067,18 @@ self-financing when $c_{\rm cert}(K)\leq1$.  The measured thresholds are:
 \centering
 \caption{Machine-specific break-even for the recovered generic PEP dual.  The
 table funds an offline or prepaid certificate; it does not credit a rejected
-zero-credit online decision.}
+zero-credit online decision.  Every entry uses the same measured total,
+search plus one median complete independent verification.}
 \label{tab:certificate-cost}
 \begin{tabular}{rrr}
 \toprule
 Exact-oracle seconds $t_f$ & One-use certificate units & Minimum reuses $K$\\
 \midrule
-$10^{-4}$ & $1.489\times10^4$ & \CertificateBreakEvenTinyOracle{}\\
-$1$       & $1.489$            & \CertificateBreakEvenOneSecond{}\\
-$10$      & $0.149$            & \CertificateBreakEvenTenSecond{}\\
-$60$      & $0.025$            & \CertificateBreakEvenSixtySecond{}\\
+$10^{-4}$ & $\CertificateUnitsTinyOracle{}\times10^4$ &
+  \CertificateBreakEvenTinyOracle{}\\
+$1$       & $\CertificateUnitsOneSecond{}$ & \CertificateBreakEvenOneSecond{}\\
+$10$      & $\CertificateUnitsTenSecond{}$ & \CertificateBreakEvenTenSecond{}\\
+$60$      & $\CertificateUnitsSixtySecond{}$ & \CertificateBreakEvenSixtySecond{}\\
 \bottomrule
 \end{tabular}
 \end{table}

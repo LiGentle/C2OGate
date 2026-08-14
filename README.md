@@ -8,6 +8,11 @@ software trust boundary, and technical-review protocol.
 
 Public repository: <https://github.com/LiGentle/C2OGate>
 
+Versioned MPC review snapshot:
+<https://github.com/LiGentle/C2OGate/releases/tag/v0.1.0>. This immutable Git
+tag is suitable for Zenodo import; no DOI is claimed until an archive service
+has actually minted one.
+
 ## Submission outputs
 
 - `output/pdf/c2ogate_mpc_manuscript.pdf`: upload-ready article.

@@ -294,6 +294,18 @@ def main() -> None:
         "CertificateVerifyMillis": (
             f"{1000.0 * cost_measurement['median_verification_seconds']:.2f}"
         ),
+        "CertificateUnitsTinyOracle": (
+            f"{cost_scenarios[0.0001]['certificate_cost_exact_call_units'] / 10**4:.3f}"
+        ),
+        "CertificateUnitsOneSecond": (
+            f"{cost_scenarios[1.0]['certificate_cost_exact_call_units']:.3f}"
+        ),
+        "CertificateUnitsTenSecond": (
+            f"{cost_scenarios[10.0]['certificate_cost_exact_call_units']:.3f}"
+        ),
+        "CertificateUnitsSixtySecond": (
+            f"{cost_scenarios[60.0]['certificate_cost_exact_call_units']:.3f}"
+        ),
         "CertificateBreakEvenTinyOracle": str(
             cost_scenarios[0.0001]["minimum_offline_reuses"]
         ),
