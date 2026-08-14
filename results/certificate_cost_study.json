@@ -1,53 +1,53 @@
 {
   "declaration": {
     "saved_exact_calls_per_accepted_decision": 1,
-    "scope": "machine-specific wall-clock accounting for the complete H=3 ten-cell generic dual suite; only offline or prepaid reuse is credited",
+    "scope": "machine-specific wall-clock accounting for the complete natural-H0=2, one-layer-padded H=3 ten-cell generic dual suite; only offline or prepaid reuse is credited",
     "spx_exact_gradient_seconds_reference": 0.0001,
     "zero_credit_online_rejection_funded": false
   },
   "environment": {
-    "certificate_payload_sha256": "538b08d7ef2c58156a3c42228307a6f236b75ca285ed25becc6470df7cf1505d",
-    "generator_sha256": "5419313b7812213acccf8470bdb69d57c3b842dd59ed43b0d2c35eee7316af84",
+    "certificate_payload_sha256": "058b231c33825d4e91f2a535514d88e668c34686225ba3f63866c693f3e384cb",
+    "generator_sha256": "4fe47be1154f5873d13dcba3e0e784bc68d53275d98f895ed487ff55f98bbe53",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
-    "python": "3.13.12 (main, Feb  3 2026, 17:53:27) [Clang 17.0.0 (clang-1700.6.3.2)]",
-    "runner_sha256": "5958b7a227cfb212da36fa03da59576a4d4d5de59de15a1a86ad27adae40a15f",
-    "verifier_sha256": "97c7d641bc7893b10b01b101280fcdd87986f34c98227a61a25584b024206c92"
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
+    "runner_sha256": "b32226107c0b3542b33fc02f89235d986f1e740f3ff9d722586ba383f32bdce3",
+    "verifier_sha256": "455d22b431930c8121de4f977cfefc3723fae8319591377d0f0956111b19da7b"
   },
   "measurement": {
-    "median_verification_seconds": 1.7004436659626663,
-    "solver_and_rational_recovery_seconds": 4.213057083077729,
-    "total_certificate_seconds": 5.913500749040395,
+    "median_verification_seconds": 1.4502033749595284,
+    "solver_and_rational_recovery_seconds": 3.9358123331330717,
+    "total_certificate_seconds": 5.3860157080926,
     "verification_repeats": 5,
     "verification_seconds": [
-      1.6931411251425743,
-      1.6948847081512213,
-      1.7004436659626663,
-      1.70435587503016,
-      1.708097708877176
+      1.4438856663182378,
+      1.448227749671787,
+      1.4502033749595284,
+      1.4524464579299092,
+      1.5596701670438051
     ]
   },
-  "payload_sha256": "f83033b9161c4895563706ee4efb2a883414754ee38897650b5132032ab4aa15",
+  "payload_sha256": "3a9c10fc8c5f184967505f0f9fac8848923486225bfee1aa0194a370b33cbcfe",
   "scenarios": [
     {
-      "certificate_cost_exact_call_units": 59135.00749040395,
+      "certificate_cost_exact_call_units": 53860.157080926,
       "exact_oracle_seconds": 0.0001,
-      "minimum_offline_reuses": 59136,
+      "minimum_offline_reuses": 53861,
       "one_shot_self_financing": false
     },
     {
-      "certificate_cost_exact_call_units": 5.913500749040395,
+      "certificate_cost_exact_call_units": 5.3860157080926,
       "exact_oracle_seconds": 1.0,
       "minimum_offline_reuses": 6,
       "one_shot_self_financing": false
     },
     {
-      "certificate_cost_exact_call_units": 0.5913500749040395,
+      "certificate_cost_exact_call_units": 0.53860157080926,
       "exact_oracle_seconds": 10.0,
       "minimum_offline_reuses": 1,
       "one_shot_self_financing": true
     },
     {
-      "certificate_cost_exact_call_units": 0.09855834581733992,
+      "certificate_cost_exact_call_units": 0.08976692846821001,
       "exact_oracle_seconds": 60.0,
       "minimum_offline_reuses": 1,
       "one_shot_self_financing": true

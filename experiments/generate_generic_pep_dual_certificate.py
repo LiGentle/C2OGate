@@ -17,18 +17,33 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
 VERIFIER = ROOT / "tools" / "verify_generic_nonquadratic_pep_dual.py"
-SCHEMA = "c2o-generic-nonquadratic-pep-dual-v2"
+SCHEMA = "c2o-generic-nonquadratic-pep-dual-v3"
+
+
+def _certified_horizon(
+    contraction: Fraction,
+    smoothness: Fraction,
+    distance: Fraction,
+    tolerance: Fraction,
+) -> int:
+    horizon = 0
+    residual_bound = smoothness * distance
+    while residual_bound > tolerance:
+        residual_bound *= contraction
+        horizon += 1
+    return horizon
+
+
+NATURAL_HORIZON = _certified_horizon(
+    Fraction(1, 10), Fraction(1), Fraction(217, 100), Fraction(7, 50)
+)
+AUDIT_PADDING = 1
+HORIZON = NATURAL_HORIZON + AUDIT_PADDING
 BAD_CELLS = [
-    (0, 0),
-    (0, 1),
-    (0, 2),
-    (0, 3),
-    (1, 1),
-    (1, 2),
-    (1, 3),
-    (2, 2),
-    (2, 3),
-    (3, 3),
+    (baseline, hybrid)
+    for baseline in range(HORIZON + 1)
+    for hybrid in range(HORIZON + 1)
+    if hybrid >= baseline
 ]
 
 
@@ -157,7 +172,7 @@ def _build_problem(
     list[cp.Constraint],
     list[cp.Constraint],
 ]:
-    horizon = 3
+    horizon = HORIZON
     baseline_calls, hybrid_calls = cell
     if not (0 <= baseline_calls <= horizon and 0 <= hybrid_calls <= horizon):
         raise ValueError(f"cell outside horizon: {cell}")
@@ -570,16 +585,21 @@ def main() -> None:
         "schema": SCHEMA,
         "declaration": {
             "cells": [list(cell) for cell in BAD_CELLS],
-            "horizon": 3,
+            "natural_horizon": NATURAL_HORIZON,
+            "audit_padding": AUDIT_PADDING,
+            "horizon": HORIZON,
             "function_class": "F_{9/10,1}",
-            "nonquadratic_realization": "f(t)=9*t^2/20+log(cosh(t))/10",
+            "nonquadratic_realization": (
+                "f(z)=9*||z||^2/20+sum_i log(cosh(z_i))/10 in R^2"
+            ),
             "proposal_contract": "24/25 <= ||y-x|| <= 97/100 and ||y-x+g_x|| <= 1/100",
             "signed_margin": (
                 "terminal squared norms plus tau are at most epsilon^2; "
                 "survival squared norms are at least epsilon^2 plus tau"
             ),
             "claim": (
-                "all ten cost-violating H=3 cells have signed-feasibility "
+                "the formula-derived horizon is H0=2; all ten cost-violating "
+                "cells in the one-layer padded H=3 audit have signed-feasibility "
                 "margin optimum below zero"
             ),
         },
@@ -613,7 +633,8 @@ def main() -> None:
     payload["payload_sha256"] = sha256(_canonical(payload)).hexdigest()
     OUTPUT.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(
-        f"EXACT: {len(certificates)} cost-violating cells, "
+        f"EXACT: R^2 realization, natural H0={NATURAL_HORIZON}, "
+        f"padded H={HORIZON}, {len(certificates)} cost-violating cells, "
         f"{payload['summary']['total_positive_leading_minors']} positive leading "
         f"minors, max upper={max(exact_bounds)}, payload={payload['payload_sha256']}"
     )

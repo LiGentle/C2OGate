@@ -192,6 +192,12 @@ def main() -> None:
         + proxy_horizons[len(proxy_horizons) // 2]
     ) / 2
     proxy_horizon_p90 = proxy_horizons[ceil(0.9 * len(proxy_horizons)) - 1]
+    nonlinear_actual = nonlinear_pep_payload["actual_instance"]
+    dependence_gap = summary["joint_accept_count"] - summary["rectangle_accept_count"]
+
+    def nonlinear_norm(field: str) -> float:
+        return sqrt(sum(float(value) ** 2 for value in nonlinear_actual[field]))
+
     metrics = {
         "TranscriptCases": f"{summary['case_count']:,}",
         "JointAcceptCount": str(summary["joint_accept_count"]),
@@ -202,6 +208,12 @@ def main() -> None:
         "TwoBinAcceptRate": _pct(summary["two_bin_accept_rate"]),
         "FourBinAcceptCount": str(summary["four_bin_accept_count"]),
         "FourBinAcceptRate": _pct(summary["four_bin_accept_rate"]),
+        "TwoBinRecoveredDependencePct": (
+            f"{100 * (summary['two_bin_accept_count'] - summary['rectangle_accept_count']) / dependence_gap:.1f}\\%"
+        ),
+        "FourBinRecoveredDependencePct": (
+            f"{100 * (summary['four_bin_accept_count'] - summary['rectangle_accept_count']) / dependence_gap:.1f}\\%"
+        ),
         "JointOnlyCount": str(summary["joint_only_accept_count"]),
         "JointOnlyRate": _pct(summary["joint_only_accept_rate"]),
         "JointViolationCount": str(summary["accepted_joint_violation_count"]),
@@ -295,6 +307,28 @@ def main() -> None:
         ),
         "NonlinearPepCandidateBound": _tex_fraction(
             nonlinear_pep_payload["exact_certificate"]["candidate_gradient_upper"]
+        ),
+        "NonlinearPepDimension": str(nonlinear_actual["dimension"]),
+        "NonlinearPepNaturalHorizon": str(
+            nonlinear_pep_payload["parameters"]["natural_horizon"]
+        ),
+        "NonlinearPepAuditPadding": str(
+            nonlinear_pep_payload["parameters"]["audit_padding"]
+        ),
+        "NonlinearPepAuditHorizon": str(
+            nonlinear_pep_payload["parameters"]["horizon"]
+        ),
+        "NonlinearPepCurrentGradientNorm": f"{nonlinear_norm('gradient_x'):.7f}",
+        "NonlinearPepBaselineOneGradientNorm": (
+            f"{nonlinear_norm('gradient_x_one'):.7f}"
+        ),
+        "NonlinearPepCandidateGradientNorm": f"{nonlinear_norm('gradient_y'):.7f}",
+        "NonlinearPepProposalNorm": f"{float(nonlinear_actual['proposal_norm']):.7f}",
+        "NonlinearPepResidualNorm": (
+            f"{float(nonlinear_actual['candidate_residual_norm']):.4f}"
+        ),
+        "NonlinearPepSpanDeterminant": (
+            f"{float(nonlinear_actual['trajectory_span_determinant']):.7f}"
         ),
         "NonlinearPepCostRatio": (
             f"{nonlinear_pep_payload['gate']['declared_all_in_cost_ratio']:.3f}"

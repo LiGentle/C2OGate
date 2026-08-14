@@ -50,6 +50,13 @@ Carter, R.G.: On the global convergence of trust region algorithms using
 \newblock SIAM Journal on Numerical Analysis \textbf{28}(1), 251--265 (1991).
 \newblock \doi{10.1137/0728014}
 
+\bibitem{CartisGouldToint2022}
+Cartis, C., Gould, N.I.M., Toint, P.L.: Evaluation Complexity of Algorithms for
+  Nonconvex Optimization: Theory, Computation and Perspectives, \emph{MOS-SIAM
+  Series on Optimization}, vol.~30.
+\newblock SIAM, Philadelphia (2022).
+\newblock \doi{10.1137/1.9781611976991}
+
 \bibitem{ConnScheinbergVicente2009}
 Conn, A.R., Scheinberg, K., Vicente, L.N.: Introduction to Derivative-Free
   Optimization, \emph{MPS-SIAM Series on Optimization}, vol.~8.
@@ -109,6 +116,12 @@ Henrion, D., Naldi, S., Din, M.S.E.: Exact algorithms for linear matrix
   inequalities.
 \newblock SIAM Journal on Optimization \textbf{26}(4), 2512--2539 (2016).
 \newblock \doi{10.1137/15M1036543}
+
+\bibitem{JanssonChaykinKeil2007}
+Jansson, C., Chaykin, D., Keil, C.: Rigorous error bounds for the optimal value
+  in semidefinite programming.
+\newblock SIAM Journal on Numerical Analysis \textbf{46}(1), 180--200 (2007).
+\newblock \doi{10.1137/050622870}
 
 \bibitem{DeKlerkGlineurTaylor2020}
 de~Klerk, E., Glineur, F., Taylor, A.B.: Worst-case convergence analysis of

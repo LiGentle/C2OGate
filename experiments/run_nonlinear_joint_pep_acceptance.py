@@ -28,7 +28,7 @@ from tools.verify_generic_nonquadratic_pep_dual import (  # noqa: E402
 )
 
 
-SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v3"
+SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v4"
 GENERIC_DUAL = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
 
 
@@ -55,28 +55,64 @@ def _gradient(value: Decimal) -> Decimal:
     return Decimal(9) * value / Decimal(10) + _tanh(value) / Decimal(10)
 
 
-def _actual_trajectory() -> dict[str, str | int]:
+def _norm(values: tuple[Decimal, ...]) -> Decimal:
+    return sum((value * value for value in values), Decimal(0)).sqrt()
+
+
+def _certified_horizon(
+    contraction: Fraction,
+    smoothness: Fraction,
+    distance: Fraction,
+    tolerance: Fraction,
+) -> int:
+    horizon = 0
+    residual_bound = smoothness * distance
+    while residual_bound > tolerance:
+        residual_bound *= contraction
+        horizon += 1
+    return horizon
+
+
+def _actual_trajectory() -> dict[str, Any]:
     getcontext().prec = 100
-    x = Decimal(1)
-    residual = Decimal(1) / Decimal(100)
-    gradient_x = _gradient(x)
-    y = x - gradient_x + residual
-    gradient_y = _gradient(y)
-    x_one = x - gradient_x
-    gradient_x_one = _gradient(x_one)
+    x = (Decimal("0.9"), Decimal("0.4"))
+    residual = (Decimal("0.003"), Decimal("-0.004"))
+    gradient_x = tuple(_gradient(value) for value in x)
+    x_one = tuple(
+        value - gradient
+        for value, gradient in zip(x, gradient_x, strict=True)
+    )
+    y = tuple(
+        value + perturbation
+        for value, perturbation in zip(x_one, residual, strict=True)
+    )
+    gradient_y = tuple(_gradient(value) for value in y)
+    gradient_x_one = tuple(_gradient(value) for value in x_one)
     tolerance = Decimal(7) / Decimal(50)
-    if not (abs(gradient_x) > tolerance):
+    if not (_norm(gradient_x) > tolerance):
         raise RuntimeError("baseline must be nonterminal at the transcript point")
-    if not (abs(gradient_x_one) < tolerance and abs(gradient_y) < tolerance):
+    if not (_norm(gradient_x_one) < tolerance and _norm(gradient_y) < tolerance):
         raise RuntimeError("both one-step and candidate terminal checks must be strict")
+    proposal = tuple(
+        candidate - current for candidate, current in zip(y, x, strict=True)
+    )
+    if not (Decimal("0.96") <= _norm(proposal) <= Decimal("0.97")):
+        raise RuntimeError("realized proposal must lie inside the rational envelope")
+    span_determinant = x[0] * x_one[1] - x[1] * x_one[0]
+    if not span_determinant < Decimal("-0.005"):
+        raise RuntimeError("realized trajectory must have a two-dimensional span")
     return {
-        "x": str(x),
-        "gradient_x": str(gradient_x),
-        "candidate_y": str(y),
-        "candidate_residual": str(y - (x - gradient_x)),
-        "gradient_y": str(gradient_y),
-        "baseline_x_one": str(x_one),
-        "gradient_x_one": str(gradient_x_one),
+        "dimension": 2,
+        "x": [str(value) for value in x],
+        "gradient_x": [str(value) for value in gradient_x],
+        "candidate_y": [str(value) for value in y],
+        "candidate_residual": [str(value) for value in residual],
+        "candidate_residual_norm": str(_norm(residual)),
+        "proposal_norm": str(_norm(proposal)),
+        "gradient_y": [str(value) for value in gradient_y],
+        "baseline_x_one": [str(value) for value in x_one],
+        "gradient_x_one": [str(value) for value in gradient_x_one],
+        "trajectory_span_determinant": str(span_determinant),
         "baseline_calls": 1,
         "hybrid_calls": 0,
     }
@@ -104,10 +140,19 @@ def main() -> None:
     baseline_one_upper = smoothness * contraction * current_gradient_upper / mu
     candidate_gradient_upper = baseline_one_upper + smoothness * residual
 
-    proposal_norm = abs(float(Decimal(actual["candidate_y"]) - Decimal(1)))
+    proposal_norm = float(Decimal(actual["proposal_norm"]))
     cells: list[dict[str, Any]] = []
     numerical_attainable: list[StoppingPair] = []
-    horizon = 3
+    natural_horizon = _certified_horizon(
+        contraction,
+        smoothness,
+        Fraction(6, 5) + proposal_upper,
+        tolerance,
+    )
+    audit_padding = 1
+    horizon = natural_horizon + audit_padding
+    if natural_horizon != 2 or horizon != 3:
+        raise RuntimeError("unexpected formula-derived or padded horizon")
     for baseline_calls in range(horizon + 1):
         for hybrid_calls in range(horizon + 1):
             status, margin = _cell_margin(
@@ -156,20 +201,27 @@ def main() -> None:
     generic_dual_cells = generic_dual_result["cells"]
     if generic_dual_cells != bad_cells:
         raise RuntimeError("the recovered generic dual suite must exclude every bad cell")
+    if (
+        generic_dual_result["realization_dimension"] != 2
+        or generic_dual_result["natural_horizon"] != natural_horizon
+        or generic_dual_result["audit_horizon"] != horizon
+    ):
+        raise RuntimeError("generic dual suite realization or horizon mismatch")
     payload: dict[str, Any] = {
         "schema": SCHEMA,
         "declaration": (
-            "A non-shift, nonquadratic realized instance is accepted by an H=3 "
-            "joint PEP gate. Ten recovered rational Gram-SDP duals exclude all "
-            "cost-violating cells; contraction bounds separately validate the "
-            "realized stopping pair."
+            "A genuinely two-dimensional, non-shift, nonquadratic realized "
+            "instance has formula-derived horizon H0=2. A one-layer padded H=3 "
+            "joint PEP audit is accepted: ten recovered rational Gram-SDP duals "
+            "exclude all cost-violating cells, while contraction bounds separately "
+            "validate the realized stopping pair."
         ),
         "function": {
-            "formula": "f(t)=9*t^2/20+log(cosh(t))/10",
-            "gradient": "f'(t)=9*t/10+tanh(t)/10",
-            "hessian": "f''(t)=9/10+sech(t)^2/10",
-            "third_derivative": "f'''(t)=-sech(t)^2*tanh(t)/5",
-            "nonquadratic_witness": "f'''(1)<0",
+            "formula": "f(z)=9*||z||^2/20+sum_i log(cosh(z_i))/10 in R^2",
+            "gradient": "grad_i f(z)=9*z_i/10+tanh(z_i)/10",
+            "hessian": "H_ii(z)=9/10+sech(z_i)^2/10, H_ij=0 for i!=j",
+            "third_derivative": "partial_iii f(z)=-sech(z_i)^2*tanh(z_i)/5",
+            "nonquadratic_witness": "partial_111 f(x)<0",
         },
         "parameters": {
             "strong_convexity": str(mu),
@@ -180,6 +232,8 @@ def main() -> None:
             "proposal_norm_lower": str(proposal_lower),
             "proposal_norm_upper": str(proposal_upper),
             "initial_distance_upper": "6/5",
+            "natural_horizon": natural_horizon,
+            "audit_padding": audit_padding,
             "horizon": horizon,
             "cost_exact_units": str(cost),
             "minimum_saved_calls": minimum_saved_calls,
@@ -241,7 +295,8 @@ def main() -> None:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(
-        "FROZEN: nonlinear joint PEP acceptance, cells 16, exact pair (1,0), "
+        "FROZEN: two-dimensional nonlinear joint PEP acceptance, natural H0=2, "
+        "padded cells 16, exact pair (1,0), "
         f"payload {payload['payload_sha256']}"
     )
 

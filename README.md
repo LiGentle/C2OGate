@@ -9,7 +9,7 @@ software trust boundary, and technical-review protocol.
 Public repository: <https://github.com/LiGentle/C2OGate>
 
 Versioned MPC review snapshot:
-<https://github.com/LiGentle/C2OGate/releases/tag/v0.2.0>. This immutable Git
+<https://github.com/LiGentle/C2OGate/releases/tag/v0.3.0>. This immutable Git
 tag is suitable for Zenodo import; no DOI is claimed until an archive service
 has actually minted one.
 
@@ -47,10 +47,10 @@ Replay the four independently checkable acceptance artifacts:
 
 Expected summaries:
 
-    VERIFIED: generic nonquadratic H=3 joint-PEP dual suite, 10 cost-violating cells, all upper bounds < 0, 100 positive leading minors
+    VERIFIED: generic nonquadratic R^2 joint-PEP dual suite, natural H0=2, padded audit H=3, 10 cost-violating cells, all upper bounds < 0, 100 positive leading minors
     VERIFIED: 3 instances, 9 rational SDP dual certificates, 87 exact principal minors
     VERIFIED: ill-conditioned real-SPX certificate, dimension 10, calls 7840->3803, condition lower bound > 1325.96
-    VERIFIED: nonquadratic joint PEP acceptance, exact pair (1,0), 10 cost-violating cells excluded
+    VERIFIED: two-dimensional nonquadratic joint PEP acceptance, natural H0=2, padded H=3, exact pair (1,0), 10 cost-violating cells excluded
 
 Build the article, source archive, software/data artifact, and cover letter:
 
@@ -62,9 +62,10 @@ expected run times, raw-data limitation, and directory map.
 ## Evidence included
 
 - Complete structured and generic horizon-20 cell enumerations.
-- One exact non-shift, nonquadratic horizon-three acceptance over the declared
-  function class, including independently replayed rational Gram-SDP duals for
-  all ten cost-violating cells and 100 exact positive-minor checks.
+- One exact non-shift, nonquadratic acceptance whose realized trajectory spans
+  two dimensions. Its formula-derived horizon is H0=2; a one-layer-padded H=3
+  audit includes independently replayed rational Gram-SDP duals for all ten
+  cost-violating cells and 100 exact positive-minor checks.
 - Three rational quadratic instances containing nine exact SDP duals and 87
   exact principal-minor checks.
 - A frozen audit over 2,000 transcript-consistent quadratic families.
@@ -99,8 +100,9 @@ This is research code supporting the submitted manuscript, not a general PEP
 modeling language or production optimizer. Generic long-horizon floating
 statuses are diagnostic only; the proof-carrying aggregator returns
 `uncertified` unless a bad-cell witness or every exclusion is independently
-verified. The nonquadratic accepted instance has horizon three and includes
-ten recovered generic Gram-SDP duals. The positive real-SPX instance reveals
+verified. The nonquadratic accepted instance has natural horizon two and a
+one-layer-padded horizon-three audit with ten recovered generic Gram-SDP duals.
+The positive real-SPX instance reveals
 its full rational quadratic.
 
 The software and supporting research artifact are released under the MIT

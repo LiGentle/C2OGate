@@ -95,8 +95,8 @@ def main() -> None:
         "schema": SCHEMA,
         "declaration": {
             "scope": (
-                "machine-specific wall-clock accounting for the complete H=3 "
-                "ten-cell generic dual suite; "
+                "machine-specific wall-clock accounting for the complete natural-H0=2, "
+                "one-layer-padded H=3 ten-cell generic dual suite; "
                 "only offline or prepaid reuse is credited"
             ),
             "saved_exact_calls_per_accepted_decision": saved_exact_calls,

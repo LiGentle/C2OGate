@@ -14,7 +14,7 @@ from tools.verify_generic_nonquadratic_pep_dual import verify_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 CERTIFICATE = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
-EXPECTED_HASH = "538b08d7ef2c58156a3c42228307a6f236b75ca285ed25becc6470df7cf1505d"
+EXPECTED_HASH = "058b231c33825d4e91f2a535514d88e668c34686225ba3f63866c693f3e384cb"
 
 
 def _load() -> dict:
@@ -36,6 +36,9 @@ def test_frozen_generic_dual_verifies() -> None:
     assert result["certificate_count"] == 10
     assert result["cells"][-1] == [3, 3]
     assert result["positive_leading_minors"] == 100
+    assert result["realization_dimension"] == 2
+    assert result["natural_horizon"] == 2
+    assert result["audit_horizon"] == 3
 
 
 @pytest.mark.parametrize("target", ["multiplier", "slack", "bound", "cell"])

@@ -65,9 +65,10 @@ An independently verified attainable bad cell returns `reject`. Every other
 unresolved condition returns `uncertified`, never `accept`.
 
 The generic horizon-20 floating audit is therefore diagnostic and has
-proof-carrying outcome `uncertified`. The separate horizon-three payload
-contains independently replayed rational duals for all ten cost-violating
-generic cells and 100 exact positive leading-minor checks.
+proof-carrying outcome `uncertified`. The separate two-dimensional
+nonquadratic payload has formula-derived horizon H0=2; its one-layer-padded
+horizon-three audit contains independently replayed rational duals for all ten
+cost-violating generic cells and 100 exact positive leading-minor checks.
 
 ## Directory map
 

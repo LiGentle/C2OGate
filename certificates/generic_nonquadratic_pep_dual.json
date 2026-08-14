@@ -2312,6 +2312,7 @@
     }
   ],
   "declaration": {
+    "audit_padding": 1,
     "cells": [
       [
         0,
@@ -2354,17 +2355,18 @@
         3
       ]
     ],
-    "claim": "all ten cost-violating H=3 cells have signed-feasibility margin optimum below zero",
+    "claim": "the formula-derived horizon is H0=2; all ten cost-violating cells in the one-layer padded H=3 audit have signed-feasibility margin optimum below zero",
     "function_class": "F_{9/10,1}",
     "horizon": 3,
-    "nonquadratic_realization": "f(t)=9*t^2/20+log(cosh(t))/10",
+    "natural_horizon": 2,
+    "nonquadratic_realization": "f(z)=9*||z||^2/20+sum_i log(cosh(z_i))/10 in R^2",
     "proposal_contract": "24/25 <= ||y-x|| <= 97/100 and ||y-x+g_x|| <= 1/100",
     "signed_margin": "terminal squared norms plus tau are at most epsilon^2; survival squared norms are at least epsilon^2 plus tau"
   },
   "environment": {
     "cvxpy": "1.9.2",
-    "generator_sha256": "5419313b7812213acccf8470bdb69d57c3b842dd59ed43b0d2c35eee7316af84",
-    "verifier_sha256": "97c7d641bc7893b10b01b101280fcdd87986f34c98227a61a25584b024206c92"
+    "generator_sha256": "4fe47be1154f5873d13dcba3e0e784bc68d53275d98f895ed487ff55f98bbe53",
+    "verifier_sha256": "455d22b431930c8121de4f977cfefc3723fae8319591377d0f0956111b19da7b"
   },
   "parameters": {
     "contract_radius": "1/100",
@@ -2378,8 +2380,8 @@
     "strong_convexity": "9/10",
     "tolerance": "7/50"
   },
-  "payload_sha256": "538b08d7ef2c58156a3c42228307a6f236b75ca285ed25becc6470df7cf1505d",
-  "schema": "c2o-generic-nonquadratic-pep-dual-v2",
+  "payload_sha256": "058b231c33825d4e91f2a535514d88e668c34686225ba3f63866c693f3e384cb",
+  "schema": "c2o-generic-nonquadratic-pep-dual-v3",
   "summary": {
     "certificate_count": 10,
     "maximum_certified_upper_bound": "-124642979316057/15815699155300000",

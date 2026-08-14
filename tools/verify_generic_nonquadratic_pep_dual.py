@@ -16,18 +16,33 @@ from pathlib import Path
 from typing import Any
 
 
-SCHEMA = "c2o-generic-nonquadratic-pep-dual-v2"
+SCHEMA = "c2o-generic-nonquadratic-pep-dual-v3"
+
+
+def _certified_horizon(
+    contraction: Fraction,
+    smoothness: Fraction,
+    distance: Fraction,
+    tolerance: Fraction,
+) -> int:
+    horizon = 0
+    residual_bound = smoothness * distance
+    while residual_bound > tolerance:
+        residual_bound *= contraction
+        horizon += 1
+    return horizon
+
+
+NATURAL_HORIZON = _certified_horizon(
+    Fraction(1, 10), Fraction(1), Fraction(217, 100), Fraction(7, 50)
+)
+AUDIT_PADDING = 1
+HORIZON = NATURAL_HORIZON + AUDIT_PADDING
 BAD_CELLS = [
-    (0, 0),
-    (0, 1),
-    (0, 2),
-    (0, 3),
-    (1, 1),
-    (1, 2),
-    (1, 3),
-    (2, 2),
-    (2, 3),
-    (3, 3),
+    (baseline, hybrid)
+    for baseline in range(HORIZON + 1)
+    for hybrid in range(HORIZON + 1)
+    if hybrid >= baseline
 ]
 Matrix = list[list[Fraction]]
 
@@ -152,7 +167,7 @@ def _matrix(raw: list[list[str]]) -> Matrix:
 def _build_constraints(
     cell: tuple[int, int],
 ) -> tuple[list[LinearConstraint], list[LinearConstraint]]:
-    horizon = 3
+    horizon = HORIZON
     baseline_calls, hybrid_calls = cell
     _require(
         0 <= baseline_calls <= horizon and 0 <= hybrid_calls <= horizon,
@@ -321,6 +336,14 @@ def _tanh(value: Decimal) -> Decimal:
     return (exponential - 1) / (exponential + 1)
 
 
+def _gradient(value: Decimal) -> Decimal:
+    return Decimal(9) * value / Decimal(10) + _tanh(value) / Decimal(10)
+
+
+def _norm(values: tuple[Decimal, ...]) -> Decimal:
+    return sum((value * value for value in values), Decimal(0)).sqrt()
+
+
 def _verify_certificate(certificate: dict[str, Any]) -> tuple[Fraction, int]:
     cell = tuple(certificate["cell"])
     _require(cell in BAD_CELLS, "certificate cell")
@@ -392,11 +415,13 @@ def verify_payload(payload: dict[str, Any], *, root: Path | None = None) -> dict
     _require(payload.get("schema") == SCHEMA, "schema")
     declaration = payload["declaration"]
     _require(declaration["cells"] == [list(cell) for cell in BAD_CELLS], "cells")
-    _require(declaration["horizon"] == 3, "horizon")
+    _require(declaration["natural_horizon"] == NATURAL_HORIZON == 2, "natural horizon")
+    _require(declaration["audit_padding"] == AUDIT_PADDING == 1, "audit padding")
+    _require(declaration["horizon"] == HORIZON == 3, "padded horizon")
     _require(declaration["function_class"] == "F_{9/10,1}", "function class")
     _require(
         declaration["nonquadratic_realization"]
-        == "f(t)=9*t^2/20+log(cosh(t))/10",
+        == "f(z)=9*||z||^2/20+sum_i log(cosh(z_i))/10 in R^2",
         "nonquadratic realization",
     )
     _require("terminal squared norms plus tau" in declaration["signed_margin"], "margin")
@@ -423,13 +448,28 @@ def verify_payload(payload: dict[str, Any], *, root: Path | None = None) -> dict
     _require(trace_consequence < 27, "derived trace bound")
 
     getcontext().prec = 100
-    gradient = Decimal(9) / Decimal(10) + _tanh(Decimal(1)) / Decimal(10)
-    proposal = -gradient + Decimal(1) / Decimal(100)
-    _require(Decimal("0.96") <= abs(proposal) <= Decimal("0.97"), "realized proposal")
-    _require(abs(proposal + gradient) == Decimal("0.01"), "realized contract")
+    current = (Decimal("0.9"), Decimal("0.4"))
+    residual = (Decimal("0.003"), Decimal("-0.004"))
+    gradient = tuple(_gradient(value) for value in current)
+    proposal = tuple(
+        -gradient_value + residual_value
+        for gradient_value, residual_value in zip(gradient, residual, strict=True)
+    )
+    _require(
+        Decimal("0.96") <= _norm(proposal) <= Decimal("0.97"),
+        "realized proposal",
+    )
+    _require(_norm(residual) == Decimal("0.005"), "realized contract")
+    _require(_norm(current) < Decimal("1.2"), "realized distance")
+    baseline_one = tuple(
+        value - gradient_value
+        for value, gradient_value in zip(current, gradient, strict=True)
+    )
+    span_determinant = current[0] * baseline_one[1] - current[1] * baseline_one[0]
+    _require(span_determinant < Decimal("-0.005"), "two-dimensional span")
     third_derivative = -(
-        Decimal(1) - _tanh(Decimal(1)) ** 2
-    ) * _tanh(Decimal(1)) / Decimal(5)
+        Decimal(1) - _tanh(current[0]) ** 2
+    ) * _tanh(current[0]) / Decimal(5)
     _require(third_derivative < 0, "nonquadratic witness")
 
     certificates = payload["certificates"]
@@ -461,6 +501,9 @@ def verify_payload(payload: dict[str, Any], *, root: Path | None = None) -> dict
         "certificate_count": len(BAD_CELLS),
         "maximum_certified_upper_bound": str(max(bounds)),
         "positive_leading_minors": total_minors,
+        "realization_dimension": 2,
+        "natural_horizon": NATURAL_HORIZON,
+        "audit_horizon": HORIZON,
     }
 
 
@@ -473,7 +516,8 @@ def main() -> None:
         json.loads(args.payload.read_text(encoding="utf-8")), root=args.root
     )
     print(
-        "VERIFIED: generic nonquadratic H=3 joint-PEP dual suite, "
+        "VERIFIED: generic nonquadratic R^2 joint-PEP dual suite, "
+        "natural H0=2, padded audit H=3, "
         f"{result['certificate_count']} cost-violating cells, all upper bounds < 0, "
         f"{result['positive_leading_minors']} positive leading minors"
     )

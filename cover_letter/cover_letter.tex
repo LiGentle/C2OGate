@@ -31,14 +31,14 @@ I am pleased to submit the manuscript
 Certification'' for consideration in \textit{Mathematical Programming
 Computation}.
 
-The manuscript presents a proof-carrying computational architecture for
-deciding whether a
-candidate produced by a secondary oracle can be certified to reduce all-in
-expensive-oracle cost relative to an unchanged baseline. C2OGate conditions on
-observed first-order data, couples the two continuations on the same unknown
-function, enumerates their joint stopping-time cells, and reduces every
-cost-violating cell over smooth strongly convex functions to a semidefinite
-program.
+The manuscript presents a proof-carrying computational architecture for one
+certified branch decision.  An external proposal mechanism supplies a state
+and an auditable error-and-cost contract; both alternatives then continue with
+the same fixed-step gradient method.  C2OGate conditions on observed
+first-order data, couples the two continuations on the same unknown function,
+enumerates their joint stopping-time cells, and reduces every cost-violating
+cell over smooth strongly convex functions to a semidefinite program.  The
+paper does not claim to implement a complete secondary-oracle optimizer.
 
 The main computational contribution is proof-carrying acceptance with explicit
 failure semantics. Structural screeners or independently checked dual
@@ -51,7 +51,8 @@ separate marginal call bounds can be arbitrarily more conservative even within
 one-dimensional quadratics.
 
 The central computational demonstration is a non-shift, nonquadratic
-horizon-three acceptance whose ledger includes recovered rational duals for
+two-dimensional acceptance with formula-derived horizon $H_0=2$.  Its
+deliberately one-layer-padded $H=3$ audit includes recovered rational duals for
 all ten cost-violating generic Gram-SDP cells.  A standard-library verifier
 reconstructs every cell, checks exact dual stationarity and a negative upper
 bound, and proves 100 positive leading principal minors.  Thus SDP computation,

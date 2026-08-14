@@ -14,7 +14,7 @@ from tools.verify_nonlinear_joint_pep_acceptance import verify_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "nonlinear_joint_pep_acceptance.json"
-EXPECTED_HASH = "e2f5d2995ab36832852e088370c7e18e1f6cf7b263d45e1b7b41aa89e1f3ccac"
+EXPECTED_HASH = "d973a0da85b227881782a7a253e555ef99aa4e108109abbe4380c88b180f76f8"
 
 
 def _load() -> dict:
@@ -39,13 +39,16 @@ def test_frozen_nonlinear_acceptance_verifies() -> None:
     assert result["strict_pair"] == [1, 0]
     assert result["bad_cells_excluded"] == 10
     assert result["joint_accept"] is True
+    assert result["dimension"] == 2
+    assert result["natural_horizon"] == 2
+    assert result["audit_horizon"] == 3
 
 
 @pytest.mark.parametrize("target", ["candidate", "bound", "cell", "cost"])
 def test_rehashed_tampering_is_rejected(target: str) -> None:
     forged = deepcopy(_load())
     if target == "candidate":
-        forged["actual_instance"]["candidate_y"] = "0.04"
+        forged["actual_instance"]["candidate_y"][0] = "0.04"
     elif target == "bound":
         forged["exact_certificate"]["candidate_gradient_upper"] = "1/10"
     elif target == "cell":

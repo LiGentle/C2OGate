@@ -21,18 +21,20 @@ e0622340@u.nus.edu
 
 ## Abstract
 
-We present C2OGate, a proof-carrying method for deciding
-whether a secondary-oracle candidate reduces all-in expensive-oracle cost
-relative to an unchanged baseline. Conditioned on a first-order transcript,
-the method couples both continuations on the same unknown function, enumerates
-their joint stopping-time cells, and represents each cell over smooth strongly
-convex functions by a dimension-free Gram SDP. It accepts only after
+We present C2OGate, a proof-carrying method for one certified branch decision.
+An external proposal mechanism supplies a state and an auditable error-and-cost
+contract; both alternatives then continue with the same fixed-step gradient
+method. Conditioned on the available first-order transcript, C2OGate couples
+both continuations on the same unknown function, enumerates their joint
+stopping-time cells, and represents each cell over smooth strongly convex
+functions by a dimension-free Gram SDP. It accepts only after
 independently verified exclusion of every cost-violating cell; a verified
 attainable bad cell rejects, and unresolved numerical evidence returns
 uncertified. We prove the finite reduction, its fixed-dimension rank
 qualification, the maximality of the resulting robust gate, and an unbounded
 gap for independent marginal call bounds even on one-dimensional quadratics.
-In a non-shift, nonquadratic H=3 instance, all ten cost-violating cells are
+In a non-shift, nonquadratic two-dimensional instance whose certified horizon
+is H0=2, all ten cost-violating cells in a deliberately padded H=3 audit are
 excluded by exact rational SDP duals; a standard-library verifier reconstructs
 every SDP and checks 100 positive leading principal minors. A generic H=20
 audit solves 231 bad-cell SDPs but remains uncertified, delimiting the current

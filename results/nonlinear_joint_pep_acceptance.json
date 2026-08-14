@@ -1,12 +1,12 @@
 {
-  "schema": "c2o-nonlinear-joint-pep-acceptance-v3",
-  "declaration": "A non-shift, nonquadratic realized instance is accepted by an H=3 joint PEP gate. Ten recovered rational Gram-SDP duals exclude all cost-violating cells; contraction bounds separately validate the realized stopping pair.",
+  "schema": "c2o-nonlinear-joint-pep-acceptance-v4",
+  "declaration": "A genuinely two-dimensional, non-shift, nonquadratic realized instance has formula-derived horizon H0=2. A one-layer padded H=3 joint PEP audit is accepted: ten recovered rational Gram-SDP duals exclude all cost-violating cells, while contraction bounds separately validate the realized stopping pair.",
   "function": {
-    "formula": "f(t)=9*t^2/20+log(cosh(t))/10",
-    "gradient": "f'(t)=9*t/10+tanh(t)/10",
-    "hessian": "f''(t)=9/10+sech(t)^2/10",
-    "third_derivative": "f'''(t)=-sech(t)^2*tanh(t)/5",
-    "nonquadratic_witness": "f'''(1)<0"
+    "formula": "f(z)=9*||z||^2/20+sum_i log(cosh(z_i))/10 in R^2",
+    "gradient": "grad_i f(z)=9*z_i/10+tanh(z_i)/10",
+    "hessian": "H_ii(z)=9/10+sech(z_i)^2/10, H_ij=0 for i!=j",
+    "third_derivative": "partial_iii f(z)=-sech(z_i)^2*tanh(z_i)/5",
+    "nonquadratic_witness": "partial_111 f(x)<0"
   },
   "parameters": {
     "strong_convexity": "9/10",
@@ -17,18 +17,45 @@
     "proposal_norm_lower": "24/25",
     "proposal_norm_upper": "97/100",
     "initial_distance_upper": "6/5",
+    "natural_horizon": 2,
+    "audit_padding": 1,
     "horizon": 3,
     "cost_exact_units": "1/2",
     "minimum_saved_calls": 1
   },
   "actual_instance": {
-    "x": "1",
-    "gradient_x": "0.9761594155955764888119458282604793590412768597257936551596810500121953244576638483458947521673676714",
-    "candidate_y": "0.0338405844044235111880541717395206409587231402742063448403189499878046755423361516541052478326323286",
-    "candidate_residual": "0.0100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "gradient_y": "0.03383929320472460459016485715699163434809735705420043087537206420794863236818493315009263560398045639",
-    "baseline_x_one": "0.0238405844044235111880541717395206409587231402742063448403189499878046755423361516541052478326323286",
-    "gradient_x_one": "0.02384013282857007714162531415602442343608144918655612156666654921734065928382529900584276295655375168",
+    "dimension": 2,
+    "x": [
+      "0.9",
+      "0.4"
+    ],
+    "gradient_x": [
+      "0.8816297870199024420811443783058094863174865164600761688098886664869386319719380146710218874398481189",
+      "0.3979948962255224885267748123896873310513184374371400103484476332433501677759774424241109330554007612"
+    ],
+    "candidate_y": [
+      "0.0213702129800975579188556216941905136825134835399238311901113335130613680280619853289781125601518811",
+      "-0.0019948962255224885267748123896873310513184374371400103484476332433501677759774424241109330554007612"
+    ],
+    "candidate_residual": [
+      "0.003",
+      "-0.004"
+    ],
+    "candidate_residual_norm": "0.005",
+    "proposal_norm": "0.9662247146652830886623804695344043696783805452290973106572905477809659711398178855662875329427419377",
+    "gradient_y": [
+      "0.02136988772360862369754411648908789461801968988209539016019371767899139794023358456767294789791097808",
+      "-0.001994895960892547629530237146891060433725354452039896776851605258932154656585081986266782755290686189"
+    ],
+    "baseline_x_one": [
+      "0.0183702129800975579188556216941905136825134835399238311901113335130613680280619853289781125601518811",
+      "0.0020051037744775114732251876103126689486815625628599896515523667566498322240225575758890669445992388"
+    ],
+    "gradient_x_one": [
+      "0.01837000636469200049287814210172919773634365271992115192783907144253009800512037671191042297111477240",
+      "0.002005103505764553019091413809856741773343205237629083639876726093681629752109045361638520869828802435"
+    ],
+    "trajectory_span_determinant": "-0.00554349179500926284163957982839480341919198710939554178964740332423969820960449231329108477392143752",
     "baseline_calls": 1,
     "hybrid_calls": 0
   },
@@ -130,7 +157,7 @@
     ],
     "generic_dual_certificate_count": 10,
     "generic_dual_positive_leading_minors": 100,
-    "generic_dual_payload_sha256": "538b08d7ef2c58156a3c42228307a6f236b75ca285ed25becc6470df7cf1505d"
+    "generic_dual_payload_sha256": "058b231c33825d4e91f2a535514d88e668c34686225ba3f63866c693f3e384cb"
   },
   "pep_enumeration": {
     "cell_count": 16,
@@ -172,85 +199,85 @@
       {
         "baseline_calls": 1,
         "hybrid_calls": 0,
-        "status": "optimal",
-        "strict_margin": 0.9332876727273509,
+        "status": "optimal_inaccurate",
+        "strict_margin": 0.9334148207485631,
         "positive_margin": true
       },
       {
         "baseline_calls": 1,
         "hybrid_calls": 1,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.008232940289957255,
+        "strict_margin": -0.00823150117465675,
         "positive_margin": false
       },
       {
         "baseline_calls": 1,
         "hybrid_calls": 2,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.019486315245007036,
+        "strict_margin": -0.019486315645528007,
         "positive_margin": false
       },
       {
         "baseline_calls": 1,
         "hybrid_calls": 3,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.01959886743693757,
+        "strict_margin": -0.019598879241049322,
         "positive_margin": false
       },
       {
         "baseline_calls": 2,
         "hybrid_calls": 0,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.01007103465629646,
+        "strict_margin": -0.010069690537596442,
         "positive_margin": false
       },
       {
         "baseline_calls": 2,
         "hybrid_calls": 1,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.0100711184466207,
+        "strict_margin": -0.01006984092098863,
         "positive_margin": false
       },
       {
         "baseline_calls": 2,
         "hybrid_calls": 2,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.019486328934129177,
+        "strict_margin": -0.01948631620037647,
         "positive_margin": false
       },
       {
         "baseline_calls": 2,
         "hybrid_calls": 3,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.01959887620886622,
+        "strict_margin": -0.019598870791745247,
         "positive_margin": false
       },
       {
         "baseline_calls": 3,
         "hybrid_calls": 0,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.01950471475738652,
+        "strict_margin": -0.019504699635951656,
         "positive_margin": false
       },
       {
         "baseline_calls": 3,
         "hybrid_calls": 1,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.019504711633108792,
+        "strict_margin": -0.01950469954634205,
         "positive_margin": false
       },
       {
         "baseline_calls": 3,
         "hybrid_calls": 2,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.01950471206064715,
+        "strict_margin": -0.019504749367693218,
         "positive_margin": false
       },
       {
         "baseline_calls": 3,
         "hybrid_calls": 3,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.01959888718307412,
+        "strict_margin": -0.01959887837254287,
         "positive_margin": false
       }
     ]
@@ -265,13 +292,13 @@
   },
   "environment": {
     "python": "3.13.5",
-    "runner_sha256": "048d34902e610b6528a0d72fb38d371c6508562f203aa5a8e6034a153f7f1545",
-    "verifier_sha256": "27f6904e39dcfa3b95b68b17ec730ea6955f5d652e0e33c53e3b74d5d1cec23c",
-    "generic_dual_file_sha256": "ff95ce5f1c6176c3859b75445dd3171f38de3f32f0e7edd55969a0710e629ab1",
+    "runner_sha256": "a0878d07e512f033c7ed0bf562d3e1826c66623fa4c558c24e06704641be8820",
+    "verifier_sha256": "8acd99e2ff41e0cbf3086f4910d72655885bd213cdafcdddf4ab00d0839d528e",
+    "generic_dual_file_sha256": "ca171f81f06e9ff655dfecbe6b7a38de933bd16079683766e2f4c52f2a1e8f2f",
     "source_sha256": {
       "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d",
       "experiments/run_transcript_pep_study.py": "6c0314b9aca7b55c1e085fba50cc8de06fab6c61ca7514acbeb7b43394edf31f"
     }
   },
-  "payload_sha256": "e2f5d2995ab36832852e088370c7e18e1f6cf7b263d45e1b7b41aa89e1f3ccac"
+  "payload_sha256": "d973a0da85b227881782a7a253e555ef99aa4e108109abbe4380c88b180f76f8"
 }
