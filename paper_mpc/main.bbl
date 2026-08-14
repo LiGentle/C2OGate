@@ -1,0 +1,183 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{DOI~\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{DOI~\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem{Abbaszadehpeivasti2022}
+Abbaszadehpeivasti, H., de~Klerk, E., Zamani, M.: The exact worst-case
+  convergence rate of the gradient method with fixed step lengths for
+  {$L$}-smooth functions.
+\newblock Optimization Letters \textbf{16}(6), 1649--1661 (2022).
+\newblock \doi{10.1007/s11590-021-01821-1}
+
+\bibitem{Alexandrov1998}
+Alexandrov, N.M., John E.~Dennis, J., Lewis, R.M., Torczon, V.: A trust-region
+  framework for managing the use of approximation models in optimization.
+\newblock Structural Optimization \textbf{15}(1), 16--23 (1998).
+\newblock \doi{10.1007/BF01197433}
+
+\bibitem{Bellavia2019}
+Bellavia, S., Gurioli, G., Morini, B., Toint, P.L.: Adaptive regularization
+  algorithms with inexact evaluations for nonconvex optimization.
+\newblock SIAM Journal on Optimization \textbf{29}(4), 2881--2915 (2019).
+\newblock \doi{10.1137/18M1226282}
+
+\bibitem{BerahasSohabVicente2023}
+Berahas, A.S., Sohab, O., Vicente, L.N.: Full-low evaluation methods for
+  derivative-free optimization.
+\newblock Optimization Methods and Software \textbf{38}(2), 386--411 (2023).
+\newblock \doi{10.1080/10556788.2022.2142582}
+
+\bibitem{BorweinWolkowicz1981}
+Borwein, J.M., Wolkowicz, H.: Facial reduction for a cone-convex programming
+  problem.
+\newblock Journal of the Australian Mathematical Society, Series A
+  \textbf{30}(3), 369--380 (1981).
+\newblock \doi{10.1017/S1446788700016606}
+
+\bibitem{Bousselmi2024}
+Bousselmi, N., Hendrickx, J.M., Glineur, F.: Interpolation conditions for
+  linear operators and applications to performance estimation problems.
+\newblock SIAM Journal on Optimization \textbf{34}(3), 3033--3063 (2024).
+\newblock \doi{10.1137/23M1575391}
+
+\bibitem{Carter1991}
+Carter, R.G.: On the global convergence of trust region algorithms using
+  inexact gradient information.
+\newblock SIAM Journal on Numerical Analysis \textbf{28}(1), 251--265 (1991).
+\newblock \doi{10.1137/0728014}
+
+\bibitem{ConnScheinbergVicente2009}
+Conn, A.R., Scheinberg, K., Vicente, L.N.: Introduction to Derivative-Free
+  Optimization, \emph{MPS-SIAM Series on Optimization}, vol.~8.
+\newblock SIAM, Philadelphia (2009).
+\newblock \doi{10.1137/1.9780898718768}
+
+\bibitem{Devolder2014}
+Devolder, O., Glineur, F., Nesterov, Y.: First-order methods of smooth convex
+  optimization with inexact oracle.
+\newblock Mathematical Programming \textbf{146}(1--2), 37--75 (2014).
+\newblock \doi{10.1007/s10107-013-0677-5}
+
+\bibitem{DiamondBoyd2016}
+Diamond, S., Boyd, S.: {CVXPY}: A {Python}-embedded modeling language for
+  convex optimization.
+\newblock Journal of Machine Learning Research \textbf{17}(83), 1--5 (2016)
+
+\bibitem{DostertDeLaatMoustrou2021}
+Dostert, M., de~Laat, D., Moustrou, P.: Exact semidefinite programming bounds
+  for packing problems.
+\newblock SIAM Journal on Optimization \textbf{31}(2), 1433--1458 (2021).
+\newblock \doi{10.1137/20M1351692}
+
+\bibitem{DroriTaylor2022}
+Drori, Y., Taylor, A.B.: On the oracle complexity of smooth strongly convex
+  minimization.
+\newblock Journal of Complexity \textbf{68}, 101590 (2022).
+\newblock \doi{10.1016/j.jco.2021.101590}
+
+\bibitem{DroriTeboulle2014}
+Drori, Y., Teboulle, M.: Performance of first-order methods for smooth convex
+  minimization: A novel approach.
+\newblock Mathematical Programming \textbf{145}(1--2), 451--482 (2014).
+\newblock \doi{10.1007/s10107-013-0653-0}
+
+\bibitem{GoujaudPEPit2022}
+Goujaud, B., Moucer, C., Glineur, F., Hendrickx, J.M., Taylor, A.B.,
+  Dieuleveut, A.: {PEPit}: Computer-assisted worst-case analyses of first-order
+  optimization methods in {Python}.
+\newblock Mathematical Programming Computation \textbf{16}(3), 337--367 (2024).
+\newblock \doi{10.1007/s12532-024-00259-7}
+
+\bibitem{GoulartChen2024}
+Goulart, P.J., Chen, Y.: Clarabel: An interior-point solver for conic programs
+  with quadratic objectives.
+\newblock Mathematical Programming Computation \textbf{16}, 317--357 (2024).
+\newblock \doi{10.1007/s12532-024-00259-5}
+
+\bibitem{GrundvigHeinkenschloss2025}
+Grundvig, D.S., Heinkenschloss, M.: Line-search based optimization using
+  function approximations with tunable accuracy.
+\newblock Optimization Methods and Software \textbf{40}(3), 579--610 (2025).
+\newblock \doi{10.1080/10556788.2024.2436192}
+
+\bibitem{HenrionNaldiSafeyElDin2016}
+Henrion, D., Naldi, S., Din, M.S.E.: Exact algorithms for linear matrix
+  inequalities.
+\newblock SIAM Journal on Optimization \textbf{26}(4), 2512--2539 (2016).
+\newblock \doi{10.1137/15M1036543}
+
+\bibitem{DeKlerkGlineurTaylor2020}
+de~Klerk, E., Glineur, F., Taylor, A.B.: Worst-case convergence analysis of
+  inexact gradient and {Newton} methods through semidefinite programming
+  performance estimation.
+\newblock SIAM Journal on Optimization \textbf{30}(3), 2053--2082 (2020).
+\newblock \doi{10.1137/19M1281368}
+
+\bibitem{KolmogorovNaldiZapata2025}
+Kolmogorov, V., Naldi, S., Zapata, V.: Certifying solutions of degenerate
+  semidefinite programs.
+\newblock SIAM Journal on Optimization \textbf{35}(3), 1630--1654 (2025).
+\newblock \doi{10.1137/24M1664691}
+
+\bibitem{Kouri2014}
+Kouri, D.P., Heinkenschloss, M., Ridzal, D., van Bloemen~Waanders, B.G.:
+  Inexact objective function evaluations in a trust-region algorithm for
+  {PDE}-constrained optimization under uncertainty.
+\newblock SIAM Journal on Scientific Computing \textbf{36}(6), A3011--A3029
+  (2014).
+\newblock \doi{10.1137/140955665}
+
+\bibitem{LykourisVassilvitskii2018}
+Lykouris, T., Vassilvitskii, S.: Competitive caching with machine learned
+  advice.
+\newblock In: Proceedings of the 35th International Conference on Machine
+  Learning, \emph{Proceedings of Machine Learning Research}, vol.~80, pp.
+  3296--3305. PMLR (2018)
+
+\bibitem{NemirovskyYudin1983}
+Nemirovsky, A.S., Yudin, D.B.: Problem Complexity and Method Efficiency in
+  Optimization.
+\newblock Wiley, New York (1983)
+
+\bibitem{Peherstorfer2018}
+Peherstorfer, B., Willcox, K., Gunzburger, M.: Survey of multifidelity methods
+  in uncertainty propagation, inference, and optimization.
+\newblock SIAM Review \textbf{60}(3), 550--591 (2018).
+\newblock \doi{10.1137/16M1082469}
+
+\bibitem{Ramana1997}
+Ramana, M.V.: An exact duality theory for semidefinite programming and its
+  complexity implications.
+\newblock Mathematical Programming \textbf{77}(1), 129--162 (1997).
+\newblock \doi{10.1007/BF02614433}
+
+\bibitem{RyuTaylorBergelingGiselsson2020}
+Ryu, E.K., Taylor, A.B., Bergeling, C., Giselsson, P.: Operator splitting
+  performance estimation: Tight contraction factors and optimal parameter
+  selection.
+\newblock SIAM Journal on Optimization \textbf{30}(3), 2251--2271 (2020).
+\newblock \doi{10.1137/19M1304854}
+
+\bibitem{TaylorPEP2017}
+Taylor, A.B., Hendrickx, J.M., Glineur, F.: Exact worst-case performance of
+  first-order methods for composite convex optimization.
+\newblock SIAM Journal on Optimization \textbf{27}(3), 1283--1313 (2017).
+\newblock \doi{10.1137/16M108104X}
+
+\bibitem{TaylorInterpolation2017}
+Taylor, A.B., Hendrickx, J.M., Glineur, F.: Smooth strongly convex
+  interpolation and exact worst-case performance of first-order methods.
+\newblock Mathematical Programming \textbf{161}(1--2), 307--345 (2017).
+\newblock \doi{10.1007/s10107-016-1009-3}
+
+\bibitem{Ziems2011}
+Ziems, J.C., Ulbrich, S.: Adaptive multilevel inexact {SQP} methods for
+  {PDE}-constrained optimization.
+\newblock SIAM Journal on Optimization \textbf{21}(1), 1--40 (2011).
+\newblock \doi{10.1137/080743160}
+
+\end{thebibliography}

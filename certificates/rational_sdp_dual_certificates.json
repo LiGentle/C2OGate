@@ -1,0 +1,867 @@
+{
+  "declaration": {
+    "certificate_count": 9,
+    "generation_method": "110-decimal-digit symmetric eigensolve followed by bounded-denominator rational reconstruction",
+    "instance_count": 3,
+    "verification_method": "exact Fraction arithmetic, exact matrix identities, and all principal minors"
+  },
+  "environment": {
+    "generator_sha256": "c60057c6356cfeed2c37745864d047aed5c7a0d22d5ef97c068c4d1c38f52647",
+    "mpmath": "1.3.0",
+    "verifier_sha256": "60c48ebb1f6c5ab7746aa1b7634e7439030563826d178a9c425f5ed9498060dd"
+  },
+  "instances": [
+    {
+      "candidate_definition": "y=(I-alpha Q)^d x",
+      "candidate_displacement": [
+        "3/20",
+        "1/5"
+      ],
+      "candidate_shift_calls": 2,
+      "claimed_acceptance": true,
+      "claimed_exact_call_saving": 2,
+      "cost_exact_units": "3/2",
+      "current_displacement": [
+        "3/5",
+        "4/5"
+      ],
+      "current_norm_squared": "1",
+      "dimension": 2,
+      "eigenvalues": [
+        "1/2",
+        "3/4"
+      ],
+      "hessian": [
+        [
+          "33/50",
+          "-3/25"
+        ],
+        [
+          "-3/25",
+          "59/100"
+        ]
+      ],
+      "id": "rational_rotation_2d_shift_2",
+      "minimum_saved_calls": 1,
+      "orthogonal_eigenbasis": [
+        [
+          "3/5",
+          "-4/5"
+        ],
+        [
+          "4/5",
+          "3/5"
+        ]
+      ],
+      "residual_dual_certificates": [
+        {
+          "dual": {
+            "certified_lower_bound": "1/4",
+            "normalization_multiplier": "1/4",
+            "slack_matrix": [
+              [
+                "1/5",
+                "-3/20"
+              ],
+              [
+                "-3/20",
+                "9/80"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.25",
+          "iteration": 0,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "9/20",
+                "-3/20"
+              ],
+              [
+                "-3/20",
+                "29/80"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "15/64"
+        },
+        {
+          "dual": {
+            "certified_lower_bound": "9/256",
+            "normalization_multiplier": "9/256",
+            "slack_matrix": [
+              [
+                "63/6400",
+                "21/1600"
+              ],
+              [
+                "21/1600",
+                "7/400"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.03515625",
+          "iteration": 1,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "9/200",
+                "21/1600"
+              ],
+              [
+                "21/1600",
+                "337/6400"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "5/256"
+        }
+      ],
+      "step_size": "1",
+      "tolerance_squared": "1/64",
+      "transcript_class": "quadratic f(z)=0.5 z^T Q z with unit-norm current displacement"
+    },
+    {
+      "candidate_definition": "y=(I-alpha Q)^d x",
+      "candidate_displacement": [
+        "1072859/4800000",
+        "535753/1200000",
+        "499/1500"
+      ],
+      "candidate_shift_calls": 3,
+      "claimed_acceptance": true,
+      "claimed_exact_call_saving": 3,
+      "cost_exact_units": "5/2",
+      "current_displacement": [
+        "1/3",
+        "2/3",
+        "2/3"
+      ],
+      "current_norm_squared": "1",
+      "dimension": 3,
+      "eigenvalues": [
+        "1/4",
+        "2/5",
+        "3/5"
+      ],
+      "hessian": [
+        [
+          "38453/84500",
+          "-3249/21125",
+          "48/845"
+        ],
+        [
+          "-3249/21125",
+          "7718/21125",
+          "-36/845"
+        ],
+        [
+          "48/845",
+          "-36/845",
+          "363/845"
+        ]
+      ],
+      "id": "rational_rotation_3d_shift_3",
+      "minimum_saved_calls": 1,
+      "orthogonal_eigenbasis": [
+        [
+          "3/5",
+          "-4/13",
+          "48/65"
+        ],
+        [
+          "4/5",
+          "3/13",
+          "-36/65"
+        ],
+        [
+          "0",
+          "12/13",
+          "5/13"
+        ]
+      ],
+      "residual_dual_certificates": [
+        {
+          "dual": {
+            "certified_lower_bound": "1/16",
+            "normalization_multiplier": "1/16",
+            "slack_matrix": [
+              [
+                "18111/105625",
+                "-54333/422500",
+                "48/845"
+              ],
+              [
+                "-54333/422500",
+                "162999/1690000",
+                "-36/845"
+              ],
+              [
+                "48/845",
+                "-36/845",
+                "8591/67600"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.0625",
+          "iteration": 0,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "395401/1690000",
+                "-54333/422500",
+                "48/845"
+              ],
+              [
+                "-54333/422500",
+                "16789/105625",
+                "-36/845"
+              ],
+              [
+                "48/845",
+                "-36/845",
+                "801/4225"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "3/64"
+        },
+        {
+          "dual": {
+            "certified_lower_bound": "49/1024",
+            "normalization_multiplier": "49/1024",
+            "slack_matrix": [
+              [
+                "12719799/169000000",
+                "-38159397/676000000",
+                "444/21125"
+              ],
+              [
+                "-38159397/676000000",
+                "114478191/2704000000",
+                "-333/21125"
+              ],
+              [
+                "444/21125",
+                "-333/21125",
+                "7083959/108160000"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.0478515625",
+          "iteration": 1,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "332907409/2704000000",
+                "-38159397/676000000",
+                "444/21125"
+              ],
+              [
+                "-38159397/676000000",
+                "15241801/169000000",
+                "-333/21125"
+              ],
+              [
+                "444/21125",
+                "-333/21125",
+                "47889/422500"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "33/1024"
+        },
+        {
+          "dual": {
+            "certified_lower_bound": "2401/65536",
+            "normalization_multiplier": "2401/65536",
+            "slack_matrix": [
+              [
+                "8083087791/270400000000",
+                "-24249263373/1081600000000",
+                "627/105625"
+              ],
+              [
+                "-24249263373/1081600000000",
+                "72747790119/4326400000000",
+                "-1881/422500"
+              ],
+              [
+                "627/105625",
+                "-1881/422500",
+                "5536297391/173056000000"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.0366363525390625",
+          "iteration": 2,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "287832920281/4326400000000",
+                "-24249263373/1081600000000",
+                "627/105625"
+              ],
+              [
+                "-24249263373/1081600000000",
+                "14453206609/270400000000",
+                "-1881/422500"
+              ],
+              [
+                "627/105625",
+                "-1881/422500",
+                "2899521/42250000"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "1377/65536"
+        }
+      ],
+      "step_size": "1/2",
+      "tolerance_squared": "1/64",
+      "transcript_class": "quadratic f(z)=0.5 z^T Q z with unit-norm current displacement"
+    },
+    {
+      "candidate_definition": "y=(I-alpha Q)^d x",
+      "candidate_displacement": [
+        "17641511/65812500",
+        "261877337/702000000",
+        "4877471/22464000",
+        "6850301/42120000"
+      ],
+      "candidate_shift_calls": 4,
+      "claimed_acceptance": true,
+      "claimed_exact_call_saving": 4,
+      "cost_exact_units": "7/2",
+      "current_displacement": [
+        "1/2",
+        "1/2",
+        "1/2",
+        "1/2"
+      ],
+      "current_norm_squared": "1",
+      "dimension": 4,
+      "eigenvalues": [
+        "1/5",
+        "1/3",
+        "1/2",
+        "2/3"
+      ],
+      "hessian": [
+        [
+          "3643927/7921875",
+          "-514888/2640625",
+          "9608/105625",
+          "-1344/40625"
+        ],
+        [
+          "-514888/2640625",
+          "914291/2640625",
+          "-7206/105625",
+          "1008/40625"
+        ],
+        [
+          "9608/105625",
+          "-7206/105625",
+          "3217/8450",
+          "-28/1625"
+        ],
+        [
+          "-1344/40625",
+          "1008/40625",
+          "-28/1625",
+          "962/1875"
+        ]
+      ],
+      "id": "rational_rotation_4d_shift_4",
+      "minimum_saved_calls": 1,
+      "orthogonal_eigenbasis": [
+        [
+          "3/5",
+          "-4/13",
+          "336/1625",
+          "-1152/1625"
+        ],
+        [
+          "4/5",
+          "3/13",
+          "-252/1625",
+          "864/1625"
+        ],
+        [
+          "0",
+          "12/13",
+          "7/65",
+          "-24/65"
+        ],
+        [
+          "0",
+          "0",
+          "24/25",
+          "7/25"
+        ]
+      ],
+      "residual_dual_certificates": [
+        {
+          "dual": {
+            "certified_lower_bound": "1/25",
+            "normalization_multiplier": "1/25",
+            "slack_matrix": [
+              [
+                "5204032/23765625",
+                "-1301008/7921875",
+                "28628/316875",
+                "-1568/40625"
+              ],
+              [
+                "-1301008/7921875",
+                "325252/2640625",
+                "-7157/105625",
+                "1176/40625"
+              ],
+              [
+                "28628/316875",
+                "-7157/105625",
+                "1997/16900",
+                "-98/4875"
+              ],
+              [
+                "-1568/40625",
+                "1176/40625",
+                "-98/4875",
+                "1267/5625"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.04",
+          "iteration": 0,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "6154657/23765625",
+                "-1301008/7921875",
+                "28628/316875",
+                "-1568/40625"
+              ],
+              [
+                "-1301008/7921875",
+                "430877/2640625",
+                "-7157/105625",
+                "1176/40625"
+              ],
+              [
+                "28628/316875",
+                "-7157/105625",
+                "2673/16900",
+                "-98/4875"
+              ],
+              [
+                "-1568/40625",
+                "1176/40625",
+                "-98/4875",
+                "1492/5625"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "3/100"
+        },
+        {
+          "dual": {
+            "certified_lower_bound": "81/2500",
+            "normalization_multiplier": "81/2500",
+            "slack_matrix": [
+              [
+                "19646884/213890625",
+                "-4911721/71296875",
+                "75109/2281500",
+                "-826/73125"
+              ],
+              [
+                "-4911721/71296875",
+                "4911721/95062500",
+                "-75109/3042000",
+                "413/48750"
+              ],
+              [
+                "75109/2281500",
+                "-75109/3042000",
+                "3766409/60840000",
+                "-413/70200"
+              ],
+              [
+                "-826/73125",
+                "413/48750",
+                "-413/70200",
+                "22819/202500"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.0324",
+          "iteration": 1,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "106307761/855562500",
+                "-4911721/71296875",
+                "75109/2281500",
+                "-826/73125"
+              ],
+              [
+                "-4911721/71296875",
+                "3995873/47531250",
+                "-75109/3042000",
+                "413/48750"
+              ],
+              [
+                "75109/2281500",
+                "-75109/3042000",
+                "45901/486720",
+                "-413/70200"
+              ],
+              [
+                "-826/73125",
+                "413/48750",
+                "-413/70200",
+                "1469/10125"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "14/625"
+        },
+        {
+          "dual": {
+            "certified_lower_bound": "6561/250000",
+            "normalization_multiplier": "6561/250000",
+            "slack_matrix": [
+              [
+                "6887756281/192501562500",
+                "-6887756281/256668750000",
+                "15642137/1642680000",
+                "-3493/2025000"
+              ],
+              [
+                "-6887756281/256668750000",
+                "6887756281/342225000000",
+                "-15642137/2190240000",
+                "3493/2700000"
+              ],
+              [
+                "15642137/1642680000",
+                "-15642137/2190240000",
+                "7074304769/219024000000",
+                "-3493/3888000"
+              ],
+              [
+                "-3493/2025000",
+                "3493/2700000",
+                "-3493/3888000",
+                "609841/11390625"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.026244",
+          "iteration": 2,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "47759069149/770006250000",
+                "-6887756281/256668750000",
+                "15642137/1642680000",
+                "-3493/2025000"
+              ],
+              [
+                "-6887756281/256668750000",
+                "15869109181/342225000000",
+                "-15642137/2190240000",
+                "3493/2700000"
+              ],
+              [
+                "15642137/1642680000",
+                "-15642137/2190240000",
+                "20515793/350438400",
+                "-3493/3888000"
+              ],
+              [
+                "-3493/2025000",
+                "3493/2700000",
+                "-3493/3888000",
+                "581617/7290000"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "4061/250000"
+        },
+        {
+          "dual": {
+            "certified_lower_bound": "531441/25000000",
+            "normalization_multiplier": "531441/25000000",
+            "slack_matrix": [
+              [
+                "7920992020321/693005625000000",
+                "-7920992020321/924007500000000",
+                "30056917/47309184000",
+                "824131/758160000"
+              ],
+              [
+                "-7920992020321/924007500000000",
+                "7920992020321/1232010000000000",
+                "-30056917/63078912000",
+                "-824131/1010880000"
+              ],
+              [
+                "30056917/47309184000",
+                "-30056917/63078912000",
+                "12839828479529/788486400000000",
+                "824131/1455667200"
+              ],
+              [
+                "824131/758160000",
+                "-824131/1010880000",
+                "824131/1455667200",
+                "14964103021/656100000000"
+              ]
+            ]
+          },
+          "high_precision_candidate": "0.02125764",
+          "iteration": 3,
+          "minimum_principal_minor": "0",
+          "primal": {
+            "cone": "W positive semidefinite",
+            "normalization_matrix": [
+              [
+                "1",
+                "0",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "1",
+                "0",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "1",
+                "0"
+              ],
+              [
+                "0",
+                "0",
+                "0",
+                "1"
+              ]
+            ],
+            "normalization_rhs": "1",
+            "objective_matrix": [
+              [
+                "11326328057273/346502812500000",
+                "-7920992020321/924007500000000",
+                "30056917/47309184000",
+                "824131/758160000"
+              ],
+              [
+                "-7920992020321/924007500000000",
+                "34110617076721/1232010000000000",
+                "-30056917/63078912000",
+                "-824131/1010880000"
+              ],
+              [
+                "30056917/47309184000",
+                "-30056917/63078912000",
+                "378895213/10092625920",
+                "824131/1455667200"
+              ],
+              [
+                "824131/758160000",
+                "-824131/1010880000",
+                "824131/1455667200",
+                "9251597/209952000"
+              ]
+            ]
+          },
+          "strict_gap_over_tolerance_squared": "281441/25000000"
+        }
+      ],
+      "step_size": "1/2",
+      "tolerance_squared": "1/100",
+      "transcript_class": "quadratic f(z)=0.5 z^T Q z with unit-norm current displacement"
+    }
+  ],
+  "payload_sha256": "1b9f47487cfc4fc9369695f0b6130da253a4074fde91aa62aef0ef89ca2d17b0",
+  "schema": "c2o-rational-sdp-dual-certificates-v2"
+}

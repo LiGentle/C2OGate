@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "c2ogate"
+version = "0.1.0"
+description = "Cost-certified two-oracle optimization gates"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Jintao Li", email = "e0622340@u.nus.edu"},
+]
+requires-python = ">=3.11"
+dependencies = ["numpy>=1.26", "matplotlib>=3.8"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[project.urls]
+Repository = "https://github.com/LiGentle/C2OGate"
+Issues = "https://github.com/LiGentle/C2OGate/issues"
+
+[project.optional-dependencies]
+pep = ["cvxpy>=1.7"]
+certificates = ["mpmath>=1.3"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"

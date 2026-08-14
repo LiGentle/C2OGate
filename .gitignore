@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# LaTeX build products
+*.aux
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+paper_mpc/main.pdf
+cover_letter/cover_letter.pdf
+
+# Submission build products
+output/
+
+# Vendored download retained locally; extracted style files are tracked.
+paper_mpc/svjour3-latex-package.zip
+
+# Operating-system metadata
+.DS_Store

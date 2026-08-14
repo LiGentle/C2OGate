@@ -1,0 +1,165 @@
+{
+  "schema": "c2o-nonlinear-joint-pep-acceptance-v1",
+  "declaration": "A non-shift, nonquadratic realized instance is accepted by the joint PEP gate. Exact rational contraction bounds, not floating solver statuses, exclude every cost-violating cell.",
+  "function": {
+    "formula": "f(t)=9*t^2/20+log(cosh(t))/10",
+    "gradient": "f'(t)=9*t/10+tanh(t)/10",
+    "hessian": "f''(t)=9/10+sech(t)^2/10",
+    "third_derivative": "f'''(t)=-sech(t)^2*tanh(t)/5",
+    "nonquadratic_witness": "f'''(1)<0"
+  },
+  "parameters": {
+    "strong_convexity": "9/10",
+    "smoothness": "1",
+    "step_size": "1",
+    "tolerance": "7/50",
+    "proposal_residual_upper": "1/100",
+    "proposal_norm_lower": "24/25",
+    "proposal_norm_upper": "97/100",
+    "initial_distance_upper": "6/5",
+    "horizon": 2,
+    "cost_exact_units": "1/2",
+    "minimum_saved_calls": 1
+  },
+  "actual_instance": {
+    "x": "1",
+    "gradient_x": "0.9761594155955764888119458282604793590412768597257936551596810500121953244576638483458947521673676714",
+    "candidate_y": "0.0338405844044235111880541717395206409587231402742063448403189499878046755423361516541052478326323286",
+    "candidate_residual": "0.0100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "gradient_y": "0.03383929320472460459016485715699163434809735705420043087537206420794863236818493315009263560398045639",
+    "baseline_x_one": "0.0238405844044235111880541717395206409587231402742063448403189499878046755423361516541052478326323286",
+    "gradient_x_one": "0.02384013282857007714162531415602442343608144918655612156666654921734065928382529900584276295655375168",
+    "baseline_calls": 1,
+    "hybrid_calls": 0
+  },
+  "exact_certificate": {
+    "current_gradient_lower": "19/20",
+    "current_gradient_upper": "49/50",
+    "gradient_step_contraction": "1/10",
+    "baseline_gradient_after_one_upper": "49/450",
+    "candidate_gradient_upper": "107/900",
+    "strict_pair": [
+      1,
+      0
+    ],
+    "cost_violating_cells": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "excluded_cost_violating_cell_count": 6
+  },
+  "pep_enumeration": {
+    "cell_count": 9,
+    "positive_margin_pairs": [
+      [
+        1,
+        0
+      ]
+    ],
+    "cells": [
+      {
+        "baseline_calls": 0,
+        "hybrid_calls": 0,
+        "status": "infeasible_inaccurate",
+        "strict_margin": null,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 0,
+        "hybrid_calls": 1,
+        "status": "infeasible",
+        "strict_margin": null,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 0,
+        "hybrid_calls": 2,
+        "status": "infeasible_inaccurate",
+        "strict_margin": null,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 1,
+        "hybrid_calls": 0,
+        "status": "optimal",
+        "strict_margin": 0.9332876970662546,
+        "positive_margin": true
+      },
+      {
+        "baseline_calls": 1,
+        "hybrid_calls": 1,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.008232991686156757,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 1,
+        "hybrid_calls": 2,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.019486330325894242,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 2,
+        "hybrid_calls": 0,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.010071133262218791,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 2,
+        "hybrid_calls": 1,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.01007106128342191,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 2,
+        "hybrid_calls": 2,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.019486345608127068,
+        "positive_margin": false
+      }
+    ]
+  },
+  "gate": {
+    "joint_accept": true,
+    "rectangle_accept": true,
+    "worst_joint_call_difference": -1,
+    "rectangle_call_difference": -1,
+    "certificate_value": 0.0,
+    "declared_all_in_cost_ratio": 0.5
+  },
+  "environment": {
+    "python": "3.13.5",
+    "runner_sha256": "972ee95a6fcbe97afc336abd3c6829fabc5cf111def470ab0b64cd2998a0e023",
+    "verifier_sha256": "f5dd1def8b5a3ac0f9fb0bfcfbb6916cfed4d57b34e190a08d6e9fd6c27dc755",
+    "source_sha256": {
+      "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d",
+      "experiments/run_transcript_pep_study.py": "b18d1fde59742589e3f8d7273567020ed6449d7357150c0024ed06b0e480b1ed"
+    }
+  },
+  "payload_sha256": "5c6ad2fec2ccc86a1ecdc781a0096a6ea6e935a0ad5faa03d5d500d9b1095e67"
+}
