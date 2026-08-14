@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Standard-library verifier for a generic nonquadratic joint-PEP dual.
+"""Standard-library verifier for a generic nonquadratic joint-PEP dual suite.
 
-The verifier reconstructs the complete rational Gram-SDP cell from the
+The verifier reconstructs every complete rational Gram-SDP cell from the
 declared transcript.  It does not import CVXPY, NumPy, or a conic solver.
 """
 
@@ -16,7 +16,19 @@ from pathlib import Path
 from typing import Any
 
 
-SCHEMA = "c2o-generic-nonquadratic-pep-dual-v1"
+SCHEMA = "c2o-generic-nonquadratic-pep-dual-v2"
+BAD_CELLS = [
+    (0, 0),
+    (0, 1),
+    (0, 2),
+    (0, 3),
+    (1, 1),
+    (1, 2),
+    (1, 3),
+    (2, 2),
+    (2, 3),
+    (3, 3),
+]
 Matrix = list[list[Fraction]]
 
 
@@ -137,9 +149,15 @@ def _matrix(raw: list[list[str]]) -> Matrix:
     return result
 
 
-def _build_constraints() -> tuple[list[LinearConstraint], list[LinearConstraint]]:
-    baseline_calls = 3
-    hybrid_calls = 3
+def _build_constraints(
+    cell: tuple[int, int],
+) -> tuple[list[LinearConstraint], list[LinearConstraint]]:
+    horizon = 3
+    baseline_calls, hybrid_calls = cell
+    _require(
+        0 <= baseline_calls <= horizon and 0 <= hybrid_calls <= horizon,
+        "cell horizon",
+    )
     mu = Fraction(9, 10)
     smoothness = Fraction(1)
     step_size = Fraction(1)
@@ -149,8 +167,8 @@ def _build_constraints() -> tuple[list[LinearConstraint], list[LinearConstraint]
     contract_radius = Fraction(1, 100)
     initial_distance_upper = Fraction(6, 5)
     tolerance = Fraction(7, 50)
-    baseline_size = baseline_calls + 1
-    hybrid_size = hybrid_calls + 1
+    baseline_size = horizon + 1
+    hybrid_size = horizon + 1
     atom_count = baseline_size + hybrid_size + 2
     value_count = baseline_size + hybrid_size + 1
     baseline_gradients = [_basis(atom_count, k) for k in range(baseline_size)]
@@ -263,12 +281,18 @@ def _build_constraints() -> tuple[list[LinearConstraint], list[LinearConstraint]
     tolerance_squared = tolerance**2
     add_inequality(
         "baseline_terminal",
-        _symmetric_outer(baseline_gradients[-1], baseline_gradients[-1]),
+        _symmetric_outer(
+            baseline_gradients[baseline_calls], baseline_gradients[baseline_calls]
+        ),
+        margin=Fraction(1),
         rhs=tolerance_squared,
     )
     add_inequality(
         "hybrid_terminal",
-        _symmetric_outer(hybrid_gradients[-1], hybrid_gradients[-1]),
+        _symmetric_outer(
+            hybrid_gradients[hybrid_calls], hybrid_gradients[hybrid_calls]
+        ),
+        margin=Fraction(1),
         rhs=tolerance_squared,
     )
     add_inequality(
@@ -277,8 +301,8 @@ def _build_constraints() -> tuple[list[LinearConstraint], list[LinearConstraint]
         rhs=smoothness**2 * (initial_distance_upper + proposal_upper) ** 2,
     )
     for label, branch in (
-        ("baseline", baseline_gradients[:-1]),
-        ("hybrid", hybrid_gradients[:-1]),
+        ("baseline", baseline_gradients[:baseline_calls]),
+        ("hybrid", hybrid_gradients[:hybrid_calls]),
     ):
         for index, gradient in enumerate(branch):
             add_inequality(
@@ -297,58 +321,20 @@ def _tanh(value: Decimal) -> Decimal:
     return (exponential - 1) / (exponential + 1)
 
 
-def verify_payload(payload: dict[str, Any], *, root: Path | None = None) -> dict[str, Any]:
-    recorded_hash = payload.get("payload_sha256")
-    unsigned = dict(payload)
-    unsigned.pop("payload_sha256", None)
-    _require(recorded_hash == sha256(_canonical(unsigned)).hexdigest(), "payload hash")
-    _require(payload.get("schema") == SCHEMA, "schema")
-    declaration = payload["declaration"]
-    _require(declaration["cell"] == [3, 3] and declaration["horizon"] == 3, "cell")
-    _require(declaration["function_class"] == "F_{9/10,1}", "function class")
+def _verify_certificate(certificate: dict[str, Any]) -> tuple[Fraction, int]:
+    cell = tuple(certificate["cell"])
+    _require(cell in BAD_CELLS, "certificate cell")
+    inequalities, equalities = _build_constraints(cell)
+    primal = certificate["primal"]
+    _require(primal["gram_order"] == 10, "Gram order")
+    _require(primal["function_value_count"] == 9, "value count")
+    _require(primal["inequality_count"] == len(inequalities), "inequality count")
+    _require(primal["equality_count"] == len(equalities), "equality count")
     _require(
-        declaration["nonquadratic_realization"]
-        == "f(t)=9*t^2/20+log(cosh(t))/10",
-        "nonquadratic realization",
+        primal["objective"] == "maximize signed cell-feasibility margin tau",
+        "primal objective",
     )
-    parameters = payload["parameters"]
-    expected_parameters = {
-        "strong_convexity": "9/10",
-        "smoothness": "1",
-        "step_size": "1",
-        "proposal_step": "1",
-        "proposal_norm_lower": "24/25",
-        "proposal_norm_upper": "97/100",
-        "contract_radius": "1/100",
-        "initial_distance_upper": "6/5",
-        "tolerance": "7/50",
-        "derived_trace_bound": "27",
-    }
-    _require(parameters == expected_parameters, "parameters")
-    trace_consequence = (
-        4 * Fraction(6, 5) ** 2
-        + 4 * (Fraction(6, 5) + Fraction(97, 100)) ** 2
-        + Fraction(6, 5) ** 2
-        + Fraction(97, 100) ** 2
-    )
-    _require(trace_consequence < 27, "derived trace bound")
-
-    getcontext().prec = 100
-    gradient = Decimal(9) / Decimal(10) + _tanh(Decimal(1)) / Decimal(10)
-    proposal = -gradient + Decimal(1) / Decimal(100)
-    _require(Decimal("0.96") <= abs(proposal) <= Decimal("0.97"), "realized proposal")
-    _require(abs(proposal + gradient) == Decimal("0.01"), "realized contract")
-    third_derivative = -(
-        Decimal(1) - _tanh(Decimal(1)) ** 2
-    ) * _tanh(Decimal(1)) / Decimal(5)
-    _require(third_derivative < 0, "nonquadratic witness")
-
-    inequalities, equalities = _build_constraints()
-    _require(payload["primal"]["gram_order"] == 10, "Gram order")
-    _require(payload["primal"]["function_value_count"] == 9, "value count")
-    _require(payload["primal"]["inequality_count"] == len(inequalities), "inequality count")
-    _require(payload["primal"]["equality_count"] == len(equalities), "equality count")
-    dual = payload["dual"]
+    dual = certificate["dual"]
     raw_lambdas = dual["inequality_multipliers"]
     raw_nus = dual["equality_multipliers"]
     inequality_names = {item.name for item in inequalities}
@@ -395,6 +381,72 @@ def verify_payload(payload: dict[str, Any], *, root: Path | None = None) -> dict
     )
     _require(objective == Fraction(dual["certified_upper_bound"]), "dual objective")
     _require(objective < 0, "strict cell exclusion")
+    return objective, len(leading_minors)
+
+
+def verify_payload(payload: dict[str, Any], *, root: Path | None = None) -> dict[str, Any]:
+    recorded_hash = payload.get("payload_sha256")
+    unsigned = dict(payload)
+    unsigned.pop("payload_sha256", None)
+    _require(recorded_hash == sha256(_canonical(unsigned)).hexdigest(), "payload hash")
+    _require(payload.get("schema") == SCHEMA, "schema")
+    declaration = payload["declaration"]
+    _require(declaration["cells"] == [list(cell) for cell in BAD_CELLS], "cells")
+    _require(declaration["horizon"] == 3, "horizon")
+    _require(declaration["function_class"] == "F_{9/10,1}", "function class")
+    _require(
+        declaration["nonquadratic_realization"]
+        == "f(t)=9*t^2/20+log(cosh(t))/10",
+        "nonquadratic realization",
+    )
+    _require("terminal squared norms plus tau" in declaration["signed_margin"], "margin")
+    parameters = payload["parameters"]
+    expected_parameters = {
+        "strong_convexity": "9/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "proposal_step": "1",
+        "proposal_norm_lower": "24/25",
+        "proposal_norm_upper": "97/100",
+        "contract_radius": "1/100",
+        "initial_distance_upper": "6/5",
+        "tolerance": "7/50",
+        "derived_trace_bound": "27",
+    }
+    _require(parameters == expected_parameters, "parameters")
+    trace_consequence = (
+        4 * Fraction(6, 5) ** 2
+        + 4 * (Fraction(6, 5) + Fraction(97, 100)) ** 2
+        + Fraction(6, 5) ** 2
+        + Fraction(97, 100) ** 2
+    )
+    _require(trace_consequence < 27, "derived trace bound")
+
+    getcontext().prec = 100
+    gradient = Decimal(9) / Decimal(10) + _tanh(Decimal(1)) / Decimal(10)
+    proposal = -gradient + Decimal(1) / Decimal(100)
+    _require(Decimal("0.96") <= abs(proposal) <= Decimal("0.97"), "realized proposal")
+    _require(abs(proposal + gradient) == Decimal("0.01"), "realized contract")
+    third_derivative = -(
+        Decimal(1) - _tanh(Decimal(1)) ** 2
+    ) * _tanh(Decimal(1)) / Decimal(5)
+    _require(third_derivative < 0, "nonquadratic witness")
+
+    certificates = payload["certificates"]
+    _require(
+        [item["cell"] for item in certificates] == [list(cell) for cell in BAD_CELLS],
+        "certificate order",
+    )
+    verified = [_verify_certificate(item) for item in certificates]
+    bounds = [bound for bound, _ in verified]
+    total_minors = sum(count for _, count in verified)
+    summary = payload["summary"]
+    _require(summary["certificate_count"] == len(BAD_CELLS), "certificate count")
+    _require(summary["total_positive_leading_minors"] == total_minors, "minor count")
+    _require(
+        Fraction(summary["maximum_certified_upper_bound"]) == max(bounds),
+        "maximum upper bound",
+    )
     if root is not None:
         environment = payload["environment"]
         _require(
@@ -405,9 +457,10 @@ def verify_payload(payload: dict[str, Any], *, root: Path | None = None) -> dict
         _require(environment["verifier_sha256"] == _file_hash(Path(__file__)), "verifier hash")
     return {
         "payload_sha256": recorded_hash,
-        "cell": [3, 3],
-        "certified_upper_bound": str(objective),
-        "positive_leading_minors": len(leading_minors),
+        "cells": [list(cell) for cell in BAD_CELLS],
+        "certificate_count": len(BAD_CELLS),
+        "maximum_certified_upper_bound": str(max(bounds)),
+        "positive_leading_minors": total_minors,
     }
 
 
@@ -420,8 +473,8 @@ def main() -> None:
         json.loads(args.payload.read_text(encoding="utf-8")), root=args.root
     )
     print(
-        "VERIFIED: generic nonquadratic H=3 joint-PEP dual, "
-        f"cell {tuple(result['cell'])}, upper bound < 0, "
+        "VERIFIED: generic nonquadratic H=3 joint-PEP dual suite, "
+        f"{result['certificate_count']} cost-violating cells, all upper bounds < 0, "
         f"{result['positive_leading_minors']} positive leading minors"
     )
 

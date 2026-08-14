@@ -21,7 +21,7 @@ from tools.verify_generic_nonquadratic_pep_dual import (  # noqa: E402
 )
 
 
-SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v2"
+SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v3"
 
 
 def _canonical(value: Any) -> bytes:
@@ -139,11 +139,18 @@ def verify_payload(
         "bad-cell count",
     )
     _require([1, 0] not in expected_bad, "certified pair must be cost-safe")
-    _require(certificate["generic_dual_excluded_cell"] == [3, 3], "generic dual cell")
+    _require(certificate["analytic_excluded_cells"] == [], "analytic exclusion ledger")
     _require(
-        certificate["analytic_excluded_cells"]
-        == [cell for cell in expected_bad if cell != [3, 3]],
-        "analytic exclusion ledger",
+        certificate["generic_dual_excluded_cells"] == expected_bad,
+        "generic dual cells",
+    )
+    _require(
+        certificate["generic_dual_certificate_count"] == len(expected_bad),
+        "generic dual count",
+    )
+    _require(
+        certificate["generic_dual_positive_leading_minors"] == 10 * len(expected_bad),
+        "generic dual minors",
     )
     if root is not None:
         generic_payload = json.loads(
@@ -152,7 +159,11 @@ def verify_payload(
             )
         )
         generic_result = verify_generic_dual(generic_payload, root=root)
-        _require(generic_result["cell"] == [3, 3], "generic dual verified cell")
+        _require(generic_result["cells"] == expected_bad, "generic dual verified cells")
+        _require(
+            generic_result["certificate_count"] == len(expected_bad),
+            "generic dual verified count",
+        )
         _require(
             generic_result["payload_sha256"]
             == certificate["generic_dual_payload_sha256"],

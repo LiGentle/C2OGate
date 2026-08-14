@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure and freeze the cost of generic PEP recovery and exact verification."""
+"""Measure and freeze the cost of the ten-cell generic PEP dual suite."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ GENERATOR = ROOT / "experiments" / "generate_generic_pep_dual_certificate.py"
 VERIFIER = ROOT / "tools" / "verify_generic_nonquadratic_pep_dual.py"
 CERTIFICATE = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
 OUTPUT = ROOT / "results" / "certificate_cost_study.json"
-SCHEMA = "c2o-certificate-cost-study-v1"
+SCHEMA = "c2o-certificate-cost-study-v2"
 
 
 def _canonical(value: Any) -> bytes:
@@ -95,7 +95,8 @@ def main() -> None:
         "schema": SCHEMA,
         "declaration": {
             "scope": (
-                "machine-specific wall-clock accounting for one H=3 generic dual; "
+                "machine-specific wall-clock accounting for the complete H=3 "
+                "ten-cell generic dual suite; "
                 "only offline or prepaid reuse is credited"
             ),
             "saved_exact_calls_per_accepted_decision": saved_exact_calls,
@@ -122,7 +123,7 @@ def main() -> None:
     payload["payload_sha256"] = sha256(_canonical(payload)).hexdigest()
     OUTPUT.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(
-        f"FROZEN: generic PEP certificate cost {certificate_seconds:.3f}s; "
+        f"FROZEN: ten-cell generic PEP certificate cost {certificate_seconds:.3f}s; "
         f"60s-oracle break-even {scenarios[-1]['minimum_offline_reuses']} reuse(s)"
     )
 

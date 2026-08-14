@@ -57,13 +57,16 @@ Frozen canonical payload hash:
 
 ## Generic nonquadratic joint-PEP dual
 
-`generic_nonquadratic_pep_dual.json` is a separate exact certificate for the
-generic cost-violating cell `(3,3)` in the horizon-three non-shift,
-nonquadratic acceptance example. Its standard-library verifier reconstructs
-the complete Gram SDP (10 vector atoms, 9 function values, 86 interpolation
-and cell inequalities, and one equality), then checks nonnegative rational
-dual multipliers, exact stationarity, the slack identity, a strictly negative
-dual objective, and ten positive leading principal minors:
+`generic_nonquadratic_pep_dual.json` is a suite of exact certificates for all
+ten cost-violating cells in the horizon-three non-shift, nonquadratic
+acceptance example. Its standard-library verifier independently reconstructs
+each complete Gram SDP (10 vector atoms, 9 function values, 80--86
+interpolation and cell inequalities, and one equality), then checks
+nonnegative rational dual multipliers, exact stationarity, the slack identity,
+a strictly negative dual objective, and ten positive leading principal minors
+per cell. The signed feasibility margin puts the same margin into terminal and
+survival constraints; any attainable cell is feasible at margin zero, so a
+negative dual upper bound safely excludes it.
 
 ```bash
 python tools/verify_generic_nonquadratic_pep_dual.py \
@@ -73,7 +76,7 @@ python tools/verify_generic_nonquadratic_pep_dual.py \
 Expected result:
 
 ```text
-VERIFIED: generic nonquadratic H=3 joint-PEP dual, cell (3, 3), upper bound < 0, 10 positive leading principal minors
+VERIFIED: generic nonquadratic H=3 joint-PEP dual suite, 10 cost-violating cells, all upper bounds < 0, 100 positive leading minors
 ```
 
 The CVXPY--Clarabel run in

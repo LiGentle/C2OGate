@@ -9,7 +9,7 @@ software trust boundary, and technical-review protocol.
 Public repository: <https://github.com/LiGentle/C2OGate>
 
 Versioned MPC review snapshot:
-<https://github.com/LiGentle/C2OGate/releases/tag/v0.1.0>. This immutable Git
+<https://github.com/LiGentle/C2OGate/releases/tag/v0.2.0>. This immutable Git
 tag is suitable for Zenodo import; no DOI is claimed until an archive service
 has actually minted one.
 
@@ -47,7 +47,7 @@ Replay the four independently checkable acceptance artifacts:
 
 Expected summaries:
 
-    VERIFIED: generic nonquadratic H=3 joint-PEP dual, cell (3, 3), upper bound < 0, 10 positive leading minors
+    VERIFIED: generic nonquadratic H=3 joint-PEP dual suite, 10 cost-violating cells, all upper bounds < 0, 100 positive leading minors
     VERIFIED: 3 instances, 9 rational SDP dual certificates, 87 exact principal minors
     VERIFIED: ill-conditioned real-SPX certificate, dimension 10, calls 7840->3803, condition lower bound > 1325.96
     VERIFIED: nonquadratic joint PEP acceptance, exact pair (1,0), 10 cost-violating cells excluded
@@ -63,8 +63,8 @@ expected run times, raw-data limitation, and directory map.
 
 - Complete structured and generic horizon-20 cell enumerations.
 - One exact non-shift, nonquadratic horizon-three acceptance over the declared
-  function class, including a recovered rational Gram-SDP dual for cell
-  `(3,3)` and exact contraction exclusions for the other bad cells.
+  function class, including independently replayed rational Gram-SDP duals for
+  all ten cost-violating cells and 100 exact positive-minor checks.
 - Three rational quadratic instances containing nine exact SDP duals and 87
   exact principal-minor checks.
 - A frozen audit over 2,000 transcript-consistent quadratic families.
@@ -100,7 +100,7 @@ modeling language or production optimizer. Generic long-horizon floating
 statuses are diagnostic only; the proof-carrying aggregator returns
 `uncertified` unless a bad-cell witness or every exclusion is independently
 verified. The nonquadratic accepted instance has horizon three and includes
-one recovered generic Gram-SDP dual. The positive real-SPX instance reveals
+ten recovered generic Gram-SDP duals. The positive real-SPX instance reveals
 its full rational quadratic.
 
 The software and supporting research artifact are released under the MIT

@@ -28,7 +28,7 @@ from tools.verify_generic_nonquadratic_pep_dual import (  # noqa: E402
 )
 
 
-SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v2"
+SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v3"
 GENERIC_DUAL = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
 
 
@@ -153,16 +153,16 @@ def main() -> None:
     ]
     generic_dual_payload = json.loads(GENERIC_DUAL.read_text(encoding="utf-8"))
     generic_dual_result = verify_generic_dual(generic_dual_payload, root=ROOT)
-    generic_dual_cell = generic_dual_result["cell"]
-    if generic_dual_cell not in bad_cells:
-        raise RuntimeError("the recovered generic dual must exclude a bad cell")
-    analytic_bad_cells = [cell for cell in bad_cells if cell != generic_dual_cell]
+    generic_dual_cells = generic_dual_result["cells"]
+    if generic_dual_cells != bad_cells:
+        raise RuntimeError("the recovered generic dual suite must exclude every bad cell")
     payload: dict[str, Any] = {
         "schema": SCHEMA,
         "declaration": (
             "A non-shift, nonquadratic realized instance is accepted by an H=3 "
-            "joint PEP gate. A recovered rational Gram-SDP dual excludes cell "
-            "(3,3), and exact contraction bounds exclude the remaining bad cells."
+            "joint PEP gate. Ten recovered rational Gram-SDP duals exclude all "
+            "cost-violating cells; contraction bounds separately validate the "
+            "realized stopping pair."
         ),
         "function": {
             "formula": "f(t)=9*t^2/20+log(cosh(t))/10",
@@ -194,8 +194,14 @@ def main() -> None:
             "strict_pair": [1, 0],
             "cost_violating_cells": bad_cells,
             "excluded_cost_violating_cell_count": len(bad_cells),
-            "analytic_excluded_cells": analytic_bad_cells,
-            "generic_dual_excluded_cell": generic_dual_cell,
+            "analytic_excluded_cells": [],
+            "generic_dual_excluded_cells": generic_dual_cells,
+            "generic_dual_certificate_count": generic_dual_result[
+                "certificate_count"
+            ],
+            "generic_dual_positive_leading_minors": generic_dual_result[
+                "positive_leading_minors"
+            ],
             "generic_dual_payload_sha256": generic_dual_result["payload_sha256"],
         },
         "pep_enumeration": {

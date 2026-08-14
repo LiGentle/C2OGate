@@ -1,6 +1,6 @@
 {
-  "schema": "c2o-nonlinear-joint-pep-acceptance-v2",
-  "declaration": "A non-shift, nonquadratic realized instance is accepted by an H=3 joint PEP gate. A recovered rational Gram-SDP dual excludes cell (3,3), and exact contraction bounds exclude the remaining bad cells.",
+  "schema": "c2o-nonlinear-joint-pep-acceptance-v3",
+  "declaration": "A non-shift, nonquadratic realized instance is accepted by an H=3 joint PEP gate. Ten recovered rational Gram-SDP duals exclude all cost-violating cells; contraction bounds separately validate the realized stopping pair.",
   "function": {
     "formula": "f(t)=9*t^2/20+log(cosh(t))/10",
     "gradient": "f'(t)=9*t/10+tanh(t)/10",
@@ -85,7 +85,8 @@
       ]
     ],
     "excluded_cost_violating_cell_count": 10,
-    "analytic_excluded_cells": [
+    "analytic_excluded_cells": [],
+    "generic_dual_excluded_cells": [
       [
         0,
         0
@@ -121,13 +122,15 @@
       [
         2,
         3
+      ],
+      [
+        3,
+        3
       ]
     ],
-    "generic_dual_excluded_cell": [
-      3,
-      3
-    ],
-    "generic_dual_payload_sha256": "4d383dc56ff5751761f7dc86cffd39d351ed255c6bcd2daf5ef6b3a63345766f"
+    "generic_dual_certificate_count": 10,
+    "generic_dual_positive_leading_minors": 100,
+    "generic_dual_payload_sha256": "538b08d7ef2c58156a3c42228307a6f236b75ca285ed25becc6470df7cf1505d"
   },
   "pep_enumeration": {
     "cell_count": 16,
@@ -262,13 +265,13 @@
   },
   "environment": {
     "python": "3.13.5",
-    "runner_sha256": "f91d99b6890710d00d10a3bbba4987a468ea240aae48d0a6b3016207005a3315",
-    "verifier_sha256": "31737c194f6f60c9f6c0078d8097f42baf137fb8d0ac6def9e2c7ad7df608811",
-    "generic_dual_file_sha256": "0e38c49ff56d6132d505f1c87ce94edb3f1c9fbfdbe793e21700256d8cdb8ddc",
+    "runner_sha256": "048d34902e610b6528a0d72fb38d371c6508562f203aa5a8e6034a153f7f1545",
+    "verifier_sha256": "27f6904e39dcfa3b95b68b17ec730ea6955f5d652e0e33c53e3b74d5d1cec23c",
+    "generic_dual_file_sha256": "ff95ce5f1c6176c3859b75445dd3171f38de3f32f0e7edd55969a0710e629ab1",
     "source_sha256": {
       "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d",
-      "experiments/run_transcript_pep_study.py": "96d1890b754a52e3d65004fba29fe094db7ce291098638219c87566370d4f5ab"
+      "experiments/run_transcript_pep_study.py": "6c0314b9aca7b55c1e085fba50cc8de06fab6c61ca7514acbeb7b43394edf31f"
     }
   },
-  "payload_sha256": "18eff08a9920854fea79a844c20d7293f7a2179023ffb9e50534f6ad9646ac08"
+  "payload_sha256": "e2f5d2995ab36832852e088370c7e18e1f6cf7b263d45e1b7b41aa89e1f3ccac"
 }

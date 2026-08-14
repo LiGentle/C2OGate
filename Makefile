@@ -1,7 +1,12 @@
-PYTHON ?= python
+PYTHON ?= python3
 PEP_PYTHONPATH ?= /tmp/c2o-mpc-deps:src
 
-.PHONY: study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual nonlinear-pep-acceptance certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
+.PHONY: check-python study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual nonlinear-pep-acceptance certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
+
+check-python:
+	@$(PYTHON) -c 'import sys; required=(3, 11); current=sys.version_info[:2]; sys.exit("C2OGate requires Python 3.11 or later; found %d.%d" % current) if current < required else print("Python version check: %d.%d" % current)'
+
+study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual nonlinear-pep-acceptance certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates test verify mpc-paper check: check-python
 
 study:
 	$(PYTHON) experiments/run_study.py

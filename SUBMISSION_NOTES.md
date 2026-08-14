@@ -21,28 +21,24 @@ e0622340@u.nus.edu
 
 ## Abstract
 
-We present C2OGate, a proof-carrying computational architecture for deciding
+We present C2OGate, a proof-carrying method for deciding
 whether a secondary-oracle candidate reduces all-in expensive-oracle cost
-relative to an unchanged baseline. Conditioning on one first-order transcript,
-it couples both continuations on the same unknown function, enumerates their
-joint stopping-time cells, and represents each cell over smooth strongly convex
-functions by a dimension-free Gram SDP. Acceptance requires independently
-verified exclusion of every cost-violating cell; a verified attainable bad cell
-rejects, and every unresolved numerical status returns uncertified. We prove
-the finite reduction, characterize the fixed-dimension rank qualification, and
-show that independent marginal call bounds can be arbitrarily conservative
-even for one-dimensional quadratics. The artifact includes a non-shift,
-nonquadratic H=3 acceptance whose proof ledger contains a recovered rational
-dual for a generic Gram-SDP cell: a standard-library verifier reconstructs the
-SDP, checks a negative dual upper bound, and proves ten positive leading
-principal minors. A generic H=20 run is reported only as solver-witnessed
-diagnostic evidence, not scalable proof-carrying acceptance. A 2,000-family
-quadratic audit is explicitly a constructed finite proxy, and the
-full-revelation real-SPX quadratic is a constant-and-cost-pipeline stress test
-rather than a short-transcript PEP result. Measured certificate cost is charged
-separately and is self-financing only for sufficiently expensive calls or
-offline reuse. All guarantees remain conditional on certified transcripts,
-oracle contracts, dimensions, and cost units.
+relative to an unchanged baseline. Conditioned on a first-order transcript,
+the method couples both continuations on the same unknown function, enumerates
+their joint stopping-time cells, and represents each cell over smooth strongly
+convex functions by a dimension-free Gram SDP. It accepts only after
+independently verified exclusion of every cost-violating cell; a verified
+attainable bad cell rejects, and unresolved numerical evidence returns
+uncertified. We prove the finite reduction, its fixed-dimension rank
+qualification, the maximality of the resulting robust gate, and an unbounded
+gap for independent marginal call bounds even on one-dimensional quadratics.
+In a non-shift, nonquadratic H=3 instance, all ten cost-violating cells are
+excluded by exact rational SDP duals; a standard-library verifier reconstructs
+every SDP and checks 100 positive leading principal minors. A generic H=20
+audit solves 231 bad-cell SDPs but remains uncertified, delimiting the current
+scalability of exact dual recovery. Measured certificate cost is charged
+explicitly and is self-financing only for sufficiently expensive calls or
+offline reuse.
 
 ## Keywords
 

@@ -66,7 +66,8 @@ unresolved condition returns `uncertified`, never `accept`.
 
 The generic horizon-20 floating audit is therefore diagnostic and has
 proof-carrying outcome `uncertified`. The separate horizon-three payload
-contains the recovered rational dual for generic cell `(3,3)`.
+contains independently replayed rational duals for all ten cost-violating
+generic cells and 100 exact positive leading-minor checks.
 
 ## Directory map
 

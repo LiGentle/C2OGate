@@ -5,7 +5,7 @@
     "scope": "the H>=20 result is structure-exploiting and is not a generic dense-PEP scalability claim"
   },
   "dense_reference": {
-    "elapsed_seconds": 12.265671959146857,
+    "elapsed_seconds": 12.41068825032562,
     "formulation": "dense two-trajectory joint PEP",
     "horizon": 5,
     "maximum_gram_order": 14,
@@ -17,13 +17,13 @@
   },
   "environment": {
     "cvxpy": "1.9.2",
-    "dense_runner_sha256": "96d1890b754a52e3d65004fba29fe094db7ce291098638219c87566370d4f5ab",
+    "dense_runner_sha256": "6c0314b9aca7b55c1e085fba50cc8de06fab6c61ca7514acbeb7b43394edf31f",
     "numpy": "2.5.2",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
     "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
     "runner_sha256": "87d2c7ca64e3d5d86d3a54e0ce852f774fc838a8cc5f212fbd24fbff72f0385a"
   },
-  "payload_sha256": "cbb86a6048490b1454216df973dd0ab3240a8ff38b53f7c8ffaee6d7cf9eb0e4",
+  "payload_sha256": "b1657bf11437d56fd8a65f736de2b05708e97675ca644a8df4483eb58cfaad87",
   "reduced_horizons": [
     {
       "cells": [
@@ -33,8 +33,8 @@
           "gram_order": 3,
           "hybrid_calls": 0,
           "interpolation_point_count": 3,
-          "setup_seconds": 0.0015168748795986176,
-          "solve_seconds": 0.009649042040109634,
+          "setup_seconds": 0.0015179580077528954,
+          "solve_seconds": 0.009781332686543465,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": 0.5118469538609791
@@ -45,8 +45,8 @@
           "gram_order": 4,
           "hybrid_calls": 1,
           "interpolation_point_count": 4,
-          "setup_seconds": 0.0024610841646790504,
-          "solve_seconds": 0.017540959175676107,
+          "setup_seconds": 0.0025412081740796566,
+          "solve_seconds": 0.01671804115176201,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.01642890065096741
@@ -57,8 +57,8 @@
           "gram_order": 5,
           "hybrid_calls": 2,
           "interpolation_point_count": 5,
-          "setup_seconds": 0.00401120912283659,
-          "solve_seconds": 0.026042208075523376,
+          "setup_seconds": 0.004241958260536194,
+          "solve_seconds": 0.02565708290785551,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.0909222319778418
@@ -69,8 +69,8 @@
           "gram_order": 6,
           "hybrid_calls": 3,
           "interpolation_point_count": 6,
-          "setup_seconds": 0.006377832964062691,
-          "solve_seconds": 0.03719545807689428,
+          "setup_seconds": 0.006395082920789719,
+          "solve_seconds": 0.037181875202804804,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.11048206640736609
@@ -81,8 +81,8 @@
           "gram_order": 7,
           "hybrid_calls": 4,
           "interpolation_point_count": 7,
-          "setup_seconds": 0.00841816607862711,
-          "solve_seconds": 0.050630207639187574,
+          "setup_seconds": 0.008194957859814167,
+          "solve_seconds": 0.05096212541684508,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.1183261778721631
@@ -93,8 +93,8 @@
           "gram_order": 8,
           "hybrid_calls": 5,
           "interpolation_point_count": 8,
-          "setup_seconds": 0.010724000167101622,
-          "solve_seconds": 0.09242529096081853,
+          "setup_seconds": 0.011063375044614077,
+          "solve_seconds": 0.09085870813578367,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.12216279630567523
@@ -105,8 +105,8 @@
           "gram_order": 9,
           "hybrid_calls": 6,
           "interpolation_point_count": 9,
-          "setup_seconds": 0.014474041759967804,
-          "solve_seconds": 0.08712762501090765,
+          "setup_seconds": 0.01426020823419094,
+          "solve_seconds": 0.08709712512791157,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.12427491398668382
@@ -117,8 +117,8 @@
           "gram_order": 10,
           "hybrid_calls": 7,
           "interpolation_point_count": 10,
-          "setup_seconds": 0.017793042119592428,
-          "solve_seconds": 0.10990795912221074,
+          "setup_seconds": 0.01799412490800023,
+          "solve_seconds": 0.10954175004735589,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.1255332967735796
@@ -129,8 +129,8 @@
           "gram_order": 11,
           "hybrid_calls": 8,
           "interpolation_point_count": 11,
-          "setup_seconds": 0.021489417180418968,
-          "solve_seconds": 0.1337951673194766,
+          "setup_seconds": 0.021031292155385017,
+          "solve_seconds": 0.1321908333338797,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.12632668029569444
@@ -141,14 +141,14 @@
           "gram_order": 12,
           "hybrid_calls": 9,
           "interpolation_point_count": 12,
-          "setup_seconds": 0.02522474993020296,
-          "solve_seconds": 0.1969807082787156,
+          "setup_seconds": 0.024909792002290487,
+          "solve_seconds": 0.19614266604185104,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.12684856889706392
         }
       ],
-      "elapsed_seconds": 0.8894841661676764,
+      "elapsed_seconds": 0.8832315830513835,
       "formulation": "exact-shift reduced one-trajectory PEP",
       "horizon": 10,
       "maximum_gram_order": 12,
@@ -166,8 +166,8 @@
       "positive_margin_cell_count": 1,
       "solved_sdp_cell_count": 10,
       "structurally_excluded_cell_count": 111,
-      "total_setup_seconds": 0.11249041836708784,
-      "total_solve_seconds": 0.7612946256995201
+      "total_setup_seconds": 0.11214995756745338,
+      "total_solve_seconds": 0.7561315400525928
     },
     {
       "cells": [
@@ -177,8 +177,8 @@
           "gram_order": 3,
           "hybrid_calls": 0,
           "interpolation_point_count": 3,
-          "setup_seconds": 0.0014986656606197357,
-          "solve_seconds": 0.009866207838058472,
+          "setup_seconds": 0.0018521249294281006,
+          "solve_seconds": 0.010614959057420492,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": 0.5953157958661316
@@ -189,8 +189,8 @@
           "gram_order": 4,
           "hybrid_calls": 1,
           "interpolation_point_count": 4,
-          "setup_seconds": 0.0026465002447366714,
-          "solve_seconds": 0.01690095802769065,
+          "setup_seconds": 0.002564708236604929,
+          "solve_seconds": 0.016530958004295826,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": 0.0670399415604067
@@ -201,8 +201,8 @@
           "gram_order": 5,
           "hybrid_calls": 2,
           "interpolation_point_count": 5,
-          "setup_seconds": 0.004190749954432249,
-          "solve_seconds": 0.02565504191443324,
+          "setup_seconds": 0.004027540795505047,
+          "solve_seconds": 0.02512749982997775,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.007453389477015374
@@ -213,8 +213,8 @@
           "gram_order": 6,
           "hybrid_calls": 3,
           "interpolation_point_count": 6,
-          "setup_seconds": 0.006197832990437746,
-          "solve_seconds": 0.03668758273124695,
+          "setup_seconds": 0.006062249653041363,
+          "solve_seconds": 0.037205207627266645,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.027013224236135443
@@ -225,8 +225,8 @@
           "gram_order": 7,
           "hybrid_calls": 4,
           "interpolation_point_count": 7,
-          "setup_seconds": 0.008390583097934723,
-          "solve_seconds": 0.05038166604936123,
+          "setup_seconds": 0.008196250069886446,
+          "solve_seconds": 0.04943420831114054,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.034857335714008585
@@ -237,8 +237,8 @@
           "gram_order": 8,
           "hybrid_calls": 5,
           "interpolation_point_count": 8,
-          "setup_seconds": 0.011873125098645687,
-          "solve_seconds": 0.06811850005760789,
+          "setup_seconds": 0.010920584201812744,
+          "solve_seconds": 0.06608962500467896,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.03869395293665573
@@ -249,8 +249,8 @@
           "gram_order": 9,
           "hybrid_calls": 6,
           "interpolation_point_count": 9,
-          "setup_seconds": 0.014409249648451805,
-          "solve_seconds": 0.08472908288240433,
+          "setup_seconds": 0.015029167290776968,
+          "solve_seconds": 0.08611216582357883,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04080607182518611
@@ -261,8 +261,8 @@
           "gram_order": 10,
           "hybrid_calls": 7,
           "interpolation_point_count": 10,
-          "setup_seconds": 0.017667707987129688,
-          "solve_seconds": 0.1104738749563694,
+          "setup_seconds": 0.01708958437666297,
+          "solve_seconds": 0.10927879204973578,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04206445417175613
@@ -273,8 +273,8 @@
           "gram_order": 11,
           "hybrid_calls": 8,
           "interpolation_point_count": 11,
-          "setup_seconds": 0.021443292032927275,
-          "solve_seconds": 0.13839408429339528,
+          "setup_seconds": 0.02099208440631628,
+          "solve_seconds": 0.16673895809799433,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04285783762476902
@@ -285,8 +285,8 @@
           "gram_order": 12,
           "hybrid_calls": 9,
           "interpolation_point_count": 12,
-          "setup_seconds": 0.04574266588315368,
-          "solve_seconds": 0.16623037494719028,
+          "setup_seconds": 0.02520541613921523,
+          "solve_seconds": 0.16582387499511242,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04337972728420578
@@ -297,8 +297,8 @@
           "gram_order": 13,
           "hybrid_calls": 10,
           "interpolation_point_count": 13,
-          "setup_seconds": 0.030670833773911,
-          "solve_seconds": 0.19916975032538176,
+          "setup_seconds": 0.030871166847646236,
+          "solve_seconds": 0.199927416164428,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04373450245160771
@@ -309,8 +309,8 @@
           "gram_order": 14,
           "hybrid_calls": 11,
           "interpolation_point_count": 14,
-          "setup_seconds": 0.03693704167380929,
-          "solve_seconds": 0.326195458881557,
+          "setup_seconds": 0.034755249973386526,
+          "solve_seconds": 0.3334215423092246,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04398206148948859
@@ -321,8 +321,8 @@
           "gram_order": 15,
           "hybrid_calls": 12,
           "interpolation_point_count": 15,
-          "setup_seconds": 0.04125995794311166,
-          "solve_seconds": 0.35250474978238344,
+          "setup_seconds": 0.03965358296409249,
+          "solve_seconds": 0.3751344163902104,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04415850125168042
@@ -333,8 +333,8 @@
           "gram_order": 16,
           "hybrid_calls": 13,
           "interpolation_point_count": 16,
-          "setup_seconds": 0.047321584075689316,
-          "solve_seconds": 0.432070208247751,
+          "setup_seconds": 0.04606904089450836,
+          "solve_seconds": 0.4381972090341151,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04428646268763968
@@ -345,14 +345,14 @@
           "gram_order": 17,
           "hybrid_calls": 14,
           "interpolation_point_count": 17,
-          "setup_seconds": 0.052888375241309404,
-          "solve_seconds": 0.4775882503017783,
+          "setup_seconds": 0.05284541705623269,
+          "solve_seconds": 0.4890024997293949,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.04438062384758254
         }
       ],
-      "elapsed_seconds": 2.8804396660998464,
+      "elapsed_seconds": 2.9268123749643564,
       "formulation": "exact-shift reduced one-trajectory PEP",
       "horizon": 15,
       "maximum_gram_order": 17,
@@ -370,8 +370,8 @@
       "positive_margin_cell_count": 2,
       "solved_sdp_cell_count": 15,
       "structurally_excluded_cell_count": 241,
-      "total_setup_seconds": 0.3431381653062999,
-      "total_solve_seconds": 2.494965791236609
+      "total_setup_seconds": 0.3161341678351164,
+      "total_solve_seconds": 2.5686393324285746
     },
     {
       "cells": [
@@ -381,8 +381,8 @@
           "gram_order": 3,
           "hybrid_calls": 0,
           "interpolation_point_count": 3,
-          "setup_seconds": 0.0015111248940229416,
-          "solve_seconds": 0.009585082996636629,
+          "setup_seconds": 0.0017297090962529182,
+          "solve_seconds": 0.009593375027179718,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": 0.6244195814995732
@@ -393,8 +393,8 @@
           "gram_order": 4,
           "hybrid_calls": 1,
           "interpolation_point_count": 4,
-          "setup_seconds": 0.0028807497583329678,
-          "solve_seconds": 0.03850229177623987,
+          "setup_seconds": 0.0027122502215206623,
+          "solve_seconds": 0.04026983305811882,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": 0.09614372583612432
@@ -405,8 +405,8 @@
           "gram_order": 5,
           "hybrid_calls": 2,
           "interpolation_point_count": 5,
-          "setup_seconds": 0.004302582703530788,
-          "solve_seconds": 0.0249909576959908,
+          "setup_seconds": 0.004198125097900629,
+          "solve_seconds": 0.02551808301359415,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": 0.021650395992333597
@@ -417,8 +417,8 @@
           "gram_order": 6,
           "hybrid_calls": 3,
           "interpolation_point_count": 6,
-          "setup_seconds": 0.006763041950762272,
-          "solve_seconds": 0.03731212532147765,
+          "setup_seconds": 0.005909125320613384,
+          "solve_seconds": 0.03632887499406934,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": 0.002090562021035139
@@ -429,8 +429,8 @@
           "gram_order": 7,
           "hybrid_calls": 4,
           "interpolation_point_count": 7,
-          "setup_seconds": 0.008358791936188936,
-          "solve_seconds": 0.05084795784205198,
+          "setup_seconds": 0.00812183367088437,
+          "solve_seconds": 0.04932666663080454,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.0057535501159974535
@@ -441,8 +441,8 @@
           "gram_order": 8,
           "hybrid_calls": 5,
           "interpolation_point_count": 8,
-          "setup_seconds": 0.011023333761841059,
-          "solve_seconds": 0.0674267909489572,
+          "setup_seconds": 0.011409709230065346,
+          "solve_seconds": 0.06853554211556911,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.009590168307252137
@@ -453,8 +453,8 @@
           "gram_order": 9,
           "hybrid_calls": 6,
           "interpolation_point_count": 9,
-          "setup_seconds": 0.014086041133850813,
-          "solve_seconds": 0.08841487532481551,
+          "setup_seconds": 0.014142250176519156,
+          "solve_seconds": 0.08789579197764397,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.011702286085499952
@@ -465,8 +465,8 @@
           "gram_order": 10,
           "hybrid_calls": 7,
           "interpolation_point_count": 10,
-          "setup_seconds": 0.01802608324214816,
-          "solve_seconds": 0.10939045809209347,
+          "setup_seconds": 0.017655166797339916,
+          "solve_seconds": 0.11375174997374415,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.0129606686867222
@@ -477,8 +477,8 @@
           "gram_order": 11,
           "hybrid_calls": 8,
           "interpolation_point_count": 11,
-          "setup_seconds": 0.021361874882131815,
-          "solve_seconds": 0.13830891717225313,
+          "setup_seconds": 0.02154324995353818,
+          "solve_seconds": 0.13516141660511494,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.013754051931399162
@@ -489,8 +489,8 @@
           "gram_order": 12,
           "hybrid_calls": 9,
           "interpolation_point_count": 12,
-          "setup_seconds": 0.04851270793005824,
-          "solve_seconds": 0.16734366584569216,
+          "setup_seconds": 0.048363666981458664,
+          "solve_seconds": 0.1661565420217812,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.014275941585636215
@@ -501,8 +501,8 @@
           "gram_order": 13,
           "hybrid_calls": 10,
           "interpolation_point_count": 13,
-          "setup_seconds": 0.030831041280180216,
-          "solve_seconds": 0.20553108304738998,
+          "setup_seconds": 0.030320791993290186,
+          "solve_seconds": 0.20103337476029992,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.01463071642894375
@@ -513,8 +513,8 @@
           "gram_order": 14,
           "hybrid_calls": 11,
           "interpolation_point_count": 14,
-          "setup_seconds": 0.03505562525242567,
-          "solve_seconds": 0.3305192501284182,
+          "setup_seconds": 0.03465025033801794,
+          "solve_seconds": 0.332482208032161,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.014878275659140823
@@ -525,8 +525,8 @@
           "gram_order": 15,
           "hybrid_calls": 12,
           "interpolation_point_count": 15,
-          "setup_seconds": 0.041105291340500116,
-          "solve_seconds": 0.3443215419538319,
+          "setup_seconds": 0.04006591672077775,
+          "solve_seconds": 0.3601430826820433,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.0150547154774981
@@ -537,8 +537,8 @@
           "gram_order": 16,
           "hybrid_calls": 13,
           "interpolation_point_count": 16,
-          "setup_seconds": 0.04738749982789159,
-          "solve_seconds": 0.4211571249179542,
+          "setup_seconds": 0.04835954215377569,
+          "solve_seconds": 0.4419475831091404,
           "solver": "CLARABEL",
           "status": "optimal_inaccurate",
           "strict_margin": -0.01518267797478011
@@ -549,8 +549,8 @@
           "gram_order": 17,
           "hybrid_calls": 14,
           "interpolation_point_count": 17,
-          "setup_seconds": 0.055305249989032745,
-          "solve_seconds": 0.4791179592721164,
+          "setup_seconds": 0.052312417421489954,
+          "solve_seconds": 0.49272583331912756,
           "solver": "CLARABEL",
           "status": "optimal_inaccurate",
           "strict_margin": -0.015276839592114656
@@ -561,8 +561,8 @@
           "gram_order": 18,
           "hybrid_calls": 15,
           "interpolation_point_count": 18,
-          "setup_seconds": 0.08456695871427655,
-          "solve_seconds": 0.5562882907688618,
+          "setup_seconds": 0.08630550000816584,
+          "solve_seconds": 0.5543300830759108,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.015346978175858127
@@ -573,8 +573,8 @@
           "gram_order": 19,
           "hybrid_calls": 16,
           "interpolation_point_count": 19,
-          "setup_seconds": 0.06704429211094975,
-          "solve_seconds": 0.7227054592221975,
+          "setup_seconds": 0.06553391693159938,
+          "solve_seconds": 0.7382805831730366,
           "solver": "CLARABEL",
           "status": "optimal_inaccurate",
           "strict_margin": -0.015399769543788081
@@ -585,8 +585,8 @@
           "gram_order": 20,
           "hybrid_calls": 17,
           "interpolation_point_count": 20,
-          "setup_seconds": 0.0736677497625351,
-          "solve_seconds": 0.7829074580222368,
+          "setup_seconds": 0.0734726251102984,
+          "solve_seconds": 0.8168840408325195,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.015439859205671973
@@ -597,8 +597,8 @@
           "gram_order": 21,
           "hybrid_calls": 18,
           "interpolation_point_count": 21,
-          "setup_seconds": 0.08529512537643313,
-          "solve_seconds": 0.8924149172380567,
+          "setup_seconds": 0.0834353337995708,
+          "solve_seconds": 0.9106857092119753,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.015470535786353
@@ -609,14 +609,14 @@
           "gram_order": 22,
           "hybrid_calls": 19,
           "interpolation_point_count": 22,
-          "setup_seconds": 0.09047870803624392,
-          "solve_seconds": 1.0203400002792478,
+          "setup_seconds": 0.08802099991589785,
+          "solve_seconds": 0.993675334379077,
           "solver": "CLARABEL",
           "status": "optimal",
           "strict_margin": -0.015494165906466179
         }
       ],
-      "elapsed_seconds": 7.325925916898996,
+      "elapsed_seconds": 7.405771417077631,
       "formulation": "exact-shift reduced one-trajectory PEP",
       "horizon": 20,
       "maximum_gram_order": 22,
@@ -634,8 +634,8 @@
       "positive_margin_cell_count": 4,
       "solved_sdp_cell_count": 20,
       "structurally_excluded_cell_count": 421,
-      "total_setup_seconds": 0.7475638738833368,
-      "total_solve_seconds": 6.48742620786652
+      "total_setup_seconds": 0.738262380938977,
+      "total_solve_seconds": 6.574725707992911
     }
   ],
   "schema": "c2o-pep-scaling-study-v1"

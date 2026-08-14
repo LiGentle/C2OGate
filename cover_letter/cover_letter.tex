@@ -50,11 +50,13 @@ reductions, gives the fixed-dimension rank qualification, and shows that
 separate marginal call bounds can be arbitrarily more conservative even within
 one-dimensional quadratics.
 
-The central new computational demonstration is a non-shift, nonquadratic
-horizon-three acceptance whose ledger includes a recovered rational dual for a
-generic Gram-SDP cell.  A standard-library verifier reconstructs the complete
-cell, checks exact dual stationarity and a negative upper bound, and proves ten
-positive leading principal minors.  The generic horizon-20 study is labeled
+The central computational demonstration is a non-shift, nonquadratic
+horizon-three acceptance whose ledger includes recovered rational duals for
+all ten cost-violating generic Gram-SDP cells.  A standard-library verifier
+reconstructs every cell, checks exact dual stationarity and a negative upper
+bound, and proves 100 positive leading principal minors.  Thus SDP computation,
+rather than an analytic contraction argument, carries the acceptance proof.
+The generic horizon-20 study is labeled
 only as a floating diagnostic with proof-carrying outcome
 \emph{uncertified}.  The paper also benchmarks two- and four-bin correlation-
 aware summaries on 2,000 constructed finite proxy families, measures the

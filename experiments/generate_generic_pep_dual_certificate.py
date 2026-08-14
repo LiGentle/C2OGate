@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recover an exact dual for one generic nonquadratic joint-PEP cell."""
+"""Recover exact duals for ten generic nonquadratic joint-PEP cells."""
 
 from __future__ import annotations
 
@@ -17,7 +17,19 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
 VERIFIER = ROOT / "tools" / "verify_generic_nonquadratic_pep_dual.py"
-SCHEMA = "c2o-generic-nonquadratic-pep-dual-v1"
+SCHEMA = "c2o-generic-nonquadratic-pep-dual-v2"
+BAD_CELLS = [
+    (0, 0),
+    (0, 1),
+    (0, 2),
+    (0, 3),
+    (1, 1),
+    (1, 2),
+    (1, 3),
+    (2, 2),
+    (2, 3),
+    (3, 3),
+]
 
 
 Matrix = list[list[Fraction]]
@@ -134,15 +146,21 @@ def _matrix_to_json(matrix: Matrix) -> list[list[str]]:
     return [[str(value) for value in row] for row in matrix]
 
 
-def _build_problem() -> tuple[
+def _build_problem(
+    cell: tuple[int, int] = (3, 3),
+    *,
+    signed_terminal_margin: bool = False,
+) -> tuple[
     cp.Problem,
     list[LinearConstraint],
     list[LinearConstraint],
     list[cp.Constraint],
     list[cp.Constraint],
 ]:
-    baseline_calls = 3
-    hybrid_calls = 3
+    horizon = 3
+    baseline_calls, hybrid_calls = cell
+    if not (0 <= baseline_calls <= horizon and 0 <= hybrid_calls <= horizon):
+        raise ValueError(f"cell outside horizon: {cell}")
     mu = Fraction(9, 10)
     smoothness = Fraction(1)
     step_size = Fraction(1)
@@ -153,8 +171,8 @@ def _build_problem() -> tuple[
     initial_distance_upper = Fraction(6, 5)
     tolerance = Fraction(7, 50)
 
-    baseline_size = baseline_calls + 1
-    hybrid_size = hybrid_calls + 1
+    baseline_size = horizon + 1
+    hybrid_size = horizon + 1
     atom_count = baseline_size + hybrid_size + 2
     value_count = baseline_size + hybrid_size + 1
     gram = cp.Variable((atom_count, atom_count), symmetric=True)
@@ -280,12 +298,22 @@ def _build_problem() -> tuple[
     tolerance_squared = tolerance**2
     add_inequality(
         "baseline_terminal",
-        _symmetric_outer(baseline_gradients[-1], baseline_gradients[-1]),
+        _symmetric_outer(
+            baseline_gradients[baseline_calls], baseline_gradients[baseline_calls]
+        ),
+        margin_coefficient=(
+            Fraction(1) if signed_terminal_margin else Fraction(0)
+        ),
         rhs=tolerance_squared,
     )
     add_inequality(
         "hybrid_terminal",
-        _symmetric_outer(hybrid_gradients[-1], hybrid_gradients[-1]),
+        _symmetric_outer(
+            hybrid_gradients[hybrid_calls], hybrid_gradients[hybrid_calls]
+        ),
+        margin_coefficient=(
+            Fraction(1) if signed_terminal_margin else Fraction(0)
+        ),
         rhs=tolerance_squared,
     )
     margin_upper = smoothness**2 * (initial_distance_upper + proposal_upper) ** 2
@@ -293,8 +321,8 @@ def _build_problem() -> tuple[
         "margin_upper", margin_coefficient=Fraction(1), rhs=margin_upper
     )
     for label, branch in (
-        ("baseline", baseline_gradients[:-1]),
-        ("hybrid", hybrid_gradients[:-1]),
+        ("baseline", baseline_gradients[:baseline_calls]),
+        ("hybrid", hybrid_gradients[:hybrid_calls]),
     ):
         for index, gradient in enumerate(branch):
             add_inequality(
@@ -439,9 +467,9 @@ def _recover_rational_dual(
     return lambdas, nus, slack, dual_objective
 
 
-def main() -> None:
+def _solve_cell(cell: tuple[int, int]) -> dict[str, Any]:
     problem, inequalities, equalities, cvx_inequalities, cvx_equalities = (
-        _build_problem()
+        _build_problem(cell, signed_terminal_margin=True)
     )
     value = problem.solve(
         solver="CLARABEL",
@@ -487,19 +515,6 @@ def main() -> None:
         multiplier * float(item.rhs)
         for multiplier, item in zip(nus, equalities, strict=True)
     )
-    print(f"status={problem.status} primal={value:.16g} dual={objective:.16g}")
-    print(
-        "stationarity",
-        np.linalg.norm(value_stationarity),
-        margin_stationarity,
-        "slack_eigenvalues",
-        np.linalg.eigvalsh(slack)[:4],
-    )
-    for multiplier, item in sorted(
-        zip(lambdas, inequalities, strict=True), reverse=True, key=lambda pair: pair[0]
-    )[:30]:
-        print(f"{multiplier: .12e} {item.name}")
-    print("equalities", list(zip((item.name for item in equalities), nus, strict=True)))
     rational_lambdas, rational_nus, rational_slack, rational_objective = (
         _recover_rational_dual(inequalities, equalities, lambdas, nus)
     )
@@ -507,15 +522,66 @@ def main() -> None:
         _determinant([row[:order] for row in rational_slack[:order]])
         for order in range(1, len(rational_slack) + 1)
     ]
+    print(
+        f"cell={cell} status={problem.status} primal={value:.9g} "
+        f"dual={objective:.9g} exact={float(rational_objective):.9g} "
+        f"stationarity=({np.linalg.norm(value_stationarity):.2e},"
+        f"{margin_stationarity:.9g}) eigmin={np.linalg.eigvalsh(slack)[0]:.2e}"
+    )
+    return {
+        "cell": list(cell),
+        "primal": {
+            "gram_order": len(rational_slack),
+            "function_value_count": len(inequalities[0].values),
+            "inequality_count": len(inequalities),
+            "equality_count": len(equalities),
+            "objective": "maximize signed cell-feasibility margin tau",
+            "floating_status": problem.status,
+            "floating_objective": float(value),
+        },
+        "dual": {
+            "inequality_multipliers": {
+                item.name: str(multiplier)
+                for item, multiplier in zip(
+                    inequalities, rational_lambdas, strict=True
+                )
+                if multiplier
+            },
+            "equality_multipliers": {
+                item.name: str(multiplier)
+                for item, multiplier in zip(
+                    equalities, rational_nus, strict=True
+                )
+                if multiplier
+            },
+            "slack_matrix": _matrix_to_json(rational_slack),
+            "leading_principal_minors": [str(entry) for entry in leading_minors],
+            "certified_upper_bound": str(rational_objective),
+        },
+    }
+
+
+def main() -> None:
+    certificates = [_solve_cell(cell) for cell in BAD_CELLS]
+    exact_bounds = [
+        Fraction(item["dual"]["certified_upper_bound"]) for item in certificates
+    ]
     payload: dict[str, Any] = {
         "schema": SCHEMA,
         "declaration": {
-            "cell": [3, 3],
+            "cells": [list(cell) for cell in BAD_CELLS],
             "horizon": 3,
             "function_class": "F_{9/10,1}",
             "nonquadratic_realization": "f(t)=9*t^2/20+log(cosh(t))/10",
             "proposal_contract": "24/25 <= ||y-x|| <= 97/100 and ||y-x+g_x|| <= 1/100",
-            "claim": "the generic joint-PEP cell (3,3) has strict-margin optimum below zero",
+            "signed_margin": (
+                "terminal squared norms plus tau are at most epsilon^2; "
+                "survival squared norms are at least epsilon^2 plus tau"
+            ),
+            "claim": (
+                "all ten cost-violating H=3 cells have signed-feasibility "
+                "margin optimum below zero"
+            ),
         },
         "parameters": {
             "strong_convexity": "9/10",
@@ -529,30 +595,15 @@ def main() -> None:
             "tolerance": "7/50",
             "derived_trace_bound": "27",
         },
-        "primal": {
-            "gram_order": len(rational_slack),
-            "function_value_count": len(inequalities[0].values),
-            "inequality_count": len(inequalities),
-            "equality_count": len(equalities),
-            "objective": "maximize strict stopping margin tau",
-            "floating_status": problem.status,
-            "floating_objective": float(value),
+        "summary": {
+            "certificate_count": len(certificates),
+            "total_positive_leading_minors": sum(
+                len(item["dual"]["leading_principal_minors"])
+                for item in certificates
+            ),
+            "maximum_certified_upper_bound": str(max(exact_bounds)),
         },
-        "dual": {
-            "inequality_multipliers": {
-                item.name: str(multiplier)
-                for item, multiplier in zip(inequalities, rational_lambdas, strict=True)
-                if multiplier
-            },
-            "equality_multipliers": {
-                item.name: str(multiplier)
-                for item, multiplier in zip(equalities, rational_nus, strict=True)
-                if multiplier
-            },
-            "slack_matrix": _matrix_to_json(rational_slack),
-            "leading_principal_minors": [str(value) for value in leading_minors],
-            "certified_upper_bound": str(rational_objective),
-        },
+        "certificates": certificates,
         "environment": {
             "generator_sha256": _file_hash(Path(__file__)),
             "verifier_sha256": _file_hash(VERIFIER),
@@ -562,8 +613,9 @@ def main() -> None:
     payload["payload_sha256"] = sha256(_canonical(payload)).hexdigest()
     OUTPUT.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(
-        f"EXACT: objective<0 ({rational_objective}), "
-        f"positive leading minors={len(leading_minors)}, payload={payload['payload_sha256']}"
+        f"EXACT: {len(certificates)} cost-violating cells, "
+        f"{payload['summary']['total_positive_leading_minors']} positive leading "
+        f"minors, max upper={max(exact_bounds)}, payload={payload['payload_sha256']}"
     )
 
 

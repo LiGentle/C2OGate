@@ -14,7 +14,7 @@
     "numpy": "2.5.2",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
     "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
-    "runner_sha256": "96d1890b754a52e3d65004fba29fe094db7ce291098638219c87566370d4f5ab",
+    "runner_sha256": "6c0314b9aca7b55c1e085fba50cc8de06fab6c61ca7514acbeb7b43394edf31f",
     "source_sha256": {
       "src/c2ogate/__init__.py": "77fec144bba4d557d7ba463d5214d4fdb582fb1d0bf874f542fd984540a09738",
       "src/c2ogate/active_set.py": "a99e1bd8813253b54527e0aa1ad01e7cc982cd47d60dd21834732e60ee263a61",
@@ -28,7 +28,7 @@
       "src/c2ogate/workflow.py": "9f1500611a523a53af4871a3be2ff2415a27ba18923041f620141dee046ab902"
     }
   },
-  "payload_sha256": "315b3c7f789c709764a552a70c4daccfe5314e8a6152bc4f699902e3330acbae",
+  "payload_sha256": "0620ad77060fae5f09b979ce62bf29a23c2ad3aa1a7985487b33e5c1def9c18f",
   "pep_audit": {
     "attainable_pairs": [
       [

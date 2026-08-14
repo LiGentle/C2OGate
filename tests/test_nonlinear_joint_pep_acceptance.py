@@ -14,7 +14,7 @@ from tools.verify_nonlinear_joint_pep_acceptance import verify_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "nonlinear_joint_pep_acceptance.json"
-EXPECTED_HASH = "18eff08a9920854fea79a844c20d7293f7a2179023ffb9e50534f6ad9646ac08"
+EXPECTED_HASH = "e2f5d2995ab36832852e088370c7e18e1f6cf7b263d45e1b7b41aa89e1f3ccac"
 
 
 def _load() -> dict:

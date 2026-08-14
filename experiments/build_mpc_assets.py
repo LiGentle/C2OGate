@@ -183,6 +183,15 @@ def main() -> None:
         and row["sketch_stride"] == 10
         and row["tolerance_power"] == 10
     )
+    proxy_horizons = sorted(
+        max(max(pair) for pair in record["pairs"])
+        for record in payload["records"]
+    )
+    proxy_horizon_median = (
+        proxy_horizons[len(proxy_horizons) // 2 - 1]
+        + proxy_horizons[len(proxy_horizons) // 2]
+    ) / 2
+    proxy_horizon_p90 = proxy_horizons[ceil(0.9 * len(proxy_horizons)) - 1]
     metrics = {
         "TranscriptCases": f"{summary['case_count']:,}",
         "JointAcceptCount": str(summary["joint_accept_count"]),
@@ -204,6 +213,14 @@ def main() -> None:
         "PepAmbiguousCells": str(summary["pep_numerically_ambiguous_cell_count"]),
         "PepOffShiftCells": str(summary["pep_off_shift_attainable_count"]),
         "TranscriptPayloadHash": payload["payload_sha256"],
+        "ProxyHorizonMin": str(proxy_horizons[0]),
+        "ProxyHorizonMedian": f"{proxy_horizon_median:.0f}",
+        "ProxyHorizonNinety": str(proxy_horizon_p90),
+        "ProxyHorizonMax": str(proxy_horizons[-1]),
+        "ProxyHorizonAtMostTwenty": str(
+            sum(horizon <= 20 for horizon in proxy_horizons)
+        ),
+        "ProxyNominalCells": f"{sum((horizon + 1) ** 2 for horizon in proxy_horizons):,}",
         "JointPolicyMeanRatio": f"{summary['joint_policy_cost_ratio']['mean']:.3f}",
         "JointPolicyMedianRatio": (
             f"{summary['joint_policy_cost_ratio']['median']:.3f}"
@@ -284,10 +301,13 @@ def main() -> None:
         ),
         "NonlinearPepPayloadHash": nonlinear_pep_payload["payload_sha256"],
         "GenericDualUpper": (
-            f"{float(Fraction(generic_dual_payload['dual']['certified_upper_bound'])):.6f}"
+            f"{float(Fraction(generic_dual_payload['summary']['maximum_certified_upper_bound'])):.6f}"
+        ),
+        "GenericDualCertificates": str(
+            generic_dual_payload["summary"]["certificate_count"]
         ),
         "GenericDualMinors": str(
-            len(generic_dual_payload["dual"]["leading_principal_minors"])
+            generic_dual_payload["summary"]["total_positive_leading_minors"]
         ),
         "GenericDualPayloadHash": generic_dual_payload["payload_sha256"],
         "CertificateCostSeconds": f"{cost_measurement['total_certificate_seconds']:.3f}",
@@ -370,6 +390,8 @@ def main() -> None:
         "PositiveSpxPayloadHash": real_spx_positive_payload["payload_sha256"],
         "PositiveSpxShortBaselineLower": str(short_baseline_lower),
         "PositiveSpxShortHybridUpper": f"{short_hybrid_upper:,}",
+        "PositiveSpxShortNominalCells": f"{(short_hybrid_upper + 1) ** 2:,}",
+        "PositiveSpxShortGramOrder": f"{2 * (short_hybrid_upper + 1) + 2:,}",
         "SpxSensitivityConfigurations": str(sensitivity["configuration_count"]),
         "SpxSensitivityAccepted": str(sensitivity["accepted_count"]),
         "SpxSensitivityMinRatio": f"{sensitivity['minimum_total_cost_ratio']:.3f}",

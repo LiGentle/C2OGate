@@ -590,16 +590,16 @@ def _summarize(records: list[dict[str, Any]], pep: dict[str, Any]) -> dict[str, 
 
 
 def _plot(records: list[dict[str, Any]], pep: dict[str, Any], output: Path) -> None:
-    fig, axes = plt.subplots(1, 3, figsize=(12.8, 3.65))
+    fig, axes = plt.subplots(1, 3, figsize=(12.8, 4.35))
     cells = pep["cells"]
     horizon = pep["parameters"]["horizon"]
     grid = np.zeros((horizon + 1, horizon + 1))
     for cell in cells:
         grid[cell["hybrid_calls"], cell["baseline_calls"]] = cell["attainable"]
     axes[0].imshow(grid, origin="lower", cmap="Blues", vmin=0.0, vmax=1.0)
-    axes[0].set_xlabel("Baseline stopping time")
-    axes[0].set_ylabel("Hybrid stopping time")
-    axes[0].set_title("Joint PEP cells")
+    axes[0].set_xlabel("Baseline stopping time", fontsize=11)
+    axes[0].set_ylabel("Hybrid stopping time", fontsize=11)
+    axes[0].set_title("Joint PEP cells", fontsize=12)
     axes[0].set_xticks(range(horizon + 1))
     axes[0].set_yticks(range(horizon + 1))
 
@@ -611,10 +611,10 @@ def _plot(records: list[dict[str, Any]], pep: dict[str, Any], output: Path) -> N
         sum(row["joint_accept"] for row in records),
     ]
     axes[1].bar(labels, values, color=["#F58518", "#ECA82C", "#72B7B2", "#4C78A8"])
-    axes[1].set_ylabel("Accepted transcript families")
-    axes[1].set_title("Acceptance coverage")
+    axes[1].set_ylabel("Accepted transcript families", fontsize=11)
+    axes[1].set_title("Acceptance coverage", fontsize=12)
     for index, value in enumerate(values):
-        axes[1].text(index, value + 8, str(value), ha="center")
+        axes[1].text(index, value + 8, str(value), ha="center", fontsize=10)
 
     x_values = [row["worst_joint_difference"] for row in records]
     y_values = [row["rectangle_difference"] for row in records]
@@ -623,9 +623,11 @@ def _plot(records: list[dict[str, Any]], pep: dict[str, Any], output: Path) -> N
     limit_low = min(x_values + y_values)
     limit_high = max(x_values + y_values)
     axes[2].plot([limit_low, limit_high], [limit_low, limit_high], "k--", lw=1)
-    axes[2].set_xlabel("Joint worst call difference")
-    axes[2].set_ylabel("Rectangle difference")
-    axes[2].set_title("Dependence retained")
+    axes[2].set_xlabel("Joint worst call difference", fontsize=11)
+    axes[2].set_ylabel("Rectangle difference", fontsize=11)
+    axes[2].set_title("Dependence retained", fontsize=12)
+    for axis in axes:
+        axis.tick_params(axis="both", labelsize=10)
     fig.tight_layout()
     output.parent.mkdir(parents=True, exist_ok=True)
     for suffix in ("pdf", "png"):
