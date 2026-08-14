@@ -25,7 +25,7 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT_ROOT = ROOT.parent
+PROJECT_ROOT = ROOT.parents[1]
 CHAIN = PROJECT_ROOT / "data" / "market_data" / "spx_options_2026-08-08.csv"
 CHAIN_META = PROJECT_ROOT / "data" / "market_data" / "spx_options_2026-08-08_meta.json"
 OUTPUT = ROOT / "results" / "real_spx_ill_conditioned_study.json"
@@ -317,10 +317,12 @@ def main() -> None:
     exact_gradient_flops = 2.0 * row_count * dimension
     offline_flops = (
         50.0 * row_count * dimension
-        + 2.0 * (row_count + sketch_count) * dimension**2
+        + 6.0 * row_count * dimension**2
         + 30.0 * dimension**3
     )
-    proposal_flops = (2.0 / 3.0) * dimension**3
+    proposal_flops = (
+        2.0 * sketch_count * dimension**2 + (2.0 / 3.0) * dimension**3
+    )
     verification_flops = 2.0 * (baseline_calls + hybrid_calls) * dimension**2
     charged_nonexact_units = (
         offline_flops + proposal_flops + verification_flops
@@ -423,8 +425,8 @@ def main() -> None:
             "minimum_saved_calls": 1,
             "gate_accepts": bool(saved_calls >= 1 and cost_slack >= 0),
             "ledger": (
-                "50nd filtering/features + two full/sketch Gram builds + 30d^3 "
-                "factorization/curvature + proposal solve + sequential replay upper charge"
+                "common ledger: 50nd filtering/features + 6nd^2 panel transforms "
+                "+ 30d^3 factorization/curvature + sketch proposal + sequential replay"
             ),
         },
     }

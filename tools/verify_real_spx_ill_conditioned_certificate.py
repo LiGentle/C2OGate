@@ -422,10 +422,12 @@ def verify_payload(
     exact_gradient_flops = 2.0 * row_count * dimension
     offline_flops = (
         50.0 * row_count * dimension
-        + 2.0 * (row_count + sketch_count) * dimension**2
+        + 6.0 * row_count * dimension**2
         + 30.0 * dimension**3
     )
-    proposal_flops = (2.0 / 3.0) * dimension**3
+    proposal_flops = (
+        2.0 * sketch_count * dimension**2 + (2.0 / 3.0) * dimension**3
+    )
     verification_flops = 2.0 * (baseline_calls + hybrid_calls) * dimension**2
     charged_nonexact = (
         offline_flops + proposal_flops + verification_flops

@@ -1,6 +1,6 @@
 {
-  "schema": "c2o-nonlinear-joint-pep-acceptance-v1",
-  "declaration": "A non-shift, nonquadratic realized instance is accepted by the joint PEP gate. Exact rational contraction bounds, not floating solver statuses, exclude every cost-violating cell.",
+  "schema": "c2o-nonlinear-joint-pep-acceptance-v2",
+  "declaration": "A non-shift, nonquadratic realized instance is accepted by an H=3 joint PEP gate. A recovered rational Gram-SDP dual excludes cell (3,3), and exact contraction bounds exclude the remaining bad cells.",
   "function": {
     "formula": "f(t)=9*t^2/20+log(cosh(t))/10",
     "gradient": "f'(t)=9*t/10+tanh(t)/10",
@@ -17,7 +17,7 @@
     "proposal_norm_lower": "24/25",
     "proposal_norm_upper": "97/100",
     "initial_distance_upper": "6/5",
-    "horizon": 2,
+    "horizon": 3,
     "cost_exact_units": "1/2",
     "minimum_saved_calls": 1
   },
@@ -56,6 +56,10 @@
         2
       ],
       [
+        0,
+        3
+      ],
+      [
         1,
         1
       ],
@@ -64,14 +68,69 @@
         2
       ],
       [
+        1,
+        3
+      ],
+      [
         2,
         2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        3
       ]
     ],
-    "excluded_cost_violating_cell_count": 6
+    "excluded_cost_violating_cell_count": 10,
+    "analytic_excluded_cells": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    "generic_dual_excluded_cell": [
+      3,
+      3
+    ],
+    "generic_dual_payload_sha256": "4d383dc56ff5751761f7dc86cffd39d351ed255c6bcd2daf5ef6b3a63345766f"
   },
   "pep_enumeration": {
-    "cell_count": 9,
+    "cell_count": 16,
     "positive_margin_pairs": [
       [
         1,
@@ -89,7 +148,7 @@
       {
         "baseline_calls": 0,
         "hybrid_calls": 1,
-        "status": "infeasible",
+        "status": "infeasible_inaccurate",
         "strict_margin": null,
         "positive_margin": false
       },
@@ -101,45 +160,94 @@
         "positive_margin": false
       },
       {
+        "baseline_calls": 0,
+        "hybrid_calls": 3,
+        "status": "infeasible_inaccurate",
+        "strict_margin": null,
+        "positive_margin": false
+      },
+      {
         "baseline_calls": 1,
         "hybrid_calls": 0,
         "status": "optimal",
-        "strict_margin": 0.9332876970662546,
+        "strict_margin": 0.9332876727273509,
         "positive_margin": true
       },
       {
         "baseline_calls": 1,
         "hybrid_calls": 1,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.008232991686156757,
+        "strict_margin": -0.008232940289957255,
         "positive_margin": false
       },
       {
         "baseline_calls": 1,
         "hybrid_calls": 2,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.019486330325894242,
+        "strict_margin": -0.019486315245007036,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 1,
+        "hybrid_calls": 3,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.01959886743693757,
         "positive_margin": false
       },
       {
         "baseline_calls": 2,
         "hybrid_calls": 0,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.010071133262218791,
+        "strict_margin": -0.01007103465629646,
         "positive_margin": false
       },
       {
         "baseline_calls": 2,
         "hybrid_calls": 1,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.01007106128342191,
+        "strict_margin": -0.0100711184466207,
         "positive_margin": false
       },
       {
         "baseline_calls": 2,
         "hybrid_calls": 2,
         "status": "optimal_inaccurate",
-        "strict_margin": -0.019486345608127068,
+        "strict_margin": -0.019486328934129177,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 2,
+        "hybrid_calls": 3,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.01959887620886622,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 3,
+        "hybrid_calls": 0,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.01950471475738652,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 3,
+        "hybrid_calls": 1,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.019504711633108792,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 3,
+        "hybrid_calls": 2,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.01950471206064715,
+        "positive_margin": false
+      },
+      {
+        "baseline_calls": 3,
+        "hybrid_calls": 3,
+        "status": "optimal_inaccurate",
+        "strict_margin": -0.01959888718307412,
         "positive_margin": false
       }
     ]
@@ -154,12 +262,13 @@
   },
   "environment": {
     "python": "3.13.5",
-    "runner_sha256": "972ee95a6fcbe97afc336abd3c6829fabc5cf111def470ab0b64cd2998a0e023",
-    "verifier_sha256": "f5dd1def8b5a3ac0f9fb0bfcfbb6916cfed4d57b34e190a08d6e9fd6c27dc755",
+    "runner_sha256": "f91d99b6890710d00d10a3bbba4987a468ea240aae48d0a6b3016207005a3315",
+    "verifier_sha256": "31737c194f6f60c9f6c0078d8097f42baf137fb8d0ac6def9e2c7ad7df608811",
+    "generic_dual_file_sha256": "0e38c49ff56d6132d505f1c87ce94edb3f1c9fbfdbe793e21700256d8cdb8ddc",
     "source_sha256": {
       "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d",
-      "experiments/run_transcript_pep_study.py": "b18d1fde59742589e3f8d7273567020ed6449d7357150c0024ed06b0e480b1ed"
+      "experiments/run_transcript_pep_study.py": "96d1890b754a52e3d65004fba29fe094db7ce291098638219c87566370d4f5ab"
     }
   },
-  "payload_sha256": "5c6ad2fec2ccc86a1ecdc781a0096a6ea6e935a0ad5faa03d5d500d9b1095e67"
+  "payload_sha256": "18eff08a9920854fea79a844c20d7293f7a2179023ffb9e50534f6ad9646ac08"
 }

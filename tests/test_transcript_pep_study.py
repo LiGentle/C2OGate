@@ -34,7 +34,7 @@ def test_transcript_payload_hash_is_self_consistent() -> None:
     recorded = payload.pop("payload_sha256")
     assert sha256(_canonical(payload)).hexdigest() == recorded
     assert recorded == (
-        "11f02b7307069587d760fae9c044eeff8ee235daa5dd9d8cc2ea2119ed53878b"
+        "315b3c7f789c709764a552a70c4daccfe5314e8a6152bc4f699902e3330acbae"
     )
 
 
@@ -59,10 +59,16 @@ def test_joint_gate_retains_dependence_without_certified_violations() -> None:
     assert summary["joint_accept_count"] == 896
     assert summary["rectangle_accept_count"] == 160
     assert summary["joint_only_accept_count"] == 736
+    assert summary["two_bin_accept_count"] == 338
+    assert summary["four_bin_accept_count"] == 487
+    assert summary["two_bin_without_joint_count"] == 0
+    assert summary["four_bin_without_joint_count"] == 0
     assert summary["rectangle_accept_without_joint_count"] == 0
     assert summary["accepted_joint_violation_count"] == 0
     assert summary["joint_policy_cost_ratio"]["mean"] == 0.9948683016716258
     assert summary["rectangle_policy_cost_ratio"]["mean"] == 0.9988441068175596
+    assert summary["two_bin_policy_cost_ratio"]["mean"] == 0.9975966149052984
+    assert summary["four_bin_policy_cost_ratio"]["mean"] == 0.9968052811637943
     assert summary["always_policy_cost_ratio"]["mean"] == 0.9927754269785753
     assert summary["joint_policy_worse_fraction"] == 0.0
     assert summary["rectangle_policy_worse_fraction"] == 0.0
@@ -77,8 +83,14 @@ def test_realized_member_policy_accounting_is_exact() -> None:
         cost = row["cost_exact_units"]
         expected_joint = cost + hybrid if row["joint_accept"] else baseline
         expected_rectangle = cost + hybrid if row["rectangle_accept"] else baseline
+        expected_two_bin = cost + hybrid if row["two_bin_accept"] else baseline
+        expected_four_bin = cost + hybrid if row["four_bin_accept"] else baseline
         assert row["joint_total_cost"] == expected_joint
         assert row["rectangle_total_cost"] == expected_rectangle
+        assert row["two_bin_total_cost"] == expected_two_bin
+        assert row["four_bin_total_cost"] == expected_four_bin
         assert row["always_total_cost"] == cost + hybrid
         assert row["joint_cost_ratio"] <= 1.0 + 1.0e-12
         assert row["rectangle_cost_ratio"] <= 1.0 + 1.0e-12
+        assert row["two_bin_cost_ratio"] <= 1.0 + 1.0e-12
+        assert row["four_bin_cost_ratio"] <= 1.0 + 1.0e-12

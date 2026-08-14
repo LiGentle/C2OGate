@@ -14,9 +14,9 @@ from tools.verify_real_spx_ill_conditioned_certificate import verify_payload
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT_ROOT = ROOT.parent
+PROJECT_ROOT = ROOT.parents[1]
 RESULT = ROOT / "results" / "real_spx_ill_conditioned_study.json"
-EXPECTED_HASH = "5af3c0b51de9f862285bfdab86e524fa6988330e4cfafb0f528066d503437395"
+EXPECTED_HASH = "b8639f38fe2dff33dc14aadf190e81fd012c23594de85742fdd3fa47d02abb19"
 
 
 def _canonical(value: dict) -> bytes:

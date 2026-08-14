@@ -9,9 +9,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT_ROOT = ROOT.parent
+PROJECT_ROOT = ROOT.parents[1]
 RESULT = ROOT / "results" / "real_spx_two_oracle_study.json"
-EXPECTED_HASH = "725cc984cb5a4ff3084ea293750d11bce2aa3beffe3d7d9e547a5b01ac5938c3"
+EXPECTED_HASH = "585dd81579978dc14be1265d4ce7afb1c0a6ccf684be0f184d05c6952c6d2a46"
 
 
 def _canonical(value: dict) -> bytes:

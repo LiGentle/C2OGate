@@ -1,0 +1,369 @@
+{
+  "curvature_misspecification": {
+    "mu_lower": [
+      {
+        "valid": true,
+        "value": "1/800"
+      },
+      {
+        "valid": true,
+        "value": "1/400"
+      },
+      {
+        "valid": false,
+        "value": "1/200"
+      }
+    ],
+    "smoothness_upper": [
+      {
+        "valid": false,
+        "value": "189/50"
+      },
+      {
+        "valid": true,
+        "value": "21/5"
+      },
+      {
+        "valid": true,
+        "value": "231/50"
+      }
+    ]
+  },
+  "declaration": {
+    "common_ledger": "50nd + 6nd^2 + 30d^3 offline, plus sketch/proposal and sequential verification",
+    "grid": "ridge x sketch stride x relative squared tolerance",
+    "ridge_values": [
+      "1/100000",
+      "1/10000",
+      "1/1000"
+    ],
+    "scope": "frozen data-driven sensitivity; not a population study",
+    "sketch_strides": [
+      5,
+      10,
+      20
+    ],
+    "tolerance_powers": [
+      8,
+      10,
+      12
+    ]
+  },
+  "environment": {
+    "helper_sha256": "df1d41671e7076bc57740b85b0073b6c54a009281fc253afee4137092052dd67",
+    "input_sha256": "c554fc8de787c6d96474bd1edb4ebe8045d9ccee42f15fde8f21fd8bbc182a9e",
+    "numpy": "2.5.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
+    "runner_sha256": "1c760dda2786485f12ba87db2bf562640f8ef1ed424b55b254c1e9b272988771"
+  },
+  "payload_sha256": "4d621098770440aee973279fe5ce9ae9db1fc20c8da4962008d42f3bc6ff9e0a",
+  "records": [
+    {
+      "baseline_calls": 4240,
+      "charged_nonexact_units": 65.45493887266039,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 816,
+      "ridge": "1/100000",
+      "saved_calls": 3424,
+      "sketch_stride": 5,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.20789031577185385
+    },
+    {
+      "baseline_calls": 8078,
+      "charged_nonexact_units": 77.61332900573407,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 4470,
+      "ridge": "1/100000",
+      "saved_calls": 3608,
+      "sketch_stride": 5,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.5629627790301726
+    },
+    {
+      "baseline_calls": 11917,
+      "charged_nonexact_units": 90.07194633776913,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 8308,
+      "ridge": "1/100000",
+      "saved_calls": 3609,
+      "sketch_stride": 5,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.7047135979137173
+    },
+    {
+      "baseline_calls": 4240,
+      "charged_nonexact_units": 64.72790219625664,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 984,
+      "ridge": "1/100000",
+      "saved_calls": 3256,
+      "sketch_stride": 10,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.24734148636704165
+    },
+    {
+      "baseline_calls": 8078,
+      "charged_nonexact_units": 75.72920047603593,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 3925,
+      "ridge": "1/100000",
+      "saved_calls": 4153,
+      "sketch_stride": 10,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.4952623422228319
+    },
+    {
+      "baseline_calls": 11917,
+      "charged_nonexact_units": 88.18781780807099,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 7763,
+      "ridge": "1/100000",
+      "saved_calls": 4154,
+      "sketch_stride": 10,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.658822507158519
+    },
+    {
+      "baseline_calls": 4240,
+      "charged_nonexact_units": 68.68116412420211,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 3728,
+      "ridge": "1/100000",
+      "saved_calls": 512,
+      "sketch_stride": 20,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.8954436707840099
+    },
+    {
+      "baseline_calls": 8078,
+      "charged_nonexact_units": 81.13815860651304,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 7566,
+      "ridge": "1/100000",
+      "saved_calls": 512,
+      "sketch_stride": 20,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.9466623122810737
+    },
+    {
+      "baseline_calls": 11917,
+      "charged_nonexact_units": 93.59839878827222,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 11405,
+      "ridge": "1/100000",
+      "saved_calls": 512,
+      "sketch_stride": 20,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.9648903582099749
+    },
+    {
+      "baseline_calls": 4115,
+      "charged_nonexact_units": 65.22936276100833,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 802,
+      "ridge": "1/10000",
+      "saved_calls": 3313,
+      "sketch_stride": 5,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.21074832630887202
+    },
+    {
+      "baseline_calls": 7840,
+      "charged_nonexact_units": 77.00800605863898,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 4335,
+      "ridge": "1/10000",
+      "saved_calls": 3505,
+      "sketch_stride": 5,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.5627561232217652
+    },
+    {
+      "baseline_calls": 11566,
+      "charged_nonexact_units": 89.09985935302392,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 8060,
+      "ridge": "1/10000",
+      "saved_calls": 3506,
+      "sketch_stride": 5,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.7045737384880706
+    },
+    {
+      "baseline_calls": 4115,
+      "charged_nonexact_units": 64.51044033322515,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 975,
+      "ridge": "1/10000",
+      "saved_calls": 3140,
+      "sketch_stride": 10,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.25261493082216896
+    },
+    {
+      "baseline_calls": 7840,
+      "charged_nonexact_units": 75.14497457535433,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 3803,
+      "ridge": "1/10000",
+      "saved_calls": 4037,
+      "sketch_stride": 10,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.4946613487978768
+    },
+    {
+      "baseline_calls": 11566,
+      "charged_nonexact_units": 87.23682786973927,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 7528,
+      "ridge": "1/10000",
+      "saved_calls": 4038,
+      "sketch_stride": 10,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.6584157727710306
+    },
+    {
+      "baseline_calls": 4115,
+      "charged_nonexact_units": 68.26896029427677,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 3599,
+      "ridge": "1/10000",
+      "saved_calls": 516,
+      "sketch_stride": 20,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.8911953730970297
+    },
+    {
+      "baseline_calls": 7840,
+      "charged_nonexact_units": 80.35919073893758,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 7324,
+      "ridge": "1/10000",
+      "saved_calls": 516,
+      "sketch_stride": 20,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.9444335702473134
+    },
+    {
+      "baseline_calls": 11566,
+      "charged_nonexact_units": 92.45266688304665,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 11050,
+      "ridge": "1/10000",
+      "saved_calls": 516,
+      "sketch_stride": 20,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.9633799642817781
+    },
+    {
+      "baseline_calls": 3178,
+      "charged_nonexact_units": 63.541599047928166,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 699,
+      "ridge": "1/1000",
+      "saved_calls": 2479,
+      "sketch_stride": 5,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.23994386376586788
+    },
+    {
+      "baseline_calls": 6055,
+      "charged_nonexact_units": 72.47376392946015,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 3326,
+      "ridge": "1/1000",
+      "saved_calls": 2729,
+      "sketch_stride": 5,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.5612673433409513
+    },
+    {
+      "baseline_calls": 8932,
+      "charged_nonexact_units": 81.811641242021,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 6203,
+      "ridge": "1/1000",
+      "saved_calls": 2729,
+      "sketch_stride": 5,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.703628710394315
+    },
+    {
+      "baseline_calls": 3178,
+      "charged_nonexact_units": 62.868116412420214,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 900,
+      "ridge": "1/1000",
+      "saved_calls": 2278,
+      "sketch_stride": 10,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.30297926885224047
+    },
+    {
+      "baseline_calls": 6055,
+      "charged_nonexact_units": 70.77626311803527,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 2896,
+      "ridge": "1/1000",
+      "saved_calls": 3159,
+      "sketch_stride": 10,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.4899713068733337
+    },
+    {
+      "baseline_calls": 8932,
+      "charged_nonexact_units": 80.11251758087202,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 5772,
+      "ridge": "1/1000",
+      "saved_calls": 3160,
+      "sketch_stride": 10,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.6551850109248625
+    },
+    {
+      "baseline_calls": 3178,
+      "charged_nonexact_units": 65.21800281293953,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 2656,
+      "ridge": "1/1000",
+      "saved_calls": 522,
+      "sketch_stride": 20,
+      "tolerance_power": 8,
+      "total_cost_ratio": 0.8562674646988482
+    },
+    {
+      "baseline_calls": 6055,
+      "charged_nonexact_units": 74.55425727577628,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 5532,
+      "ridge": "1/1000",
+      "saved_calls": 523,
+      "sketch_stride": 20,
+      "tolerance_power": 10,
+      "total_cost_ratio": 0.925937945049674
+    },
+    {
+      "baseline_calls": 8932,
+      "charged_nonexact_units": 83.89213458833713,
+      "cost_gate_accepts": true,
+      "hybrid_calls": 8409,
+      "ridge": "1/1000",
+      "saved_calls": 523,
+      "sketch_stride": 20,
+      "tolerance_power": 12,
+      "total_cost_ratio": 0.950838796975855
+    }
+  ],
+  "schema": "c2o-spx-sensitivity-v1",
+  "summary": {
+    "accepted_count": 27,
+    "configuration_count": 27,
+    "maximum_saved_calls": 4154,
+    "maximum_total_cost_ratio": 0.9648903582099749,
+    "minimum_saved_calls": 512,
+    "minimum_total_cost_ratio": 0.20789031577185385
+  }
+}

@@ -29,7 +29,7 @@ payloads; timings are descriptive and are not used in exact acceptance proofs.
 
        make check
 
-3. Replay the exact proof objects without trusting an SDP solver:
+3. Replay the four exact proof objects without trusting an SDP solver:
 
        make verify
 
@@ -63,6 +63,10 @@ Acceptance does not trust:
 
 An independently verified attainable bad cell returns `reject`. Every other
 unresolved condition returns `uncertified`, never `accept`.
+
+The generic horizon-20 floating audit is therefore diagnostic and has
+proof-carrying outcome `uncertified`. The separate horizon-three payload
+contains the recovered rational dual for generic cell `(3,3)`.
 
 ## Directory map
 

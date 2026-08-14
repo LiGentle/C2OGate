@@ -23,9 +23,13 @@ if str(SRC) not in sys.path:
 
 from c2ogate.transcript import StoppingPair, transcript_optimal_gate  # noqa: E402
 from experiments.run_transcript_pep_study import _cell_margin  # noqa: E402
+from tools.verify_generic_nonquadratic_pep_dual import (  # noqa: E402
+    verify_payload as verify_generic_dual,
+)
 
 
-SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v1"
+SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v2"
+GENERIC_DUAL = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
 
 
 def _canonical(value: Any) -> bytes:
@@ -103,7 +107,7 @@ def main() -> None:
     proposal_norm = abs(float(Decimal(actual["candidate_y"]) - Decimal(1)))
     cells: list[dict[str, Any]] = []
     numerical_attainable: list[StoppingPair] = []
-    horizon = 2
+    horizon = 3
     for baseline_calls in range(horizon + 1):
         for hybrid_calls in range(horizon + 1):
             status, margin = _cell_margin(
@@ -147,12 +151,18 @@ def main() -> None:
         for s in range(horizon + 1)
         if Fraction(s - r) + max(Fraction(minimum_saved_calls), cost) > 0
     ]
+    generic_dual_payload = json.loads(GENERIC_DUAL.read_text(encoding="utf-8"))
+    generic_dual_result = verify_generic_dual(generic_dual_payload, root=ROOT)
+    generic_dual_cell = generic_dual_result["cell"]
+    if generic_dual_cell not in bad_cells:
+        raise RuntimeError("the recovered generic dual must exclude a bad cell")
+    analytic_bad_cells = [cell for cell in bad_cells if cell != generic_dual_cell]
     payload: dict[str, Any] = {
         "schema": SCHEMA,
         "declaration": (
-            "A non-shift, nonquadratic realized instance is accepted by the "
-            "joint PEP gate. Exact rational contraction bounds, not floating "
-            "solver statuses, exclude every cost-violating cell."
+            "A non-shift, nonquadratic realized instance is accepted by an H=3 "
+            "joint PEP gate. A recovered rational Gram-SDP dual excludes cell "
+            "(3,3), and exact contraction bounds exclude the remaining bad cells."
         ),
         "function": {
             "formula": "f(t)=9*t^2/20+log(cosh(t))/10",
@@ -184,6 +194,9 @@ def main() -> None:
             "strict_pair": [1, 0],
             "cost_violating_cells": bad_cells,
             "excluded_cost_violating_cell_count": len(bad_cells),
+            "analytic_excluded_cells": analytic_bad_cells,
+            "generic_dual_excluded_cell": generic_dual_cell,
+            "generic_dual_payload_sha256": generic_dual_result["payload_sha256"],
         },
         "pep_enumeration": {
             "cell_count": len(cells),
@@ -207,6 +220,7 @@ def main() -> None:
             "verifier_sha256": _file_hash(
                 ROOT / "tools" / "verify_nonlinear_joint_pep_acceptance.py"
             ),
+            "generic_dual_file_sha256": _file_hash(GENERIC_DUAL),
             "source_sha256": {
                 "src/c2ogate/transcript.py": _file_hash(
                     ROOT / "src" / "c2ogate" / "transcript.py"
@@ -221,7 +235,7 @@ def main() -> None:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     print(
-        "FROZEN: nonlinear joint PEP acceptance, cells 9, exact pair (1,0), "
+        "FROZEN: nonlinear joint PEP acceptance, cells 16, exact pair (1,0), "
         f"payload {payload['payload_sha256']}"
     )
 

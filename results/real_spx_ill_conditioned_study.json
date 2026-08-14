@@ -76,17 +76,17 @@
   },
   "cost_accounting": {
     "baseline_total_units": 7840.0,
-    "candidate_to_baseline_ratio": 0.4921103283897136,
-    "candidate_total_units": 3858.1449745753544,
-    "charged_nonexact_units": 55.144974575354325,
+    "candidate_to_baseline_ratio": 0.4946613487978768,
+    "candidate_total_units": 3878.1449745753544,
+    "charged_nonexact_units": 75.14497457535433,
     "conservative_sequential_verification_flops": 2328600.0,
     "exact_gradient_flops": 123240.0,
     "gate_accepts": true,
-    "ledger": "50nd filtering/features + two full/sketch Gram builds + 30d^3 factorization/curvature + proposal solve + sequential replay upper charge",
+    "ledger": "common ledger: 50nd filtering/features + 6nd^2 panel transforms + 30d^3 factorization/curvature + sketch proposal + sequential replay",
     "minimum_saved_calls": 1,
-    "offline_pipeline_flops": 4466800.0,
-    "online_proposal_flops": 666.6666666666666,
-    "total_cost_slack_units": 3981.8550254246456,
+    "offline_pipeline_flops": 6808200.0,
+    "online_proposal_flops": 124066.66666666667,
+    "total_cost_slack_units": 3961.8550254246456,
     "unit": "one full-panel exact gradient arithmetic count"
   },
   "data": {
@@ -110,8 +110,8 @@
     "numpy": "2.5.1",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
     "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
-    "runner_sha256": "034e8c1e53d53a82bf092af30a7dbf5ec0c795dc3dd26db38acbee84da20c1e8",
-    "verifier_sha256": "64f0285b573d9b3767982cf766ead3f6d82904f3afe5bbb6744f09207a85e149"
+    "runner_sha256": "df1d41671e7076bc57740b85b0073b6c54a009281fc253afee4137092052dd67",
+    "verifier_sha256": "6e8982bcc1985efb5394b606d84984eb4827b3f2a868a08943cca7adb4e0c879"
   },
   "objective": {
     "basis": "centered/RMS-scaled total-degree-three polynomial; no whitening",
@@ -402,26 +402,26 @@
     "sketch_stride": 10,
     "type": "unwhitened rational ridge implied-volatility surface least squares"
   },
-  "payload_sha256": "5af3c0b51de9f862285bfdab86e524fa6988330e4cfafb0f528066d503437395",
+  "payload_sha256": "b8639f38fe2dff33dc14aadf190e81fd012c23594de85742fdd3fa47d02abb19",
   "schema": "c2o-real-spx-ill-conditioned-v2",
   "timing": {
-    "baseline_median_seconds": 0.7841412918642163,
+    "baseline_median_seconds": 0.7903469577431679,
     "baseline_seconds": [
-      0.7841412918642163,
-      0.7871158749330789,
-      0.7816948329564184
+      0.7928494578227401,
+      0.7892937920987606,
+      0.7903469577431679
     ],
-    "hybrid_median_seconds": 0.3831264169421047,
+    "hybrid_median_seconds": 0.3825357500463724,
     "hybrid_seconds_including_proposal_solve": [
-      0.3831264169421047,
-      0.3923237498383969,
-      0.3693660420831293
+      0.3825730001553893,
+      0.3817703751847148,
+      0.3825357500463724
     ],
-    "independent_verification_seconds": 0.39139512507244945,
+    "independent_verification_seconds": 0.3711291248910129,
     "measured_break_even_reuses": 2,
-    "measured_ratio_at_break_even": 0.8609989028217684,
-    "measured_warm_speedup": 2.0466907453753316,
-    "pipeline_seconds_including_certificate_generation_and_verification": 0.5840367500204593,
+    "measured_ratio_at_break_even": 0.8317737521553952,
+    "measured_warm_speedup": 2.066073452343628,
+    "pipeline_seconds_including_certificate_generation_and_verification": 0.5497082090005279,
     "repeat_count": 3,
     "scope": "descriptive local CPU timing; exact identities do not depend on timing"
   }

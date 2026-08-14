@@ -14,7 +14,7 @@ from tools.verify_nonlinear_joint_pep_acceptance import verify_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "nonlinear_joint_pep_acceptance.json"
-EXPECTED_HASH = "5c6ad2fec2ccc86a1ecdc781a0096a6ea6e935a0ad5faa03d5d500d9b1095e67"
+EXPECTED_HASH = "18eff08a9920854fea79a844c20d7293f7a2179023ffb9e50534f6ad9646ac08"
 
 
 def _load() -> dict:
@@ -37,7 +37,7 @@ def test_frozen_nonlinear_acceptance_verifies() -> None:
     assert payload["payload_sha256"] == EXPECTED_HASH
     result = verify_payload(payload, root=ROOT)
     assert result["strict_pair"] == [1, 0]
-    assert result["bad_cells_excluded"] == 6
+    assert result["bad_cells_excluded"] == 10
     assert result["joint_accept"] is True
 
 

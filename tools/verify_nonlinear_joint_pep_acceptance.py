@@ -9,10 +9,19 @@ from fractions import Fraction
 from hashlib import sha256
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v1"
+from tools.verify_generic_nonquadratic_pep_dual import (  # noqa: E402
+    verify_payload as verify_generic_dual,
+)
+
+
+SCHEMA = "c2o-nonlinear-joint-pep-acceptance-v2"
 
 
 def _canonical(value: Any) -> bytes:
@@ -64,6 +73,11 @@ def verify_payload(
         _require(
             environment["verifier_sha256"] == _file_hash(Path(__file__)),
             "verifier hash",
+        )
+        generic_dual_path = root / "certificates" / "generic_nonquadratic_pep_dual.json"
+        _require(
+            environment["generic_dual_file_sha256"] == _file_hash(generic_dual_path),
+            "generic dual file hash",
         )
         for relative, expected in environment["source_sha256"].items():
             _require(
@@ -125,6 +139,25 @@ def verify_payload(
         "bad-cell count",
     )
     _require([1, 0] not in expected_bad, "certified pair must be cost-safe")
+    _require(certificate["generic_dual_excluded_cell"] == [3, 3], "generic dual cell")
+    _require(
+        certificate["analytic_excluded_cells"]
+        == [cell for cell in expected_bad if cell != [3, 3]],
+        "analytic exclusion ledger",
+    )
+    if root is not None:
+        generic_payload = json.loads(
+            (root / "certificates" / "generic_nonquadratic_pep_dual.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        generic_result = verify_generic_dual(generic_payload, root=root)
+        _require(generic_result["cell"] == [3, 3], "generic dual verified cell")
+        _require(
+            generic_result["payload_sha256"]
+            == certificate["generic_dual_payload_sha256"],
+            "generic dual payload binding",
+        )
 
     getcontext().prec = 100
     actual = payload["actual_instance"]

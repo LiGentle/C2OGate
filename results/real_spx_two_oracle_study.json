@@ -12,9 +12,9 @@
     "numpy": "2.5.1",
     "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
     "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
-    "runner_sha256": "5873aef3a90a7aaa7127b44d881be4394e8ee2315463da39bdd5dd78b769c3c1"
+    "runner_sha256": "525cab0ccea2ef76b9883afde96f2da0c94618ab66c346a89b6229d9d1b5381a"
   },
-  "payload_sha256": "725cc984cb5a4ff3084ea293750d11bce2aa3beffe3d7d9e547a5b01ac5938c3",
+  "payload_sha256": "585dd81579978dc14be1265d4ce7afb1c0a6ccf684be0f184d05c6952c6d2a46",
   "production_grid_bridge": {
     "both_exactly_stationarity_certified": true,
     "exact_adjoint_change_fraction": 0.0026525198938991412,
@@ -72,23 +72,23 @@
       "type": "deterministic every-tenth-quote sketch Hessian applied to cached exact gradient"
     },
     "cost_accounting": {
-      "amortized_branch_units_at_break_even": 1.9939413610299686,
+      "amortized_branch_units_at_break_even": 1.9953649134195437,
       "amortized_dominates": true,
-      "amortized_total_units_at_break_even": 6.993941361029968,
-      "arithmetic_ledger": "feature/filter budget 50nd + three dense panel transforms 6nd^2 + factorization/eigendecomposition budget 20d^3; unit-cost scalar arithmetic",
+      "amortized_total_units_at_break_even": 6.995364913419544,
+      "arithmetic_ledger": "common ledger: feature/filter budget 50nd + dense panel transforms 6nd^2 + factorization/eigendecomposition budget 30d^3; unit-cost scalar arithmetic",
       "break_even_reuses": 57,
       "cold_start_baseline_units": 7.0,
       "cold_start_dominates": false,
-      "cold_start_total_units": 61.18846694796062,
+      "cold_start_total_units": 61.2696094341664,
       "exact_gradient_flops": 123240.0,
-      "measured_break_even_reuses": 1035,
-      "measured_constant_pipeline_seconds": 0.17265195795334876,
-      "measured_constant_pipeline_units": 1510.6227856095177,
-      "measured_median_certificate_replay_seconds": 4.6833185479044914e-05,
-      "measured_median_exact_gradient_seconds": 0.00011429190635681152,
-      "measured_median_rebuild_and_proposal_seconds": 1.4875084161758423e-05,
-      "measured_online_to_exact_ratio": 0.5399181062581486,
-      "one_time_constant_pipeline_units": 55.162284972411555,
+      "measured_break_even_reuses": 1021,
+      "measured_constant_pipeline_seconds": 0.15195520874112844,
+      "measured_constant_pipeline_units": 1493.4136023102235,
+      "measured_median_certificate_replay_seconds": 4.200031980872154e-05,
+      "measured_median_exact_gradient_seconds": 0.00010175025090575218,
+      "measured_median_rebuild_and_proposal_seconds": 1.2624543160200119e-05,
+      "measured_online_to_exact_ratio": 0.5368523662857483,
+      "one_time_constant_pipeline_units": 55.24342745861733,
       "online_proposal_and_verification_units": 1.0261819755490642,
       "timing_scope": "descriptive local CPU timing, including CSV filtering and exact Fraction construction; the certified comparison uses the declared arithmetic ledger",
       "unit": "one full-panel exact gradient flop count"
@@ -102,7 +102,7 @@
       "snapshot_timestamp": "2026-08-08 00:49:56",
       "source_symbol": "^SPX"
     },
-    "generation_seconds": 0.19849000009708107,
+    "generation_seconds": 0.17503879172727466,
     "objective": {
       "basis": "total-degree-three polynomial in normalized moneyness and maturity",
       "dimension": 10,

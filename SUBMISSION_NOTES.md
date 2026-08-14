@@ -21,28 +21,28 @@ e0622340@u.nus.edu
 
 ## Abstract
 
-We present C2OGate, an exact computational method for deciding whether a
-candidate produced by a secondary oracle can be certified to reduce all-in
-calls to an expensive oracle relative to an unchanged baseline. The method
-conditions on observed first-order data, couples baseline and candidate
-continuations on the same unknown function, enumerates their joint
-stopping-time cells, and reduces each cell over smooth strongly convex
-functions to a dimension-free semidefinite program. Acceptance is
-proof-carrying: structural screeners or independently checked dual certificates
-must exclude every cost-violating cell, while a verified attainable cell
-rejects and any unresolved numerical status returns uncertified. This design
-isolates numerical optimization from the trusted verifier and charges proposal,
-solution, certificate, verification, and rejected work in a common cost ledger.
-We prove an exact finite-horizon reduction and show that replacing the joint
-object by independent marginal call bounds can be arbitrarily conservative
-even within one-dimensional quadratics. The implementation provides hash-bound
-inputs, rational certificates, standard-library verifiers, and adversarial
-integrity tests. Experiments include complete horizon-20 cell enumerations, a
-nonquadratic acceptance, nine exact rational dual certificates, an audit over
-2,000 transcript-consistent quadratic families, and a real-SPX cost instance
-reducing 7,840 baseline calls to 3,803 hybrid calls with an all-in ratio of
-0.492. The guarantee remains conditional on the declared transcript, function
-class, oracle contract, and costs; unresolved cells never support acceptance.
+We present C2OGate, a proof-carrying computational architecture for deciding
+whether a secondary-oracle candidate reduces all-in expensive-oracle cost
+relative to an unchanged baseline. Conditioning on one first-order transcript,
+it couples both continuations on the same unknown function, enumerates their
+joint stopping-time cells, and represents each cell over smooth strongly convex
+functions by a dimension-free Gram SDP. Acceptance requires independently
+verified exclusion of every cost-violating cell; a verified attainable bad cell
+rejects, and every unresolved numerical status returns uncertified. We prove
+the finite reduction, characterize the fixed-dimension rank qualification, and
+show that independent marginal call bounds can be arbitrarily conservative
+even for one-dimensional quadratics. The artifact includes a non-shift,
+nonquadratic H=3 acceptance whose proof ledger contains a recovered rational
+dual for a generic Gram-SDP cell: a standard-library verifier reconstructs the
+SDP, checks a negative dual upper bound, and proves ten positive leading
+principal minors. A generic H=20 run is reported only as solver-witnessed
+diagnostic evidence, not scalable proof-carrying acceptance. A 2,000-family
+quadratic audit is explicitly a constructed finite proxy, and the
+full-revelation real-SPX quadratic is a constant-and-cost-pipeline stress test
+rather than a short-transcript PEP result. Measured certificate cost is charged
+separately and is self-financing only for sufficiently expensive calls or
+offline reuse. All guarantees remain conditional on certified transcripts,
+oracle contracts, dimensions, and cost units.
 
 ## Keywords
 

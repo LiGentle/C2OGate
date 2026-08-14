@@ -31,7 +31,8 @@ I am pleased to submit the manuscript
 Certification'' for consideration in \textit{Mathematical Programming
 Computation}.
 
-The manuscript presents an exact computational method for deciding whether a
+The manuscript presents a proof-carrying computational architecture for
+deciding whether a
 candidate produced by a secondary oracle can be certified to reduce all-in
 expensive-oracle cost relative to an unchanged baseline. C2OGate conditions on
 observed first-order data, couples the two continuations on the same unknown
@@ -49,18 +50,21 @@ reductions, gives the fixed-dimension rank qualification, and shows that
 separate marginal call bounds can be arbitrarily more conservative even within
 one-dimensional quadratics.
 
-The computational study includes complete structured and generic horizon-20
-enumerations, exact acceptance of a nonquadratic instance, nine rational dual
-certificates checked through 87 exact principal minors, 2,000 finite
-transcript-consistent quadratic families, and a real-SPX cost instance reducing
-7,840 baseline calls to 3,803 hybrid calls with an all-in ratio of 0.492. The
-paper distinguishes exact acceptance, witnessed rejection, scaling evidence,
-and accounting evidence; it does not promote inaccurate solver statuses to
-proofs or claim universal acceleration.
+The central new computational demonstration is a non-shift, nonquadratic
+horizon-three acceptance whose ledger includes a recovered rational dual for a
+generic Gram-SDP cell.  A standard-library verifier reconstructs the complete
+cell, checks exact dual stationarity and a negative upper bound, and proves ten
+positive leading principal minors.  The generic horizon-20 study is labeled
+only as a floating diagnostic with proof-carrying outcome
+\emph{uncertified}.  The paper also benchmarks two- and four-bin correlation-
+aware summaries on 2,000 constructed finite proxy families, measures the
+certificate break-even threshold, and reports the real-SPX full-quadratic
+result only as a constant-and-cost-pipeline stress test (common-ledger ratio
+0.495), not as short-transcript PEP acceptance.
 
 This submission is designed for MPC's software and data review. The accompanying
-artifact contains structured Python source, complete frozen inputs, canonical
-hashes, rebuild scripts, unit and integrity tests, three standard-library exact
+artifact contains structured Python source, complete frozen derived proof inputs, canonical
+hashes, rebuild scripts, unit and integrity tests, four standard-library exact
 verifiers, and adversarial rehashed modifications. Exact proof replay is
 separated from optional CVXPY--Clarabel experiment regeneration, so a Technical
 Editor can inspect the acceptance evidence without trusting the search solver.

@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "pep_scaling_study.json"
-EXPECTED_HASH = "1c4b193e376016fb557cb9f2c757f4bbe6b210d48c03845b7b99faf6b1953df4"
+EXPECTED_HASH = "cbb86a6048490b1454216df973dd0ab3240a8ff38b53f7c8ffaee6d7cf9eb0e4"
 
 
 def _canonical(value: dict) -> bytes:

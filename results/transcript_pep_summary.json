@@ -1,0 +1,73 @@
+{
+  "accepted_joint_violation_count": 0,
+  "always_policy_cost_ratio": {
+    "mean": 0.9927754269785753,
+    "median": 0.9942699922382912,
+    "q05": 0.9743486588729807,
+    "q95": 1.0060239800955175
+  },
+  "always_policy_worse_fraction": 0.2415,
+  "case_count": 2000,
+  "four_bin_accept_count": 487,
+  "four_bin_accept_rate": 0.2435,
+  "four_bin_policy_cost_ratio": {
+    "mean": 0.9968052811637943,
+    "median": 1.0,
+    "q05": 0.9801691325261632,
+    "q95": 1.0
+  },
+  "four_bin_policy_worse_fraction": 0.0,
+  "four_bin_without_joint_count": 0,
+  "joint_accept_count": 896,
+  "joint_accept_rate": 0.448,
+  "joint_only_accept_count": 736,
+  "joint_only_accept_rate": 0.368,
+  "joint_only_cost_slack": {
+    "mean": 0.4624931873240779,
+    "median": 0.46347463682230916,
+    "q05": 0.04086529597912675,
+    "q95": 0.8937277799751606
+  },
+  "joint_policy_cost_ratio": {
+    "mean": 0.9948683016716258,
+    "median": 1.0,
+    "q05": 0.9776475701910972,
+    "q95": 1.0
+  },
+  "joint_policy_worse_fraction": 0.0,
+  "pep_attainable_pair_count": 3,
+  "pep_cell_count": 36,
+  "pep_joint_accept": true,
+  "pep_numerically_ambiguous_cell_count": 4,
+  "pep_off_shift_attainable_count": 0,
+  "pep_rectangle_accept": false,
+  "rectangle_accept_count": 160,
+  "rectangle_accept_rate": 0.08,
+  "rectangle_accept_without_joint_count": 0,
+  "rectangle_minus_joint_difference": {
+    "mean": 10.365,
+    "median": 4.0,
+    "q05": 0.0,
+    "q95": 46.0
+  },
+  "rectangle_policy_cost_ratio": {
+    "mean": 0.9988441068175596,
+    "median": 1.0,
+    "q05": 0.989560758836441,
+    "q95": 1.0
+  },
+  "rectangle_policy_worse_fraction": 0.0,
+  "shift_case_count": 1310,
+  "shift_joint_accept_rate": 0.5099236641221374,
+  "shift_rectangle_accept_rate": 0.083206106870229,
+  "two_bin_accept_count": 338,
+  "two_bin_accept_rate": 0.169,
+  "two_bin_policy_cost_ratio": {
+    "mean": 0.9975966149052984,
+    "median": 1.0,
+    "q05": 0.9822921185739008,
+    "q95": 1.0
+  },
+  "two_bin_policy_worse_fraction": 0.0,
+  "two_bin_without_joint_count": 0
+}

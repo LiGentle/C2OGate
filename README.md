@@ -36,15 +36,16 @@ Run source and integrity checks:
 
     make check
 
-Replay the three independently checkable acceptance artifacts:
+Replay the four independently checkable acceptance artifacts:
 
     make verify
 
 Expected summaries:
 
+    VERIFIED: generic nonquadratic H=3 joint-PEP dual, cell (3, 3), upper bound < 0, 10 positive leading minors
     VERIFIED: 3 instances, 9 rational SDP dual certificates, 87 exact principal minors
     VERIFIED: ill-conditioned real-SPX certificate, dimension 10, calls 7840->3803, condition lower bound > 1325.96
-    VERIFIED: nonquadratic joint PEP acceptance, exact pair (1,0), 6 cost-violating cells excluded
+    VERIFIED: nonquadratic joint PEP acceptance, exact pair (1,0), 10 cost-violating cells excluded
 
 Build the article, source archive, software/data artifact, and cover letter:
 
@@ -56,13 +57,17 @@ expected run times, raw-data limitation, and directory map.
 ## Evidence included
 
 - Complete structured and generic horizon-20 cell enumerations.
-- One exact non-shift, nonquadratic acceptance over the declared function
-  class.
+- One exact non-shift, nonquadratic horizon-three acceptance over the declared
+  function class, including a recovered rational Gram-SDP dual for cell
+  `(3,3)` and exact contraction exclusions for the other bad cells.
 - Three rational quadratic instances containing nine exact SDP duals and 87
   exact principal-minor checks.
 - A frozen audit over 2,000 transcript-consistent quadratic families.
 - A real-SPX positive cost certificate in dimension 10, with exact-call count
-  7,840 to 3,803 and all-in cost ratio 0.492.
+  7,840 to 3,803 and common-ledger all-in cost ratio 0.495; the full rational
+  quadratic is revealed, so this is a constant-pipeline stress test.
+- A measured generic-certificate break-even ledger and a 27-configuration SPX
+  sensitivity grid over ridge, sketch stride, and tolerance.
 - Frozen canonical JSON payloads, source hashes, verifier hashes, and rehashed
   adversarial modifications.
 
@@ -76,6 +81,7 @@ The two market-data regeneration targets are optional:
 
     make real-spx-study
     make real-spx-positive-study
+    make spx-sensitivity-study
 
 They require the external unofficial SPX snapshot whose hashes are recorded in
 the frozen payloads. The snapshot is not redistributed. A clean archive can
@@ -86,9 +92,11 @@ that snapshot.
 
 This is research code supporting the submitted manuscript, not a general PEP
 modeling language or production optimizer. Generic long-horizon floating
-statuses are used only for scaling and rejection evidence; they never support
-proof-carrying acceptance. The nonquadratic accepted instance has horizon two,
-and the positive real-SPX instance reveals its full rational quadratic.
+statuses are diagnostic only; the proof-carrying aggregator returns
+`uncertified` unless a bad-cell witness or every exclusion is independently
+verified. The nonquadratic accepted instance has horizon three and includes
+one recovered generic Gram-SDP dual. The positive real-SPX instance reveals
+its full rational quadratic.
 
 The software and supporting research artifact are released under the MIT
 License. See `LICENSE` for the complete terms. The raw third-party SPX snapshot

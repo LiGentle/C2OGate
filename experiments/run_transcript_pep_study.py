@@ -304,6 +304,33 @@ def _gradient_calls(
     return calls
 
 
+def _partitioned_rectangle_difference(
+    pairs: set[StoppingPair], partition_count: int
+) -> int:
+    """Safe dependence summary between one rectangle and the full pair set.
+
+    The baseline-call axis is split into a fixed number of equal-width bins.
+    Within each nonempty bin we retain only the baseline minimum and hybrid
+    maximum.  One bin is the ordinary rectangle; finer bins retain coarse
+    correlation without storing every attainable pair.
+    """
+
+    if not pairs or partition_count < 1:
+        raise ValueError("a nonempty pair set and positive partition count are required")
+    lower = min(pair.baseline_calls for pair in pairs)
+    upper = max(pair.baseline_calls for pair in pairs)
+    width = max(1, (upper - lower + 1 + partition_count - 1) // partition_count)
+    groups: dict[int, list[StoppingPair]] = {}
+    for pair in pairs:
+        index = min(partition_count - 1, (pair.baseline_calls - lower) // width)
+        groups.setdefault(index, []).append(pair)
+    return max(
+        max(pair.hybrid_calls for pair in group)
+        - min(pair.baseline_calls for pair in group)
+        for group in groups.values()
+    )
+
+
 def _run_ensemble_case(
     rng: np.random.Generator,
     case_id: int,
@@ -378,6 +405,15 @@ def _run_ensemble_case(
         raise RuntimeError("the realized family member was not recorded")
     cost = float(rng.uniform(0.05, 1.25))
     decision = transcript_optimal_gate(pairs, cost)
+    threshold = max(1.0, cost)
+    partitioned_differences = {
+        partitions: _partitioned_rectangle_difference(pairs, partitions)
+        for partitions in (2, 4)
+    }
+    partitioned_acceptance = {
+        partitions: difference + threshold <= 1.0e-12
+        for partitions, difference in partitioned_differences.items()
+    }
     baseline_cost = float(realized_pair.baseline_calls)
     if baseline_cost <= 0.0:
         raise RuntimeError("cost ratios require a positive realized baseline")
@@ -390,6 +426,12 @@ def _run_ensemble_case(
         else baseline_cost
     )
     always_total_cost = cost + realized_pair.hybrid_calls
+    partitioned_total_cost = {
+        partitions: (
+            cost + realized_pair.hybrid_calls if accepted else baseline_cost
+        )
+        for partitions, accepted in partitioned_acceptance.items()
+    }
     return {
         "case_id": case_id,
         "dimension": dimension,
@@ -405,6 +447,10 @@ def _run_ensemble_case(
         "rectangle_accept": decision.accept_rectangle,
         "worst_joint_difference": decision.worst_joint_call_difference,
         "rectangle_difference": decision.rectangle_call_difference,
+        "two_bin_difference": partitioned_differences[2],
+        "four_bin_difference": partitioned_differences[4],
+        "two_bin_accept": partitioned_acceptance[2],
+        "four_bin_accept": partitioned_acceptance[4],
         "baseline_lower_calls": decision.baseline_lower_calls,
         "hybrid_upper_calls": decision.hybrid_upper_calls,
         "joint_cost_slack": decision.guaranteed_joint_cost_slack,
@@ -417,6 +463,10 @@ def _run_ensemble_case(
         "rectangle_cost_ratio": rectangle_total_cost / baseline_cost,
         "always_total_cost": always_total_cost,
         "always_cost_ratio": always_total_cost / baseline_cost,
+        "two_bin_total_cost": partitioned_total_cost[2],
+        "two_bin_cost_ratio": partitioned_total_cost[2] / baseline_cost,
+        "four_bin_total_cost": partitioned_total_cost[4],
+        "four_bin_cost_ratio": partitioned_total_cost[4] / baseline_cost,
         "rectangle_accept_without_joint": bool(
             decision.accept_rectangle and not decision.accept_joint
         ),
@@ -451,6 +501,8 @@ def _summarize(records: list[dict[str, Any]], pep: dict[str, Any]) -> dict[str, 
     joint = [row for row in records if row["joint_accept"]]
     rectangle = [row for row in records if row["rectangle_accept"]]
     joint_only = [row for row in records if row["joint_only_accept"]]
+    two_bin = [row for row in records if row["two_bin_accept"]]
+    four_bin = [row for row in records if row["four_bin_accept"]]
     shift = [row for row in records if row["proposal_ratio"] == 1.0]
     return {
         "case_count": len(records),
@@ -470,6 +522,16 @@ def _summarize(records: list[dict[str, Any]], pep: dict[str, Any]) -> dict[str, 
         "joint_only_accept_rate": len(joint_only) / len(records),
         "rectangle_accept_without_joint_count": sum(
             row["rectangle_accept_without_joint"] for row in records
+        ),
+        "two_bin_accept_count": len(two_bin),
+        "two_bin_accept_rate": len(two_bin) / len(records),
+        "four_bin_accept_count": len(four_bin),
+        "four_bin_accept_rate": len(four_bin) / len(records),
+        "two_bin_without_joint_count": sum(
+            row["two_bin_accept"] and not row["joint_accept"] for row in records
+        ),
+        "four_bin_without_joint_count": sum(
+            row["four_bin_accept"] and not row["joint_accept"] for row in records
         ),
         "accepted_joint_violation_count": sum(
             row["accepted_joint_violation"] for row in records
@@ -498,6 +560,12 @@ def _summarize(records: list[dict[str, Any]], pep: dict[str, Any]) -> dict[str, 
         "rectangle_policy_cost_ratio": _quantiles(
             [row["rectangle_cost_ratio"] for row in records]
         ),
+        "two_bin_policy_cost_ratio": _quantiles(
+            [row["two_bin_cost_ratio"] for row in records]
+        ),
+        "four_bin_policy_cost_ratio": _quantiles(
+            [row["four_bin_cost_ratio"] for row in records]
+        ),
         "always_policy_cost_ratio": _quantiles(
             [row["always_cost_ratio"] for row in records]
         ),
@@ -508,6 +576,12 @@ def _summarize(records: list[dict[str, Any]], pep: dict[str, Any]) -> dict[str, 
             np.mean(
                 [row["rectangle_cost_ratio"] > 1.0 + 1.0e-12 for row in records]
             )
+        ),
+        "two_bin_policy_worse_fraction": float(
+            np.mean([row["two_bin_cost_ratio"] > 1.0 + 1.0e-12 for row in records])
+        ),
+        "four_bin_policy_worse_fraction": float(
+            np.mean([row["four_bin_cost_ratio"] > 1.0 + 1.0e-12 for row in records])
         ),
         "always_policy_worse_fraction": float(
             np.mean([row["always_cost_ratio"] > 1.0 + 1.0e-12 for row in records])
@@ -529,13 +603,14 @@ def _plot(records: list[dict[str, Any]], pep: dict[str, Any], output: Path) -> N
     axes[0].set_xticks(range(horizon + 1))
     axes[0].set_yticks(range(horizon + 1))
 
-    labels = ["Rectangle", "Joint", "Joint only"]
+    labels = ["Rectangle", "2-bin", "4-bin", "Joint"]
     values = [
         sum(row["rectangle_accept"] for row in records),
+        sum(row["two_bin_accept"] for row in records),
+        sum(row["four_bin_accept"] for row in records),
         sum(row["joint_accept"] for row in records),
-        sum(row["joint_only_accept"] for row in records),
     ]
-    axes[1].bar(labels, values, color=["#F58518", "#4C78A8", "#72B7B2"])
+    axes[1].bar(labels, values, color=["#F58518", "#ECA82C", "#72B7B2", "#4C78A8"])
     axes[1].set_ylabel("Accepted transcript families")
     axes[1].set_title("Acceptance coverage")
     for index, value in enumerate(values):

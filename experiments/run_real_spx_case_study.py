@@ -25,7 +25,7 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PROJECT_ROOT = ROOT.parent
+PROJECT_ROOT = ROOT.parents[1]
 CHAIN = PROJECT_ROOT / "data" / "market_data" / "spx_options_2026-08-08.csv"
 CHAIN_META = PROJECT_ROOT / "data" / "market_data" / "spx_options_2026-08-08_meta.json"
 PRODUCTION = (
@@ -310,7 +310,7 @@ def _market_surface_case() -> dict[str, Any]:
     offline_flops = (
         50.0 * row_count * dimension
         + 6.0 * row_count * dimension**2
-        + 20.0 * dimension**3
+        + 30.0 * dimension**3
     )
     offline_cost = offline_flops / exact_gradient_flops
     if online_cost >= call_saving:
@@ -449,8 +449,9 @@ def _market_surface_case() -> dict[str, Any]:
             "online_proposal_and_verification_units": online_cost,
             "one_time_constant_pipeline_units": offline_cost,
             "arithmetic_ledger": (
-                "feature/filter budget 50nd + three dense panel transforms 6nd^2 "
-                "+ factorization/eigendecomposition budget 20d^3; unit-cost scalar arithmetic"
+                "common ledger: feature/filter budget 50nd + dense panel transforms "
+                "6nd^2 + factorization/eigendecomposition budget 30d^3; "
+                "unit-cost scalar arithmetic"
             ),
             "cold_start_total_units": online_cost + offline_cost + hybrid[0],
             "cold_start_baseline_units": float(baseline[0]),

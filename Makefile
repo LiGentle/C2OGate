@@ -1,7 +1,7 @@
 PYTHON ?= python
 PEP_PYTHONPATH ?= /tmp/c2o-mpc-deps:src
 
-.PHONY: study transcript-study pep-scaling-study generic-pep-scaling-study nonlinear-pep-acceptance real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
+.PHONY: study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual nonlinear-pep-acceptance certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
 
 study:
 	$(PYTHON) experiments/run_study.py
@@ -24,6 +24,17 @@ nonlinear-pep-acceptance:
 	$(PYTHON) tools/verify_nonlinear_joint_pep_acceptance.py results/nonlinear_joint_pep_acceptance.json --root .
 	$(PYTHON) experiments/build_mpc_assets.py
 
+generic-pep-dual:
+	PYTHONPATH=$(PEP_PYTHONPATH) $(PYTHON) experiments/generate_generic_pep_dual_certificate.py
+	$(PYTHON) tools/verify_generic_nonquadratic_pep_dual.py certificates/generic_nonquadratic_pep_dual.json --root .
+
+certificate-cost-study: generic-pep-dual
+	PYTHONPATH=$(PEP_PYTHONPATH) $(PYTHON) experiments/run_certificate_cost_study.py
+
+spx-sensitivity-study:
+	$(PYTHON) experiments/run_spx_sensitivity_study.py
+	$(PYTHON) experiments/build_mpc_assets.py
+
 real-spx-study:
 	$(PYTHON) experiments/run_real_spx_case_study.py
 	$(PYTHON) experiments/build_mpc_assets.py
@@ -37,12 +48,13 @@ rational-certificates:
 	$(PYTHON) experiments/generate_rational_dual_certificates.py
 	$(PYTHON) tools/verify_rational_dual_certificates.py certificates/rational_sdp_dual_certificates.json
 
-studies: study transcript-study pep-scaling-study generic-pep-scaling-study nonlinear-pep-acceptance rational-certificates
+studies: study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual nonlinear-pep-acceptance rational-certificates
 
 test:
 	PYTHONPATH=src $(PYTHON) -m pytest -q tests
 
 verify:
+	$(PYTHON) tools/verify_generic_nonquadratic_pep_dual.py certificates/generic_nonquadratic_pep_dual.json --root .
 	$(PYTHON) tools/verify_rational_dual_certificates.py certificates/rational_sdp_dual_certificates.json
 	$(PYTHON) tools/verify_real_spx_ill_conditioned_certificate.py results/real_spx_ill_conditioned_study.json
 	$(PYTHON) tools/verify_nonlinear_joint_pep_acceptance.py results/nonlinear_joint_pep_acceptance.json --root .
