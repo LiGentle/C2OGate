@@ -1,8 +1,8 @@
-PYTHON ?= python3
+PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 PEP_PYTHONPATH ?= /tmp/c2o-mpc-deps:src
 RUFF_VERSION ?= 0.12.10
 
-.PHONY: check-python check-ruff study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
+.PHONY: check-python check-ruff study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual h10-marginal-certificate h10-envelope-profiles h10-envelope-family scs-recovery-diagnostic sympy-exact-crosscheck joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
 
 check-python:
 	@$(PYTHON) -c 'import sys; required=(3, 11); current=sys.version_info[:2]; sys.exit("C2OGate requires Python 3.11 or later; found %d.%d" % current) if current < required else print("Python version check: %d.%d" % current)'
@@ -10,7 +10,7 @@ check-python:
 check-ruff:
 	@$(PYTHON) -c 'from importlib.metadata import version; actual=version("ruff"); expected="$(RUFF_VERSION)"; assert actual == expected, "C2OGate check requires ruff %s; found %s" % (expected, actual); print("ruff version check: %s" % actual)'
 
-study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates test verify mpc-paper check: check-python
+study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual h10-marginal-certificate h10-envelope-profiles h10-envelope-family scs-recovery-diagnostic sympy-exact-crosscheck joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates test verify mpc-paper check: check-python
 
 study:
 	$(PYTHON) experiments/run_study.py
@@ -40,6 +40,25 @@ generic-pep-dual:
 h10-generic-pep-dual:
 	PYTHONPATH=$(PEP_PYTHONPATH) $(PYTHON) experiments/generate_h10_generic_pep_dual_certificate.py
 	$(PYTHON) tools/verify_h10_generic_pep_dual.py certificates/h10_generic_pep_dual.json --root .
+
+h10-marginal-certificate:
+	PYTHONPATH=experiments $(PYTHON) experiments/generate_h10_marginal_certificate.py
+	$(PYTHON) tools/verify_h10_marginal_pep_dual.py certificates/h10_marginal_pep_dual.json --root .
+
+h10-envelope-profiles:
+	PYTHONPATH=experiments $(PYTHON) experiments/generate_h10_envelope_profile.py candidate_heavy
+	PYTHONPATH=experiments $(PYTHON) experiments/generate_h10_envelope_profile.py tight_contract
+
+h10-envelope-family: h10-envelope-profiles
+	$(PYTHON) experiments/build_h10_envelope_family.py
+	$(PYTHON) tools/verify_h10_envelope_family.py certificates/h10_envelope_family.json --root .
+
+scs-recovery-diagnostic:
+	PYTHONPATH=experiments $(PYTHON) experiments/run_scs_recovery_diagnostic.py
+	$(PYTHON) tools/verify_scs_recovery_diagnostic.py results/scs_recovery_diagnostic.json --root .
+
+sympy-exact-crosscheck:
+	$(PYTHON) experiments/run_sympy_exact_crosscheck.py
 
 joint-only-certificate:
 	$(PYTHON) experiments/generate_joint_only_shift_certificate.py
@@ -92,6 +111,9 @@ test:
 verify:
 	$(PYTHON) tools/verify_generic_nonquadratic_pep_dual.py certificates/generic_nonquadratic_pep_dual.json --root .
 	$(PYTHON) tools/verify_h10_generic_pep_dual.py certificates/h10_generic_pep_dual.json --root .
+	$(PYTHON) tools/verify_h10_marginal_pep_dual.py certificates/h10_marginal_pep_dual.json --root .
+	$(PYTHON) tools/verify_h10_envelope_family.py certificates/h10_envelope_family.json --root .
+	$(PYTHON) tools/verify_scs_recovery_diagnostic.py results/scs_recovery_diagnostic.json --root .
 	$(PYTHON) tools/verify_joint_only_shift_certificate.py certificates/joint_only_shift_certificate.json --root .
 	$(PYTHON) tools/verify_full_class_joint_only_pep_dual.py certificates/full_class_joint_only_pep_dual.json --root .
 	$(PYTHON) tools/verify_rational_dual_certificates.py certificates/rational_sdp_dual_certificates.json

@@ -8,7 +8,7 @@ software trust boundary, and technical-review protocol.
 
 Public repository: <https://github.com/LiGentle/C2OGate>
 
-The present MPC submission snapshot is version 0.5.0.  The public repository
+The present MPC submission snapshot is version 0.6.0.  The public repository
 is the development record; no archival DOI is claimed until an immutable
 release has actually been deposited and minted by an archive service.
 
@@ -45,7 +45,7 @@ Run source and integrity checks:
 
     make check
 
-Replay the seven independently checkable proof objects:
+Replay the ten independently checkable proof objects:
 
     make verify
 
@@ -53,6 +53,9 @@ Expected summaries:
 
     VERIFIED: generic nonquadratic R^2 joint-PEP dual suite, natural H0=2, padded audit H=3, 10 cost-violating cells, all upper bounds < 0, 100 positive leading minors
     VERIFIED: natural-H=10 generic joint-PEP dual suite, 66 cost-violating cells, Gram order <= 24, 1584 exact positive LDL pivots, progress=66/66 independently replayable exclusions constructed
+    VERIFIED: flagship exact marginals L_x=1, U_y=0, rectangle gate value=0, 4 positive LDL pivots
+    VERIFIED: five natural-H=10 envelopes, 198 independently recovered + 132 transported exact exclusions, 4752 independent positive LDL pivots
+    VERIFIED: SCS producer diagnostic, 9/9 exact recoveries, 0 fail-closed outcomes
     VERIFIED: full infinite-class joint-only PEP acceptance, H=3, 10 bad cells, 100 positive LDL pivots, witness pairs=[[2, 1], [1, 0]]
     VERIFIED: exact joint-only acceptance, rectangle rejection, pairs=[[3, 2], [1, 0]], formula horizon=26
     VERIFIED: 3 instances, 9 rational SDP dual certificates, 87 exact principal minors
@@ -66,9 +69,11 @@ Build the article, source archive, software/data artifact, and cover letter:
 See `ARTIFACT_EVALUATION.md` for the trusted/untrusted split, command sequence,
 expected run times, raw-data limitation, and directory map.
 
-The natural-$H=10$ verifier performs exact rational elimination for every
-cell and can take several minutes; it imports only the Python standard
-library and does not invoke an SDP solver.
+The balanced natural-$H=10$ verifier performs exact rational elimination for
+every cell and can take several minutes.  The five-envelope family replays all
+three independently recovered sources and can take tens of minutes; the two
+transported sources are then checked algebraically.  These consumers import
+only the Python standard library and do not invoke an SDP solver.
 
 Replay the flagship verifier once, combine that charge with the frozen search
 and rational-recovery time, and rebuild the paper's complete break-even ledger:
@@ -81,12 +86,24 @@ machine-independent acceptance proof.
 
 ## Evidence included
 
-- A natural-$H=10$ generic suite containing all 66 cost-violating cells,
+- A five-envelope natural-$H=10$ family containing 330 verified
+  profile-cell exclusions.  Three source envelopes contribute 198
+  independently recovered rational duals; two homogeneous transports
+  contribute 132 algebraically checked exclusions.  The balanced source
+  contains all 66 cost-violating cells,
   66 exact rational dual exclusions, and 1,584 exact positive $LDL^\top$
   pivots, with no structural prescreen. The payload records the ordered
   threshold--regularizer recovery prefix for every cell: 69 attempts contain
   66 successes and three failed attempts, with four of ten configurations
   reached before all cells were certified.
+- An exact marginal audit of the balanced flagship: $L_x=1$, $U_y=0$, and
+  rectangle gate value zero.  The paper therefore does not attribute strict
+  joint-over-marginal value to this profile; the separate full-class $H=3$
+  suite supplies that evidence.
+- A stratified SCS-to-rational-recovery diagnostic whose successful outputs
+  are independently replayed and whose unsuccessful outputs fail closed, plus
+  a full-load SymPy rational-arithmetic LDL cross-check of all 1,584
+  balanced-source pivots.
 - Five complete bad-cell timing and peak-memory runs with Clarabel and SCS,
   plus a same-model comparison with PEPit 0.5.1.  PEPit is faster in this
   benchmark; C2OGate contributes the branch disjunction, fail-closed
@@ -123,6 +140,14 @@ machine-independent acceptance proof.
 The synthetic and performance-estimation studies can be regenerated with:
 
     make studies
+
+The additional producer and independent-backend diagnostics introduced for
+the multi-envelope audit are explicit because they are substantially slower:
+
+    make h10-marginal-certificate
+    make h10-envelope-family
+    make scs-recovery-diagnostic
+    make sympy-exact-crosscheck
 
 The two market-data regeneration targets are optional:
 

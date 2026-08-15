@@ -1,0 +1,70 @@
+{
+  "declaration": {
+    "bad_cells_per_profile": 66,
+    "claim": "all 330 profile-cell exclusions are exact; 198 are independently recovered and 132 follow by checked homogeneous transport",
+    "horizon": 10,
+    "independently_recovered_profile_count": 3,
+    "profile_count": 5,
+    "transported_profile_count": 2
+  },
+  "environment": {
+    "builder_sha256": "2f85066e8e28577f692ca83a355aa9bf5111cce48c1942bc62bec6fcf83dea91",
+    "verifier_sha256": "5b56112be69ca14c8cf08485a3787284cc3e1657b583bd219bbbc3f4d0639207"
+  },
+  "payload_sha256": "641d2210822ab1745bf1e6a81e74469f8f30c4101b4a88fd60adc28656e29454",
+  "schema": "c2o-h10-envelope-family-v1",
+  "sources": [
+    {
+      "file_sha256": "7a96706ed0eb761e30ae8632dcd4cd23002ef73461258415f89ddd9ddbb0c59e",
+      "name": "balanced",
+      "path": "certificates/h10_generic_pep_dual.json",
+      "payload_sha256": "657a8b91d025ab66d610251981e3d1e0604baea6385f1682c640f864c616700f",
+      "source_kind": "independent Clarabel recovery"
+    },
+    {
+      "file_sha256": "d59896108d729455a7a097c16d07ebd3b1b59632686325754107023acb669023",
+      "name": "candidate_heavy",
+      "path": "certificates/h10_candidate_heavy_pep_dual.json",
+      "payload_sha256": "79739ce788458fd58835833618b284d3e2085bd2fdd252fe5cb33ee06fcffb39",
+      "source_kind": "independent Clarabel recovery"
+    },
+    {
+      "file_sha256": "2573bfb71aef8792c9df4efef7ceaea6d5979acc57aa694a528544d6e9f0cbfb",
+      "name": "tight_contract",
+      "path": "certificates/h10_tight_contract_pep_dual.json",
+      "payload_sha256": "a3b9b1fce04919a4341c6d9e4651b93bd767909a47c892a9c912fdb2f32c99cd",
+      "source_kind": "independent Clarabel recovery"
+    }
+  ],
+  "transport_rule": {
+    "dual_effect": "stationarity and slack are unchanged; every dual objective is multiplied by scale^2",
+    "invariant_fields": [
+      "strong_convexity",
+      "smoothness",
+      "step_size",
+      "proposal_step"
+    ],
+    "scaled_fields": [
+      "proposal_norm_lower",
+      "proposal_norm_upper",
+      "contract_radius",
+      "initial_distance_upper",
+      "tolerance"
+    ],
+    "squared_field": "derived_trace_bound"
+  },
+  "transports": [
+    {
+      "name": "balanced_scale_4_5",
+      "scale": "4/5",
+      "source": "balanced",
+      "source_kind": "exact homogeneous transport"
+    },
+    {
+      "name": "balanced_scale_6_5",
+      "scale": "6/5",
+      "source": "balanced",
+      "source_kind": "exact homogeneous transport"
+    }
+  ]
+}

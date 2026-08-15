@@ -63,6 +63,19 @@ Conn, A.R., Scheinberg, K., Vicente, L.N.: Introduction to Derivative-Free
 \newblock SIAM, Philadelphia (2009).
 \newblock \doi{10.1137/1.9780898718768}
 
+\bibitem{DasGuptaVanParysRyu2024}
+{Das Gupta}, S., {Van Parys}, B.P.G., Ryu, E.K.: Branch-and-bound performance
+  estimation programming: A unified methodology for constructing optimal
+  optimization methods.
+\newblock Mathematical Programming \textbf{204}, 567--639 (2024).
+\newblock \doi{10.1007/s10107-023-01973-1}
+
+\bibitem{DavisPapp2022}
+Davis, M.M., Papp, D.: Dual certificates and efficient rational sum-of-squares
+  decompositions for polynomial optimization over compact sets.
+\newblock SIAM Journal on Optimization \textbf{32}(4), 2461--2492 (2022).
+\newblock \doi{10.1137/21M1422574}
+
 \bibitem{Devolder2014}
 Devolder, O., Glineur, F., Nesterov, Y.: First-order methods of smooth convex
   optimization with inexact oracle.
@@ -96,7 +109,7 @@ Drori, Y., Teboulle, M.: Performance of first-order methods for smooth convex
 Gatheral, J.: The Volatility Surface: A Practitioner's Guide.
 \newblock John Wiley \& Sons, Hoboken, NJ (2006)
 
-\bibitem{GoujaudPEPit2022}
+\bibitem{GoujaudPEPit2024}
 Goujaud, B., Moucer, C., Glineur, F., Hendrickx, J.M., Taylor, A.B.,
   Dieuleveut, A.: {PEPit}: Computer-assisted worst-case analyses of first-order
   optimization methods in {Python}.
@@ -130,6 +143,11 @@ Jansson, C., Chaykin, D., Keil, C.: Rigorous error bounds for the optimal value
   in semidefinite programming.
 \newblock SIAM Journal on Numerical Analysis \textbf{46}(1), 180--200 (2007).
 \newblock \doi{10.1137/050622870}
+
+\bibitem{JeongEtAl2026}
+Jeong, G., Park, S., Hyun, J., Oum, S.i., Yang, H.: Formalizing flag algebras
+  in {Lean} (2026).
+\newblock \doi{10.48550/arXiv.2607.23500}
 
 \bibitem{DeKlerkGlineurTaylor2020}
 de~Klerk, E., Glineur, F., Taylor, A.B.: Worst-case convergence analysis of
@@ -177,6 +195,11 @@ O'Donoghue, B., Chu, E., Parikh, N., Boyd, S.: Conic optimization via operator
   1042--1068 (2016).
 \newblock \doi{10.1007/s10957-016-0892-3}
 
+\bibitem{ParkRanjanStellato2025}
+Park, J., Ranjan, V., Stellato, B.: Data-driven analysis of first-order methods
+  via distributionally robust optimization (2025).
+\newblock \doi{10.48550/arXiv.2511.17834}
+
 \bibitem{Peherstorfer2018}
 Peherstorfer, B., Willcox, K., Gunzburger, M.: Survey of multifidelity methods
   in uncertainty propagation, inference, and optimization.
@@ -188,6 +211,12 @@ Ramana, M.V.: An exact duality theory for semidefinite programming and its
   complexity implications.
 \newblock Mathematical Programming \textbf{77}(1), 129--162 (1997).
 \newblock \doi{10.1007/BF02614433}
+
+\bibitem{RouxVoroninSankaranarayanan2018}
+Roux, P., Voronin, Y.L., Sankaranarayanan, S.: Validating numerical
+  semidefinite programming solvers for polynomial invariants.
+\newblock Formal Methods in System Design \textbf{53}(2), 286--312 (2018).
+\newblock \doi{10.1007/s10703-017-0302-y}
 
 \bibitem{RyuTaylorBergelingGiselsson2020}
 Ryu, E.K., Taylor, A.B., Bergeling, C., Giselsson, P.: Operator splitting
@@ -214,6 +243,11 @@ Taylor, A.B., Hendrickx, J.M., Glineur, F.: Smooth strongly convex
   interpolation and exact worst-case performance of first-order methods.
 \newblock Mathematical Programming \textbf{161}(1--2), 307--345 (2017).
 \newblock \doi{10.1007/s10107-016-1009-3}
+
+\bibitem{ThomsenEtAl2026}
+Thomsen, D.B., Upadhyaya, M., Goujaud, B., Dieuleveut, A., Taylor, A.: Finding
+  simple proofs for first-order optimization (2026).
+\newblock \doi{10.48550/arXiv.2607.08753}
 
 \bibitem{Ziems2011}
 Ziems, J.C., Ulbrich, S.: Adaptive multilevel inexact {SQP} methods for

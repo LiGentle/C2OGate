@@ -50,17 +50,21 @@ reductions, gives the fixed-dimension rank qualification, and shows that
 separate marginal call bounds can be arbitrarily more conservative even within
 one-dimensional quadratics.
 
-The central computational demonstration has natural horizon $H=10$, nonzero
-proposal-contract radius, 66 cost-violating generic Gram-SDP cells, Gram order
-at most 24, and up to 534 inequalities per cell.  Rational dual recovery
-succeeds for every cell in a recorded ordered threshold--regularizer search;
-incomplete recovery would report certified progress and return
-\emph{uncertified}.  A standard-library verifier reconstructs all affine
-systems, stationarity equations, dual objectives, and slack matrices and
-checks 1,584 exact positive $LDL^\top$ pivots.  Repeated Clarabel and SCS runs
-report timing quantiles and peak memory, and a same-model PEPit comparison
-separates generic PEP modeling from C2OGate's branch-disjunction,
-fail-closed-aggregation, and exact-proof layers.  A separate exact instance
+The central computational study has natural horizon $H=10$ and covers five
+nonzero-radius envelopes and 330 verified profile-cell exclusions.  Three
+source envelopes contribute 198 independently recovered rational duals; two
+homogeneous transports contribute 132 algebraically checked exclusions.  The
+balanced source has Gram order at most 24 and up to 534 inequalities per cell.
+A standard-library verifier reconstructs all affine systems, stationarity
+equations, dual objectives, and slack matrices and checks 1,584 exact positive
+$LDL^\top$ pivots; an independent SymPy rational-arithmetic backend confirms
+all 1,584 exact pivots.  Its separately certified marginal rectangle
+also accepts, at boundary value zero, and the manuscript states this rather
+than attributing strict dependence value to the flagship.  Repeated Clarabel
+and SCS runs, a stratified SCS-to-rational recovery diagnostic, and a
+same-model PEPit comparison separate generic PEP modeling from C2OGate's
+branch-disjunction, fail-closed-aggregation, and exact-proof layers.  A
+separate exact instance
 over the full infinite class $\mathcal F_{1/2,1}$ excludes all ten bad cells
 and accepts with the joint stopping-time set while sharp independent marginals
 reject.  It has a nonzero proposal radius and uses neither a shift identity nor
@@ -71,14 +75,11 @@ the method as moderate-horizon exact infrastructure rather than promoting
 solver statuses to proofs.
 
 The manuscript also reports a fully charged cost ledger for this flagship
-suite: frozen search and rational recovery, one complete independent verifier
-replay, and the resulting prepaid-reuse thresholds are all charged against
-the certificate's remaining cost budget.  This accounting does not use a
-possibly rejected first online decision to finance its own proof.
-An explicit repeated-PDE calculation additionally charges acquisition of the
-curvature, distance, and residual envelope and gives a prepaid break-even
-threshold on the frozen timing ledger when one forward--adjoint
-gradient takes 60 seconds.
+suite.  Its headline table includes frozen search and rational recovery, one
+complete independent replay, and a 12-exact-call acquisition charge for the
+curvature, distance, and residual envelope.  The resulting prepaid-reuse
+thresholds do not use a possibly rejected first online decision to finance its
+own proof.
 
 The paper also reports a contract-misspecification audit on 2,000 finite
 families, including false-acceptance rates relative to the full class.  The
@@ -90,7 +91,7 @@ the same filtering and data-to-rational-matrix reconstruction path.
 This submission is designed for MPC's software and data review.  The
 accompanying artifact contains structured Python source, complete frozen
 derived proof inputs, canonical hashes, rebuild scripts, unit and integrity
-tests, seven standard-library exact
+tests, ten standard-library exact
 verifiers, and adversarial rehashed modifications. Exact proof replay is
 separated from optional CVXPY--Clarabel experiment regeneration, so a Technical
 Editor can inspect the acceptance evidence without trusting the search solver.

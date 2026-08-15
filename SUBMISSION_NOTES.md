@@ -23,24 +23,26 @@ e0622340@u.nus.edu
 
 We present C2OGate, a proof-carrying method for deciding between two
 continuations after an external mechanism supplies a candidate and an
-auditable error-and-cost contract. Conditioned on one first-order transcript,
+auditable error-and-cost contract. Conditioned on a first-order transcript,
 the method couples fixed-step gradient descent from both starts on the same
 unknown smooth strongly convex function and represents every cost-violating
 joint stopping-time cell by a dimension-free Gram SDP. Acceptance requires
 independently verified exclusion of every bad cell; counterexamples reject,
 and incomplete evidence returns uncertified. We prove the finite reduction,
 its fixed-dimension rank qualification, transcript-relative maximality, and
-the possible loss from replacing the joint set by independent marginals. In
-the flagship audit, exact rational duals exclude all 66 bad cells at natural
-horizon H=10 (Gram order at most 24); a standard-library verifier reconstructs
-1,584 positive LDL pivots. A second nonzero-radius example over the full
-smooth strongly convex class with mu=1/2 and L=1 is accepted by the joint PEP
-while exact marginal bounds reject. Repeated Clarabel/SCS and PEPit comparisons expose
-moderate-horizon scaling and solver dependence. Rational certificate
-construction is a heuristic success-or-fail search; only the independent
-verification and resulting decisions are guaranteed; the generic H=20
-enumeration remains uncertified. Every reported construction and verification
-cost is charged explicitly.
+the possible loss from replacing the joint set by independent marginals. Five
+natural-H=10 envelopes yield 330 exact bad-cell exclusions: 198 are
+independently recovered across three source envelopes and 132 follow by
+checked homogeneous transport. The flagship profile has Gram order at most 24
+and 1,584 exact positive LDL pivots; an independent SymPy rational-arithmetic
+check confirms all 1,584 exact pivots. Its exact marginal rectangle
+also accepts, at boundary value zero. A separate nonzero-radius example over
+the full smooth strongly convex class with mu=1/2 and L=1 is accepted only by
+the joint PEP. Rational certificate construction remains heuristic
+success-or-fail; only independent verification and resulting decisions are
+guaranteed, and the generic H=20 enumeration remains uncertified. The
+deployment ledger separately charges proof construction, envelope acquisition,
+and verification.
 
 ## Keywords
 

@@ -35,7 +35,7 @@ payloads; timings are descriptive and are not used in exact acceptance proofs.
 
        make check
 
-3. Replay the seven exact proof objects without trusting an SDP solver:
+3. Replay the ten exact proof objects without trusting an SDP solver:
 
        make verify
 
@@ -47,11 +47,13 @@ payloads; timings are descriptive and are not used in exact acceptance proofs.
 
        make studies
 
-The natural-$H=10$ verifier performs exact rational $LDL^\top$ elimination for
-66 order-24 slack matrices and can take several minutes.  It uses only the
-Python standard library and never calls an SDP solver.  The generic horizon-20
-regeneration is also a multi-minute optional task; timings are recorded rather
-than asserted as portable constants.
+The balanced natural-$H=10$ verifier performs exact rational $LDL^\top$
+elimination for 66 order-24 slack matrices and can take several minutes.  The
+family consumer replays all three independently recovered sources and can take
+tens of minutes; the two transported profiles add only algebraic checks.  It
+uses only the Python standard library and never calls an SDP solver.  The
+generic horizon-20 regeneration is also a multi-minute optional task; timings
+are recorded rather than asserted as portable constants.
 
 To reproduce the flagship cost ledger on the review machine, run:
 
@@ -96,6 +98,16 @@ heuristic producer; they are not inputs to the mathematical acceptance proof.
 The frozen run makes 69 attempts: 65 cells succeed at the first configuration,
 one succeeds at the fourth after three failed attempts, and six configurations
 are never reached. The final independently replayable coverage is 66/66.
+Two further source envelopes repeat all 66 recoveries independently, and two
+homogeneous transports are checked algebraically, yielding five envelopes and
+330 verified profile-cell exclusions.  The balanced flagship's separately
+verified marginals give $L_x=1$, $U_y=0$, so its rectangle gate also accepts at
+value zero.  Strict dependence value is instead established by the full-class
+joint-only suite.  A stratified SCS recovery diagnostic tests producer
+portability without treating solver status as proof.  A separate SymPy
+matrix pass recomputes all 1,584 balanced-source LDL pivots over the rationals;
+the standard-library consumer remains the trusted
+acceptance boundary.
 The separate
 full-class joint-only suite excludes ten bad cells over the infinite
 $\mathcal F_{1/2,1}$ transcript class, checks 100 positive exact pivots, and

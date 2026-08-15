@@ -1,0 +1,79 @@
+{
+  "certificate": {
+    "dual": {
+      "certified_gradient_squared_upper_bound": "155342104878162431/899753345713600000",
+      "certified_margin_upper_bound": "-2200934438950938121/8097780111422400000",
+      "equality_multipliers": {},
+      "inequality_multipliers": {
+        "derived_trace_bound": "1/100000",
+        "initial_distance": "9/29",
+        "interpolation_0_1": "417075539372/524434728945",
+        "interpolation_1_0": "56293/574053",
+        "interpolation_1_2": "92557405214/75538122025",
+        "interpolation_2_0": "636959/913565",
+        "interpolation_2_1": "218323/413425",
+        "objective_link": "1",
+        "proposal_contract": "2581482/821767",
+        "proposal_norm_lower": "204679/755104"
+      },
+      "positive_ldl_pivot_count": 4
+    },
+    "primal": {
+      "equality_count": 1,
+      "floating_objective": -0.271854789272031,
+      "floating_status": "optimal_inaccurate",
+      "function_value_count": 3,
+      "gram_order": 4,
+      "inequality_count": 12
+    },
+    "recovery": {
+      "ordered_grid_attempts": [
+        {
+          "active_threshold": "1e-06",
+          "outcome": "success",
+          "regularizer": "1/100000"
+        }
+      ],
+      "producer_guarantee": "heuristic success-or-fail"
+    }
+  },
+  "declaration": {
+    "conclusion": "U_y=0 and L_x=1 exactly; the marginal rectangle gate value is 0",
+    "objective": "maximize ||grad f(y)||^2 over the full transcript class",
+    "scope": "flagship natural-H=10 transcript envelope"
+  },
+  "environment": {
+    "clarabel": "0.11.1",
+    "cvxpy": "1.9.2",
+    "generator_sha256": "839a32c21325a4920617f59736ae001205ff644d62fd66355664c3e2c23e9e87",
+    "numpy": "2.4.6",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.11.15 (main, Jun  2 2026, 22:36:57) [Clang 22.1.3 ]",
+    "verifier_sha256": "c5b56691fb39842eb9823c1bdfd21a1c42f69108456f63d6d9016bdffb77f996"
+  },
+  "exact_consequences": {
+    "attaining_quadratic_witness": "f(t)=(t-4/5)^2/2, x=0, y=4/5",
+    "baseline_initial_gradient_lower_bound": "69/100",
+    "baseline_marginal_lower": 1,
+    "candidate_marginal_upper": 0,
+    "rectangle_call_difference": -1,
+    "rectangle_gate_value_with_max_cost_one": 0
+  },
+  "parameters": {
+    "contract_radius": "1/10",
+    "derived_trace_bound": "6",
+    "initial_distance_upper": "1",
+    "proposal_norm_lower": "79/100",
+    "proposal_norm_upper": "81/100",
+    "smoothness": "1",
+    "strong_convexity": "1/10",
+    "tolerance": "2/3"
+  },
+  "payload_sha256": "609e1f8e45e2e5225cabbc69bdf0ad867dafaa99fa1e77d8503f416eecbea0e4",
+  "schema": "c2o-h10-marginal-pep-dual-v1",
+  "summary": {
+    "generation_seconds": 0.17618191614747047,
+    "recovery_attempt_count": 1,
+    "recovery_failure_count": 0
+  }
+}
