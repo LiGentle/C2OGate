@@ -44,7 +44,8 @@ The main computational contribution is proof-carrying acceptance with explicit
 failure semantics. Structural screeners or independently checked dual
 certificates must exclude every cost-violating cell; a verified attainable
 cell rejects, and any unresolved numerical status returns \emph{uncertified}.
-The numerical optimizer is therefore outside the trusted acceptance boundary.
+The numerical optimizer and producer-side coefficient assembly are therefore
+outside the trusted acceptance boundary.
 The paper proves the finite-horizon and exact dimension-free Gram-SDP
 reductions, gives the fixed-dimension rank qualification, and shows that
 separate marginal call bounds can be arbitrarily more conservative even within
@@ -55,9 +56,12 @@ nonzero-radius envelopes and 330 verified profile-cell exclusions.  Three
 source envelopes contribute 198 independently recovered rational duals; two
 homogeneous transports contribute 132 algebraically checked exclusions.  The
 balanced source has Gram order at most 24 and up to 534 inequalities per cell.
-A standard-library verifier reconstructs all affine systems, stationarity
-equations, dual objectives, and slack matrices and checks 1,584 exact positive
-$LDL^\top$ pivots; an independent SymPy rational-arithmetic backend confirms
+A standard-library verifier accepts no stored SDP coefficient matrices: from
+the declared parameters and cell label it independently rebuilds every
+interpolation, transcript, stopping, margin, anchor, and trace coefficient in
+exact rational arithmetic.  It then checks stationarity, dual objectives,
+slack matrices, and 1,584 exact positive $LDL^\top$ pivots; an independent
+SymPy rational-arithmetic backend confirms
 all 1,584 exact pivots.  Its separately certified marginal rectangle
 also accepts, at boundary value zero, and the manuscript states this rather
 than attributing strict dependence value to the flagship.  Repeated Clarabel

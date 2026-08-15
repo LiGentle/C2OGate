@@ -28,7 +28,9 @@ the method couples fixed-step gradient descent from both starts on the same
 unknown smooth strongly convex function and represents every cost-violating
 joint stopping-time cell by a dimension-free Gram SDP. Acceptance requires
 independently verified exclusion of every bad cell; counterexamples reject,
-and incomplete evidence returns uncertified. We prove the finite reduction,
+and incomplete evidence returns uncertified. The consumer rebuilds every SDP
+coefficient from the declared parameters in exact rational arithmetic before
+checking the supplied dual. We prove the finite reduction,
 its fixed-dimension rank qualification, transcript-relative maximality, and
 the possible loss from replacing the joint set by independent marginals. Five
 natural-H=10 envelopes yield 330 exact bad-cell exclusions: 198 are

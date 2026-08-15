@@ -8,7 +8,7 @@ software trust boundary, and technical-review protocol.
 
 Public repository: <https://github.com/LiGentle/C2OGate>
 
-The present MPC submission snapshot is version 0.6.0.  The public repository
+The present MPC submission snapshot is version 0.6.1.  The public repository
 is the development record; no archival DOI is claimed until an immutable
 release has actually been deposited and minted by an archive service.
 
@@ -96,6 +96,12 @@ machine-independent acceptance proof.
   threshold--regularizer recovery prefix for every cell: 69 attempts contain
   66 successes and three failed attempts, with four of ten configurations
   reached before all cells were certified.
+- The proof payload does not contain authoritative primal SDP matrices. The
+  standard-library consumer reconstructs every interpolation, transcript,
+  stopping, margin, anchor, and trace coefficient from the declared parameters
+  with exact `fractions.Fraction` arithmetic before checking stationarity,
+  objective, slack, and positive pivots. Producer-side CVXPY assembly is not
+  trusted.
 - An exact marginal audit of the balanced flagship: $L_x=1$, $U_y=0$, and
   rectangle gate value zero.  The paper therefore does not attribute strict
   joint-over-marginal value to this profile; the separate full-class $H=3$

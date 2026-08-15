@@ -59,7 +59,9 @@ the method couples fixed-step gradient descent from both starts on the same
 unknown smooth strongly convex function and represents every cost-violating
 joint stopping-time cell by a dimension-free Gram SDP.  Acceptance requires
 independently verified exclusion of every bad cell; counterexamples reject,
-and incomplete evidence returns \emph{uncertified}.  We prove the finite
+and incomplete evidence returns \emph{uncertified}.  The consumer rebuilds
+every SDP coefficient from the declared parameters in exact rational
+arithmetic before checking the supplied dual.  We prove the finite
 reduction, its fixed-dimension rank qualification, transcript-relative
 maximality, and the possible loss from replacing the joint set by independent
 marginals.  Five natural-$H=10$ envelopes yield 330 exact bad-cell exclusions:
@@ -144,9 +146,11 @@ semantics, cost accounting, and independently replayable proofs:
   \item Excluded cells become conic dual proof objects.  The flagship audit
   has formula-derived horizon $H=10$, a nonzero proposal-contract radius, and
   no structural cell prescreen.  Exact rational duals exclude all 66 bad cells
-  (Gram order at most 24 and up to 534 inequalities); a standard-library
-  verifier reconstructs dual stationarity, objective, slack, and 1,584 exact
-  positive $LDL^\top$ pivots.  Two additional source envelopes are recovered
+  (Gram order at most 24 and up to 534 inequalities).  A standard-library
+  verifier independently rebuilds every interpolation, transcript, stopping,
+  margin, anchor, and trace coefficient from the declared parameters before
+  checking dual stationarity, objective, slack, and 1,584 exact positive
+  $LDL^\top$ pivots.  Two additional source envelopes are recovered
   independently and two scaled envelopes are transported exactly, giving
   \HtenFamilyExactCells{} exclusions across \HtenFamilyProfiles{} profiles.
   Rational recovery is an explicitly heuristic, success-or-fail producer;
@@ -284,7 +288,8 @@ The mathematical reductions below assemble standard smooth strongly convex
 interpolation, a finite stopping-time disjunction, and weak duality.  The paper
 is therefore evaluated as a software and computational architecture: which
 cells must be solved, what evidence permits acceptance, how incomplete recovery
-fails closed, and how every paid component enters the branch ledger.
+fails closed, how the intended conic model is reconstructed independently of
+the producer, and how every paid component enters the branch ledger.
 Table~\ref{tab:method-position} summarizes that boundary.  Linear-operator
 interpolation \citep{Bousselmi2024} could extend the architecture but is not
 used in the verified implementation.
@@ -1046,6 +1051,25 @@ and upper-bounds \eqref{eq:conic-primal} by $b^\top u+h^\top v$.
 The entries of $v$ are nonnegative weights on interpolation, transcript, and
 stopping inequalities; $Z$ is a positive-semidefinite remainder.
 
+\paragraph{Consumer-side model reconstruction.}
+The proof payload does not supply authoritative primal coefficient matrices.
+For each declared parameter tuple and cell label, the standard-library
+consumer independently rebuilds the vector atoms, the two affine
+gradient-descent trajectories, every ordered smooth strongly convex
+interpolation inequality, the distance and proposal-contract rows, the
+terminal and strict-survival stopping rows, the margin row, the value anchor,
+and the redundant trace bound.  All coefficients and right-hand sides are
+formed with \texttt{fractions.Fraction}; no floating-point coefficient emitted
+by CVXPY, Clarabel, SCS, or the recovery producer is read as evidence.  Unknown
+multiplier names, incorrect row counts, or a parameter mismatch are rejected.
+Only after this reconstruction does the consumer form stationarity, the dual
+objective, and the slack matrix and check them exactly.  Thus the
+producer-side modeling and solver layers are outside the trusted acceptance
+boundary; the trusted kernel includes the smaller, independently implemented
+semantic-to-coefficient reconstruction and exact rational algebra.  This is a
+machine check of the instantiated finite SDP, not a formalization of the
+smooth strongly convex interpolation theorem proved in the paper.
+
 \paragraph{Implemented rational recovery.}
 For each cell, the artifact applies the following heuristic success-or-fail
 procedure to a numerical dual.  There is no completeness, termination, or
@@ -1540,8 +1564,11 @@ strict dual slack without changing the feasible set.  Rational recovery and
 exact positive-definiteness checks succeeded for every cell, with largest
 verified upper bound \HtenDualUpper{}$<0$.  The frozen generation run took
 \HtenDualGenerationSeconds{} seconds, while the standard-library verifier
-separately reconstructed 66 stationarity systems, 66 rational slacks, and
-\HtenDualPivots{} positive $LDL^\top$ pivots.  Weak duality therefore gives
+separately rebuilt all SDP rows from the parameter tuple---including 506
+ordered interpolation inequalities and, at the largest cell, 28 additional
+inequalities plus the anchor equality---then reconstructed 66 stationarity
+systems, 66 rational slacks, and \HtenDualPivots{} positive $LDL^\top$ pivots.
+Weak duality therefore gives
 class-wide acceptance.  Nonemptiness is witnessed by
 $f(t)=t^2/2+(4/5)t$, $x=0$, $y=-4/5$.  This is a verified computational
 result, not a proposition inferred from solver statuses.
@@ -2029,7 +2056,9 @@ proof-carrying computational
 workflow.  The method retains the joint dependence between baseline and
 candidate stopping times, generates only the cost-violating cells, screens
 them with auditable identities, and separates numerical search from the proof
-required for acceptance.  Its three-valued output is deliberate: a witnessed
+required for acceptance.  Its consumer also rebuilds the complete finite SDP
+from declared parameters, so neither producer-side coefficient assembly nor a
+stored solver matrix is trusted.  Its three-valued output is deliberate: a witnessed
 bad cell rejects, verified exclusion of every bad cell can accept, and every
 remaining numerical or modeling uncertainty is reported as uncertified.
 

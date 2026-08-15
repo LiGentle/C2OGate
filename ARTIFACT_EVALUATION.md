@@ -76,6 +76,7 @@ Acceptance trusts:
 Acceptance does not trust:
 
 - a solver's `infeasible` or `inaccurate` status by itself;
+- producer-side CVXPY coefficient arrays or stored solver matrices;
 - the high-precision rational-certificate generator;
 - wall-clock measurements;
 - an unverified or missing cell record.
@@ -132,8 +133,16 @@ with `a(x)=0` and
 Consequently every interpolation, distance, contract, and stopping row is
 affine in `G`. For example, the proposal contract is
 `(a(y)+gamma a(g_0^x))^T G (a(y)+gamma a(g_0^x)) <= delta^2`.
-The independent consumers reconstruct these coefficients instead of trusting
-stored matrices.
+The proof payload contains no authoritative primal coefficient matrices. From
+the declared parameters and cell label, each independent consumer rebuilds
+all interpolation, transcript, contract, stopping, margin, anchor, and trace
+rows using only `fractions.Fraction`. It rejects unknown multiplier names,
+wrong row counts, and parameter mismatches before checking stationarity, the
+dual objective, or the slack matrix. Consequently the producer-side modeling
+layer is outside the trusted boundary; the smaller verifier-side
+semantic-to-coefficient builder is part of the trusted kernel. This checks the
+instantiated finite SDP and does not claim a machine formalization of the
+interpolation theorem.
 
 ## Ancillary policy accounting
 
