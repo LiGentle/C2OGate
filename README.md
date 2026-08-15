@@ -8,7 +8,7 @@ software trust boundary, and technical-review protocol.
 
 Public repository: <https://github.com/LiGentle/C2OGate>
 
-The present MPC submission snapshot is version 0.6.1.  The public repository
+The present MPC submission snapshot is version 0.7.0.  The public repository
 is the development record; no archival DOI is claimed until an immutable
 release has actually been deposited and minted by an archive service.
 
@@ -111,9 +111,18 @@ machine-independent acceptance proof.
   a full-load SymPy rational-arithmetic LDL cross-check of all 1,584
   balanced-source pivots.
 - Five complete bad-cell timing and peak-memory runs with Clarabel and SCS,
-  plus a same-model comparison with PEPit 0.5.1.  PEPit is faster in this
-  benchmark; C2OGate contributes the branch disjunction, fail-closed
-  aggregation, exact recovery, and independent proof consumer.
+  plus a same-model comparison with PEPit 0.5.1.  The reported approximately
+  1.54x gap is end-to-end, not a mislabeled front-end number: the payload
+  separates Python model construction, wrapper/CVXPY canonicalization,
+  Clarabel's reported numerical-kernel time, and residual loop overhead.
+  PEPit is faster here. C2OGate retains a domain-specific producer because its
+  independent exact consumer needs stable named rational rows; a PEPit producer
+  adapter could emit the same schema.
+- Explicit PEPit provenance: the optional `pep` extra pins `PEPit==0.5.1`; the
+  frozen environment records installer `uv`, official documentation, PyPI
+  release, GitHub home page, and tagged source URL. No `direct_url.json` was
+  present, so the payload does not guess which package-index mirror served the
+  installation.
 - An exact nonzero-radius suite over the full infinite class
   `F_{1/2,1}` in which the joint PEP accepts and sharp independent marginals
   reject. Ten rational duals and 100 exact positive pivots are independently
@@ -128,6 +137,12 @@ machine-independent acceptance proof.
   two dimensions. Its formula-derived horizon is H0=2; a one-layer-padded H=3
   audit includes independently replayed rational Gram-SDP duals for all ten
   cost-violating cells and 100 exact positive-minor checks.
+- A rolling nonlinear logistic calibration simulation with 256 decisions,
+  40,000 normalized records, 20 parameters, and a charged 5% minibatch
+  proposal. The exact H=10 suite accepts 48 decisions from short transcripts
+  before candidate/future full gradients are revealed; the held-out audit has
+  zero accepted violations. The prepaid-proof ratio is 0.863, while the cold
+  ledger separately reports when the measured one-time proof self-finances.
 - Three rational quadratic instances containing nine exact SDP duals and 87
   exact principal-minor checks.
 - A frozen audit over 2,000 transcript-consistent quadratic families.
@@ -154,6 +169,8 @@ the multi-envelope audit are explicit because they are substantially slower:
     make h10-envelope-family
     make scs-recovery-diagnostic
     make sympy-exact-crosscheck
+    make pepit-comparison
+    make rolling-logistic-workload
 
 The two market-data regeneration targets are optional:
 
@@ -179,8 +196,11 @@ progress without weakening the acceptance rule. The main proof suite has natural
 replays every cost-violating cell. Exact generic recovery is currently a
 moderate-horizon method, not a scalable long-horizon SDP solver. The smaller
 nonquadratic realization and the full-class joint-only suite are independent
-cross-checks. The positive real-SPX instance reveals its full rational
-quadratic.
+cross-checks. The rolling logistic workload is synthetic but makes a genuine
+short-transcript decision: candidate and future full-data gradients enter only
+the post-decision audit. Its shock distribution is deliberately chosen to
+cross the certified envelope. The positive real-SPX instance reveals its full
+rational quadratic.
 
 The software and supporting research artifact are released under the MIT
 License. See `LICENSE` for the complete terms. The raw third-party SPX snapshot

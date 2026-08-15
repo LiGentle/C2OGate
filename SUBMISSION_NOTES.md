@@ -44,7 +44,10 @@ the joint PEP. Rational certificate construction remains heuristic
 success-or-fail; only independent verification and resulting decisions are
 guaranteed, and the generic H=20 enumeration remains uncertified. The
 deployment ledger separately charges proof construction, envelope acquisition,
-and verification.
+and verification. In a synthetic rolling nonlinear logistic workload, the
+frozen H=10 proof accepts 48 of 256 decisions using only short transcripts;
+post-decision full-model evaluation finds zero accepted violations and a
+prepaid-proof cost ratio of 0.863 after charging every 5% minibatch proposal.
 
 ## Keywords
 

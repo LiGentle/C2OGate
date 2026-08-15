@@ -33,6 +33,7 @@ FULL_CLASS_JOINT_ONLY_CERTIFICATE = (
 )
 SOLVER_BENCHMARK_PAYLOAD = ROOT / "results" / "generic_pep_solver_benchmark.json"
 PEPIT_COMPARISON_PAYLOAD = ROOT / "results" / "pepit_backend_comparison.json"
+ROLLING_LOGISTIC_PAYLOAD = ROOT / "results" / "rolling_logistic_workload.json"
 CERTIFICATE_COST_PAYLOAD = ROOT / "results" / "certificate_cost_study.json"
 H10_CERTIFICATE_COST_PAYLOAD = ROOT / "results" / "h10_certificate_cost_study.json"
 SPX_SENSITIVITY_PAYLOAD = ROOT / "results" / "spx_sensitivity_study.json"
@@ -93,6 +94,7 @@ def main() -> None:
     )
     solver_benchmark_payload = _load_hashed_payload(SOLVER_BENCHMARK_PAYLOAD)
     pepit_comparison_payload = _load_hashed_payload(PEPIT_COMPARISON_PAYLOAD)
+    rolling_logistic_payload = _load_hashed_payload(ROLLING_LOGISTIC_PAYLOAD)
     certificate_cost_payload = _load_hashed_payload(CERTIFICATE_COST_PAYLOAD)
     h10_certificate_cost_payload = _load_hashed_payload(
         H10_CERTIFICATE_COST_PAYLOAD
@@ -264,6 +266,19 @@ def main() -> None:
     pepit_comparison = {
         (row["backend"], row["horizon"]): row
         for row in pepit_comparison_payload["summary"]
+    }
+    pepit_h10_native = pepit_comparison[("c2ogate", 10)]
+    pepit_h10_generic = pepit_comparison[("pepit", 10)]
+    pepit_h10_comparison = next(
+        row
+        for row in pepit_comparison_payload["comparison_to_pepit"]
+        if row["horizon"] == 10
+    )
+    rolling_summary = rolling_logistic_payload["summary"]
+    rolling_config = rolling_logistic_payload["configuration"]
+    rolling_cost_scenarios = {
+        row["exact_oracle_seconds"]: row
+        for row in rolling_logistic_payload["cold_cost_scenarios"]
     }
     contract_sensitivity = {
         row["contract_radius"]: row
@@ -555,13 +570,75 @@ def main() -> None:
         ),
         "SympyCrosscheckPayloadHash": sympy_crosscheck_payload["payload_sha256"],
         "CtwoHtenSerialWall": (
-            f"{pepit_comparison[('c2ogate', 10)]['wall_seconds']['median']:.2f}"
+            f"{pepit_h10_native['wall_seconds']['median']:.2f}"
         ),
         "PepitHtenSerialWall": (
-            f"{pepit_comparison[('pepit', 10)]['wall_seconds']['median']:.2f}"
+            f"{pepit_h10_generic['wall_seconds']['median']:.2f}"
+        ),
+        "PepitHtenEndToEndRatio": (
+            f"{pepit_h10_comparison['end_to_end_ratio_c2ogate_over_pepit']:.2f}"
+        ),
+        "PepitHtenExtraWall": (
+            f"{pepit_h10_comparison['median_extra_seconds_c2ogate_minus_pepit']['wall_seconds']:.2f}"
+        ),
+        "PepitHtenExtraBuild": (
+            f"{pepit_h10_native['model_build_seconds']['median'] - pepit_h10_generic['model_build_seconds']['median']:.2f}"
+        ),
+        "PepitHtenExtraCanonicalization": (
+            f"{(pepit_h10_native['solve_call_seconds']['median'] - pepit_h10_native['solver_numeric_seconds']['median']) - (pepit_h10_generic['solve_call_seconds']['median'] - pepit_h10_generic['solver_numeric_seconds']['median']):.2f}"
+        ),
+        "PepitHtenExtraSolverKernel": (
+            f"{pepit_h10_native['solver_numeric_seconds']['median'] - pepit_h10_generic['solver_numeric_seconds']['median']:.2f}"
+        ),
+        "PepitHtenExtraLoop": (
+            f"{pepit_h10_native['loop_and_measurement_overhead_seconds']['median'] - pepit_h10_generic['loop_and_measurement_overhead_seconds']['median']:.2f}"
         ),
         "PepitVersion": pepit_comparison_payload["environment"]["pepit"],
         "PepitComparisonPayloadHash": pepit_comparison_payload["payload_sha256"],
+        "RollingLogisticEpisodes": str(rolling_config["episode_count"]),
+        "RollingLogisticSamples": f"{rolling_config['sample_count']:,}",
+        "RollingLogisticDimension": str(rolling_config["dimension"]),
+        "RollingLogisticMinibatchPercent": _pct(
+            rolling_config["minibatch_fraction"]
+        ),
+        "RollingLogisticAccepted": str(rolling_summary["accepted_episode_count"]),
+        "RollingLogisticAcceptRate": _pct(rolling_summary["acceptance_rate"]),
+        "RollingLogisticViolations": str(
+            rolling_summary["accepted_safety_violation_count"]
+        ),
+        "RollingLogisticBaselineCalls": str(
+            rolling_summary["baseline_exact_calls"]
+        ),
+        "RollingLogisticGatedCalls": str(rolling_summary["gated_exact_calls"]),
+        "RollingLogisticSavedCalls": str(
+            rolling_summary["saved_exact_calls_before_cheap_cost"]
+        ),
+        "RollingLogisticCheapUnits": (
+            f"{rolling_summary['cheap_proposal_exact_call_units']:.1f}"
+        ),
+        "RollingLogisticWarmRatio": f"{rolling_summary['warm_cost_ratio']:.3f}",
+        "RollingLogisticWarmSaved": (
+            f"{rolling_summary['warm_net_saved_exact_call_units']:.1f}"
+        ),
+        "RollingLogisticBreakEvenTen": str(
+            rolling_cost_scenarios[10.0]["break_even_episode_count"]
+        ),
+        "RollingLogisticColdRatioTen": (
+            f"{rolling_cost_scenarios[10.0]['observed_batch_all_in_cost_ratio']:.3f}"
+        ),
+        "RollingLogisticBreakEvenSixty": str(
+            rolling_cost_scenarios[60.0]["break_even_episode_count"]
+        ),
+        "RollingLogisticColdRatioSixty": (
+            f"{rolling_cost_scenarios[60.0]['observed_batch_all_in_cost_ratio']:.3f}"
+        ),
+        "RollingLogisticBreakEvenSixHundred": str(
+            rolling_cost_scenarios[600.0]["break_even_episode_count"]
+        ),
+        "RollingLogisticColdRatioSixHundred": (
+            f"{rolling_cost_scenarios[600.0]['observed_batch_all_in_cost_ratio']:.3f}"
+        ),
+        "RollingLogisticPayloadHash": rolling_logistic_payload["payload_sha256"],
         "MisspecTenFalseConditional": _pct(
             misspecification["0.90"]["false_accept_rate_conditional_on_accept"]
         ),

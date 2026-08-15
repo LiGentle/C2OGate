@@ -31,77 +31,55 @@ I am pleased to submit the manuscript
 ``C2OGate: Proof-Carrying Joint Performance Estimation for Certified Branch
 Decisions'' for consideration in \textit{Mathematical Programming Computation}.
 
-The manuscript presents a proof-carrying computational architecture for one
-certified branch decision.  An external proposal mechanism supplies a state
-and an auditable error-and-cost contract; both alternatives then continue with
-the same fixed-step gradient method.  C2OGate conditions on observed
-first-order data, couples the two continuations on the same unknown function,
-enumerates their joint stopping-time cells, and reduces every cost-violating
-cell over smooth strongly convex functions to a semidefinite program.  The
-paper does not claim to implement a complete secondary-oracle optimizer.
+The manuscript presents a proof-carrying architecture for one certified branch
+decision. Given a proposed state and an auditable error-and-cost contract,
+C2OGate couples two fixed-step gradient continuations on the same unknown
+smooth strongly convex function, enumerates their joint stopping-time cells,
+and reduces every cost-violating cell to a Gram SDP. Verified exclusions can
+accept, an attainable bad cell rejects, and every unresolved status returns
+\emph{uncertified}. The paper proves the finite-horizon and exact
+dimension-free reductions, states the fixed-dimension rank qualification, and
+quantifies the loss from replacing joint stopping times by separate marginals.
 
-The main computational contribution is proof-carrying acceptance with explicit
-failure semantics. Structural screeners or independently checked dual
-certificates must exclude every cost-violating cell; a verified attainable
-cell rejects, and any unresolved numerical status returns \emph{uncertified}.
-The numerical optimizer and producer-side coefficient assembly are therefore
-outside the trusted acceptance boundary.
-The paper proves the finite-horizon and exact dimension-free Gram-SDP
-reductions, gives the fixed-dimension rank qualification, and shows that
-separate marginal call bounds can be arbitrarily more conservative even within
-one-dimensional quadratics.
+The flagship natural-$H=10$ study covers five nonzero-radius envelopes and 330
+verified profile-cell exclusions: 198 rational duals are recovered
+independently and 132 follow by checked homogeneous transport. For the balanced
+source, a standard-library verifier accepts no stored SDP matrices; it rebuilds
+every interpolation, transcript, stopping, margin, anchor, and trace
+coefficient from parameters in exact rational arithmetic, then checks
+stationarity, objectives, slack matrices, and 1,584 positive $LDL^\top$ pivots.
+Thus both the numerical solver and producer-side coefficient assembly are
+outside the trusted boundary. Rational recovery is explicitly heuristic
+success-or-fail, and the generic $H=20$ study remains \emph{uncertified}.
 
-The central computational study has natural horizon $H=10$ and covers five
-nonzero-radius envelopes and 330 verified profile-cell exclusions.  Three
-source envelopes contribute 198 independently recovered rational duals; two
-homogeneous transports contribute 132 algebraically checked exclusions.  The
-balanced source has Gram order at most 24 and up to 534 inequalities per cell.
-A standard-library verifier accepts no stored SDP coefficient matrices: from
-the declared parameters and cell label it independently rebuilds every
-interpolation, transcript, stopping, margin, anchor, and trace coefficient in
-exact rational arithmetic.  It then checks stationarity, dual objectives,
-slack matrices, and 1,584 exact positive $LDL^\top$ pivots; an independent
-SymPy rational-arithmetic backend confirms
-all 1,584 exact pivots.  Its separately certified marginal rectangle
-also accepts, at boundary value zero, and the manuscript states this rather
-than attributing strict dependence value to the flagship.  Repeated Clarabel
-and SCS runs, a stratified SCS-to-rational recovery diagnostic, and a
-same-model PEPit comparison separate generic PEP modeling from C2OGate's
-branch-disjunction, fail-closed-aggregation, and exact-proof layers.  A
-separate exact instance
-over the full infinite class $\mathcal F_{1/2,1}$ excludes all ten bad cells
-and accepts with the joint stopping-time set while sharp independent marginals
-reject.  It has a nonzero proposal radius and uses neither a shift identity nor
-full Hessian revelation.  Rational recovery is explicitly presented as a
-heuristic success-or-fail producer; the independent consumer supplies the
-guarantee.  The generic horizon-20 study remains \emph{uncertified}, delimiting
-the method as moderate-horizon exact infrastructure rather than promoting
-solver statuses to proofs.
+The revision also addresses the relationship to PEPit directly. PEPit 0.5.1
+encodes the same cells and is faster in the matched experiment. The reported
+$1.54\times$ gap is end-to-end, with Python assembly, CVXPY canonicalization,
+Clarabel kernel time, and residual overhead separated. The payload records the
+pinned distribution, installer, and public source metadata. C2OGate does not
+use PEPit as its acceptance boundary because the independent consumer requires
+stable named rational rows without importing PEPit, CVXPY, or a solver; a
+future PEPit producer adapter could emit the same proof schema.
 
-The manuscript also reports a fully charged cost ledger for this flagship
-suite.  Its headline table includes frozen search and rational recovery, one
-complete independent replay, and a 12-exact-call acquisition charge for the
-curvature, distance, and residual envelope.  The resulting prepaid-reuse
-thresholds do not use a possibly rejected first online decision to finance its
-own proof.
+To exercise the reusable proof on a nonlinear short-transcript workload, the
+manuscript includes 256 rolling proximal-logistic calibration episodes with
+40,000 normalized records and a charged 5\% minibatch proposal. Before seeing
+any candidate or future full-data gradient, the gate accepts 48 episodes.
+Held-out continuation finds zero accepted violations and 48 exact-call
+savings. Charging every minibatch gives a prepaid-proof ratio of 0.863; the
+cold ledger gives ratio 0.951 and break-even 165 episodes for a 60-second exact
+oracle, but ratio 1.392 at 10 seconds. We identify this as a realistic
+synthetic workload whose shock distribution crosses the certified envelope,
+not as real production evidence or a way to finance a rejected first decision.
 
-The paper also reports a contract-misspecification audit on 2,000 finite
-families, including false-acceptance rates relative to the full class.  The
-real-SPX result remains a constant-and-cost-pipeline stress test rather than a
-short-transcript PEP acceptance.  Because the third-party snapshot cannot be
-redistributed, the artifact includes a synthetic raw option panel that runs
-the same filtering and data-to-rational-matrix reconstruction path.
-
-This submission is designed for MPC's software and data review.  The
-accompanying artifact contains structured Python source, complete frozen
-derived proof inputs, canonical hashes, rebuild scripts, unit and integrity
-tests, ten standard-library exact
-verifiers, and adversarial rehashed modifications. Exact proof replay is
-separated from optional CVXPY--Clarabel experiment regeneration, so a Technical
-Editor can inspect the acceptance evidence without trusting the search solver.
-I believe this combination of a new stopping-cell computation, exact
-certification, and evaluation-ready implementation fits MPC's emphasis on
-significant developments in computational optimization.
+The accompanying MIT-licensed artifact contains source, frozen hash-bound
+inputs, ten standard-library exact verifiers, tests, adversarial rehash checks,
+and rebuild scripts. Exact proof replay is separated from optional solver
+regeneration, allowing an MPC Technical Editor to inspect acceptance without
+trusting the search solver. This combination of stopping-cell computation,
+exact certification, honest cost accounting, and evaluation-ready software is
+the reason I believe the manuscript fits \textit{Mathematical Programming
+Computation}.
 
 The manuscript is original, is not under consideration elsewhere, and is
 self-contained; it does not rely on an unpublished companion paper. I am the

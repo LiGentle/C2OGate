@@ -19,6 +19,11 @@ separate from numerical SDP search.
 The frozen PEP runs were produced on macOS arm64 with Python 3.13.5, NumPy
 2.5.2, and CVXPY 1.9.2. Platform details and runner hashes are embedded in the
 payloads; timings are descriptive and are not used in exact acceptance proofs.
+The same-model comparison pins `PEPit==0.5.1` through the `pep` optional extra.
+Its frozen distribution metadata records installer `uv`, the official
+documentation, PyPI release page, GitHub project, and tagged source URL. The
+installation contains no `direct_url.json`; accordingly, the artifact does not
+infer which configured package-index mirror delivered it.
 
 ## Recommended evaluation sequence
 
@@ -63,6 +68,25 @@ The command performs one complete exact replay, adds it to the generator's
 frozen search-and-recovery wall time, and computes prepaid-reuse thresholds
 from the remaining $0.6$-call certificate budget.  This timing is descriptive;
 the verifier's exact arithmetic result is the proof.
+
+To regenerate the PEPit timing decomposition and the short-transcript
+nonlinear workload, run:
+
+       make pepit-comparison
+       make rolling-logistic-workload
+
+The PEPit payload reports total wall time, Python model construction,
+solve-call wall time, Clarabel's numerical kernel time, and the residual
+framework/CVXPY canonicalization component. Thus the manuscript's roughly
+1.54x figure is explicitly end-to-end rather than a pure front-end claim.
+
+The rolling workload contains 256 proximal-logistic episodes with 40,000
+normalized rows, 20 parameters, and a 5% minibatch proposal. The gate sees
+only the current exact gradient, proposal, and analytic envelope checks. Full
+candidate and future gradients are computed after the decision solely for the
+outcome audit. The frozen proof accepts 48 episodes with zero held-out safety
+violations. The workload is a realistic synthetic pattern, not real operations
+data, and its center-shock distribution is chosen to cross the certified band.
 
 ## Trust boundary
 
@@ -116,6 +140,12 @@ proves that sharp independent marginals reject.  The separate
 two-dimensional nonquadratic payload has formula-derived horizon H0=2; its
 one-layer-padded horizon-three audit remains an independent realization
 cross-check.
+The rolling logistic workload reuses the independently verified balanced
+$H=10$ suite rather than producing a new proof. Each accepted record must pass
+the proposal-norm, residual, and strong-monotonicity distance checks; its
+future stopping pair is retained only as held-out evaluation data. The frozen
+ledger charges all 256 minibatches, rejected proposals included, and reports
+both prepaid-proof and cold-start scenarios.
 
 ## Exact Gram assembly record
 

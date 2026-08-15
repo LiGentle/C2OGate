@@ -75,7 +75,12 @@ $\cF_{1/2,1}$ is accepted only by the joint PEP.  Rational certificate
 construction remains heuristic success-or-fail; only independent verification
 and the resulting decisions are guaranteed, and the generic $H=20$
 enumeration remains uncertified.  The deployment ledger separately charges
-proof construction, envelope acquisition, and verification.
+proof construction, envelope acquisition, and verification.  In a synthetic
+rolling nonlinear logistic workload, the frozen $H=10$ proof accepts
+\RollingLogisticAccepted{} of \RollingLogisticEpisodes{} decisions using only
+short transcripts; post-decision full-model evaluation finds zero accepted
+violations and a prepaid-proof cost ratio of \RollingLogisticWarmRatio{} after
+charging every \RollingLogisticMinibatchPercent{} minibatch proposal.
 \keywords{performance estimation \and proof-carrying computation \and
 semidefinite programming \and certified branch decision \and stopping time
 \and evaluation cost}
@@ -172,7 +177,8 @@ The artifact additionally includes an exact marginal audit showing that the
 flagship rectangle accepts at value zero, a SymPy exact-arithmetic cross-check,
 five-repeat Clarabel/SCS scaling runs,
 a same-model PEPit comparison, structured and generic $H=20$ diagnostics,
-and exact nonlinear and rational-quadratic ledgers.  Its 2,000 finite quadratic
+an exact-proposal rolling logistic simulation, and exact nonlinear and
+rational-quadratic ledgers.  Its 2,000 finite quadratic
 families remain a constructed proxy, hence optimistic for an infinite
 consistency class; their new contract-perturbation audit measures this
 optimism.  The full-revelation SPX quadratic tests constant and cost
@@ -252,10 +258,16 @@ Data-driven PEP conditions distributional guarantees on sampled trajectories
 conditioning, or certified PEP computation is new by itself.  Our narrower
 object is a deterministic one-transcript branch comparison with a
 discontinuous stopping rule.  PEPit 0.5.1 encodes the same signed cells and is
-faster in the reported front-end comparison.  The implemented increment is the
-cost-violating cell disjunction, three-valued aggregation, proof producer and
-small consumer, and explicit cost ledger; it is not a new general PEP language
-or interpolation theorem.
+faster in the reported same-model numerical comparison.  It would be a natural
+floating-point producer front end.  We do not make it the acceptance boundary
+because the consumer must reconstruct stable, named rational coefficient rows
+from parameters, reject missing or unknown rows, and replay the dual identity
+without importing PEPit, CVXPY, or a conic solver.  The present artifact
+therefore retains a small domain-specific exact builder; a future PEPit adapter
+could emit the same proof schema without changing the consumer.  The
+implemented increment is the cost-violating cell disjunction, three-valued
+aggregation, proof producer and small consumer, and explicit cost ledger; it is
+not a new general PEP language or interpolation theorem.
 
 \paragraph{Rational recovery and verified SDP.}
 Rigorous SDP postprocessing predates this work.  Interval methods bound
@@ -1433,6 +1445,12 @@ Nonquadratic $\R^2$, $H_0=2$; padded $H=3$ & \NonlinearPepCells{} cells,
 \NonlinearPepBadCells{} bad & Exact acceptance & All ten bad cells have
 independently replayed rational generic PEP duals; contraction bounds
 cross-check the realized pair.\\
+Rolling nonlinear logistic workload & \RollingLogisticEpisodes{} episodes,
+\RollingLogisticSamples{} rows, dimension \RollingLogisticDimension{} &
+\RollingLogisticAccepted{} short-transcript acceptances; zero post-decision
+violations & Reuses the exact $H=10$ suite after checking its envelope.  The
+\RollingLogisticMinibatchPercent{} proposals are charged; the workload is
+synthetic and its anchor distribution is chosen to cross the certified band.\\
 Rational quadratic suite & \RationalCertificateInstances{} instances,
 \RationalDualCertificates{} duals & Exact acceptance &
 \RationalPrincipalMinors{} exact principal minors; reduced quadratic SDPs.\\
@@ -1648,19 +1666,33 @@ acceptance proof.}
 \label{fig:solver-benchmark}
 \end{figure}
 
-For a front-end comparison, we encoded exactly the same signed-margin cells in
-PEPit \PepitVersion{} and ran both front ends serially through Clarabel.  The
-version is the installed public distribution and its metadata points to the
-official \url{https://pepit.readthedocs.io/en/0.5.1/} documentation.  At
-$H=10$, PEPit took \PepitHtenSerialWall{} seconds versus
-\CtwoHtenSerialWall{} seconds for the specialized builder, and both returned
-the same maximum margin to six significant digits.  PEPit is therefore the
-better numerical modeling front end in this test.  C2OGate's distinct layer
-starts after modeling: it generates the cost disjunction, aggregates all cells
-with three-valued semantics, recovers exact rational duals, and gives them to a
-solver-independent consumer.  PESTO is cited as the 2017 MATLAB predecessor;
-we do not present it as a 2022 chordal solver or duplicate the Python benchmark
-in a separate MATLAB/YALMIP environment.
+For a same-model comparison, we encoded exactly the same signed-margin cells
+in PEPit \PepitVersion{} and ran both implementations serially through the same
+CVXPY--Clarabel stack.  The optional artifact extra pins
+\texttt{PEPit==\PepitVersion{}}; the frozen environment records installer
+\texttt{uv}, the distribution metadata's tagged GitHub download URL, the PyPI
+release URL, and the official
+\url{https://pepit.readthedocs.io/en/0.5.1/} documentation.  No
+\texttt{direct\_url.json} is present, so we do not infer which package-index
+mirror served the wheel.
+
+At $H=10$, PEPit takes \PepitHtenSerialWall{} seconds versus
+\CtwoHtenSerialWall{} seconds, an end-to-end factor
+\PepitHtenEndToEndRatio{}, and both return the same maximum margin to six
+significant digits.  This is not a ``pure front-end'' ratio.  Of the
+\PepitHtenExtraWall{}-second median end-to-end gap, the corresponding median
+component differences are \PepitHtenExtraBuild{} seconds for native Python
+model assembly, \PepitHtenExtraCanonicalization{} seconds for wrapper/CVXPY
+canonicalization, and \PepitHtenExtraLoop{} seconds for loop and measurement
+overhead.  The native-minus-PEPit Clarabel-kernel difference is
+\PepitHtenExtraSolverKernel{} seconds (negative means native is faster).
+PEPit is therefore the better floating modeling
+front end in this test.  We retain the native proof path only because C2OGate's
+distinct layer requires named exact coefficient reconstruction, three-valued
+cell aggregation, rational recovery, and a solver-independent consumer.  PESTO
+is cited as the 2017 MATLAB predecessor; we do not present it as a 2022 chordal
+solver or duplicate the Python benchmark in a separate MATLAB/YALMIP
+environment.
 
 \paragraph{Independent exact-arithmetic backend.}
 As a full-load consumer cross-check, SymPy's rational matrix backend computes
@@ -1825,6 +1857,76 @@ ratio is \NonlinearPepCostRatio{}.  Rehashed candidate, bound, cell, and ledger
 changes are rejected.  The rectangle also accepts this singleton pair, so the
 example validates nonlinear proof carrying rather than the separate
 joint-over-marginal advantage.
+
+\subsection{Rolling nonlinear calibration: acceptance from a short transcript}
+\label{sec:rolling-logistic}
+
+We next test the flagship proof as a reusable gate in a nonlinear repeated
+workload, rather than reveal a quadratic model to the decision rule.  The
+simulation has \RollingLogisticEpisodes{} rolling proximal logistic
+calibrations, each with \RollingLogisticSamples{} normalized feature rows and
+\RollingLogisticDimension{} parameters.  For episode $e$,
+\begin{equation}
+ f_e(w)=\frac{0.8}{n}\sum_{i=1}^n
+ \left[\log(1+\exp(a_i^\top w))-b_i a_i^\top w\right]
+ +\frac{0.8}{2}\norm{w-u_e}^2 .                 \label{eq:rolling-logistic}
+\end{equation}
+The binary labels and normalized Gaussian features are frozen by seed; the
+regularization center $u_e$ changes direction and magnitude across episodes,
+modeling a rolling prior or proximal-center update.  Since
+$\norm{a_i}=1$ and the logistic second derivative lies in $[0,1/4]$,
+\[
+ 0.8I\preceq\nabla^2 f_e(w)\preceq I.
+\]
+Thus every episode belongs to $\cF_{0.8,1}\subset\cF_{0.1,1}$ without a
+full Hessian computation.
+
+At $x=0$, the exact full-data gradient is already in the transcript.  The
+external producer scans a fresh \RollingLogisticMinibatchPercent{} minibatch,
+forms its gradient $\widetilde g_e$, and proposes $y_e=-\widetilde g_e$.  Before
+branching, the gate checks only
+\[
+ 0.79\leq\norm{y_e}\leq0.81,\qquad
+ \norm{y_e+\nabla f_e(0)}\leq0.1,\qquad
+ \frac{\norm{\nabla f_e(0)}}{0.8}\leq1.
+\]
+The last inequality is the strong-monotonicity distance certificate
+$\norm{x-x_*}\leq\norm{\nabla f_e(x)}/0.8$.  These checks place the transcript
+inside the balanced $H=10$ envelope, so its 66 independently replayed bad-cell
+exclusions apply unchanged.  Candidate gradients, realized stopping times,
+the optimizer, and future full-data gradients are withheld until after this
+decision; they are used only for the outcome audit.
+
+The gate accepts \RollingLogisticAccepted{} of \RollingLogisticEpisodes{}
+episodes (\RollingLogisticAcceptRate{}).  In the post-decision full-model
+evaluation, every accepted episode has stopping pair $(1,0)$, so the
+\RollingLogisticAccepted{} acceptances save \RollingLogisticSavedCalls{} exact
+calls and produce \RollingLogisticViolations{} safety violations.  The
+unchanged baseline uses \RollingLogisticBaselineCalls{} remaining exact calls;
+the gated paths use \RollingLogisticGatedCalls{}.  Charging all minibatch
+queries adds \RollingLogisticCheapUnits{} exact-call units, giving prepaid-proof
+total \RollingLogisticWarmRatio{} of baseline and net saving
+\RollingLogisticWarmSaved{} units.
+
+The one-time proof is not silently removed.  Using the measured
+$H=10$ search-plus-verification charge, a 10-second exact oracle gives an
+all-in ratio \RollingLogisticColdRatioTen{} on these 256 episodes and requires
+\RollingLogisticBreakEvenTen{} episodes at the observed acceptance rate.  At
+60 seconds the corresponding values are \RollingLogisticColdRatioSixty{} and
+\RollingLogisticBreakEvenSixty{}; at 600 seconds they are
+\RollingLogisticColdRatioSixHundred{} and
+\RollingLogisticBreakEvenSixHundred{}.  Therefore this frozen batch is
+self-financing in the 60- and 600-second scenarios, but not in the 10-second
+scenario.  It does not finance a possibly rejected first decision from zero
+credit.
+
+This study closes a narrower evidence gap than a production deployment would.
+It is a reproducible synthetic generalized-linear workload, not observed
+operations data; its center-shock distribution is deliberately chosen to
+cross the certified displacement band.  It demonstrates that a nonlinear
+repeated workload can trigger the exact gate without revealing the candidate
+continuation, while leaving empirical frequency and constant acquisition in a
+real system open.
 
 \subsection{Exact rational certificates}
 
@@ -1994,7 +2096,10 @@ acceptance, but its radius experiment confirms that this evidence degrades as
 the proposal departs from a gradient step.  A Newton-type proposal requires a
 separately certified residual or a richer interpolation model.  Obtaining
 comparably tight low-cost constants from short transcripts in large nonlinear
-applications remains the principal practical bottleneck.
+applications remains the principal practical bottleneck.  The rolling
+logistic study in \cref{sec:rolling-logistic} obtains its constants from
+normalized features and explicit proximal curvature; that is a genuine
+short-transcript route, but not evidence that such structure is generic.
 
 The intended operating regime is consequently narrow: high-fidelity calls
 must be expensive black-box operations, proposal and proof work must be
@@ -2007,14 +2112,16 @@ sharing a fixed feature map and maturity panel, but the present snapshot does
 not establish a production reuse distribution; its result remains a stress
 test of the accounting interface.
 
-Nor does the present evidence show that a real repeated workload frequently
-lands in the flagship displacement bands.  The five-envelope family tests
-mathematical and producer robustness across declared envelopes, not their
-empirical frequency.  A trust-region or multifidelity model manager may make
-better practical accept/reject choices and already supplies convergence
-safeguards; C2OGate adds only a separately checkable pointwise cost claim when
-its stronger transcript and funding conditions hold.  No experiment here
-demonstrates that it changes a production trust-region decision.
+The rolling logistic simulation lands in the flagship band in
+\RollingLogisticAcceptRate{} of its frozen episodes and quantifies rejected
+proposal cost, but it is not a real repeated workload and its shock range is
+selected to cross that band.  The five-envelope family tests mathematical and
+producer robustness across declared envelopes, not universal empirical
+frequency.  A trust-region or multifidelity model manager may make better
+practical accept/reject choices and already supplies convergence safeguards;
+C2OGate adds only a separately checkable pointwise cost claim when its stronger
+transcript and funding conditions hold.  No experiment here demonstrates that
+it changes a production trust-region decision.
 
 The exact-shift audit in \cref{tab:scaling} reduces the residual SDP count from
 quadratic to linear in $H$.  The ragged audit in
@@ -2080,12 +2187,19 @@ Repeated Clarabel/SCS runs, an SCS-to-rational recovery diagnostic, and a
 same-model PEPit comparison expose numerical cost rather than hiding it, while
 the contract-misspecification audit shows that optimistic declarations can
 create false acceptances relative to the full consistency class.
+The rolling proximal-logistic workload additionally exercises the frozen
+$H=10$ proof before full revelation: \RollingLogisticAccepted{} of
+\RollingLogisticEpisodes{} short transcripts accept, the held-out continuation
+audit finds zero violations, and the charged prepaid-proof ratio is
+\RollingLogisticWarmRatio{}.  Its cold ledger is favorable for the reported
+60-second exact-oracle scenario but not for the 10-second scenario.
 
 The generic horizon-20 audit nevertheless remains uncertified rather than
 promoting floating statuses to proofs.  The finite-family study is a
 constructed proxy, and the real-SPX result is a full-model constant-pipeline
 stress test whose short-transcript screen does not accept.  The evidence
-therefore does not establish universal acceleration, cheap constant
+therefore does not establish a real production workload, universal
+acceleration, cheap constant
 acquisition, or scalable exact dual recovery.  It establishes a conservative
 moderate-horizon implementation pattern for making and auditing cost-dominance
 claims when the

@@ -2,7 +2,7 @@ PYTHON ?= $(if $(wildcard .venv/bin/python),.venv/bin/python,python3)
 PEP_PYTHONPATH ?= /tmp/c2o-mpc-deps:src
 RUFF_VERSION ?= 0.12.10
 
-.PHONY: check-python check-ruff study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual h10-marginal-certificate h10-envelope-profiles h10-envelope-family scs-recovery-diagnostic sympy-exact-crosscheck joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
+.PHONY: check-python check-ruff study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual h10-marginal-certificate h10-envelope-profiles h10-envelope-family scs-recovery-diagnostic sympy-exact-crosscheck joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison rolling-logistic-workload synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates studies test verify mpc-paper mpc-source software-archive cover-letter submission check clean
 
 check-python:
 	@$(PYTHON) -c 'import sys; required=(3, 11); current=sys.version_info[:2]; sys.exit("C2OGate requires Python 3.11 or later; found %d.%d" % current) if current < required else print("Python version check: %d.%d" % current)'
@@ -10,7 +10,7 @@ check-python:
 check-ruff:
 	@$(PYTHON) -c 'from importlib.metadata import version; actual=version("ruff"); expected="$(RUFF_VERSION)"; assert actual == expected, "C2OGate check requires ruff %s; found %s" % (expected, actual); print("ruff version check: %s" % actual)'
 
-study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual h10-marginal-certificate h10-envelope-profiles h10-envelope-family scs-recovery-diagnostic sympy-exact-crosscheck joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates test verify mpc-paper check: check-python
+study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual h10-generic-pep-dual h10-marginal-certificate h10-envelope-profiles h10-envelope-family scs-recovery-diagnostic sympy-exact-crosscheck joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison rolling-logistic-workload synthetic-data-fixture nonlinear-pep-acceptance certificate-cost-study h10-certificate-cost-study spx-sensitivity-study real-spx-study real-spx-positive-study rational-certificates test verify mpc-paper check: check-python
 
 study:
 	$(PYTHON) experiments/run_study.py
@@ -73,7 +73,11 @@ solver-benchmark:
 	$(PYTHON) experiments/build_mpc_assets.py
 
 pepit-comparison:
-	PYTHONPATH=$(PEP_PYTHONPATH) $(PYTHON) experiments/run_pepit_backend_comparison.py
+	PYTHONPATH=src MPLCONFIGDIR=/tmp/c2o-matplotlib $(PYTHON) experiments/run_pepit_backend_comparison.py
+	$(PYTHON) experiments/build_mpc_assets.py
+
+rolling-logistic-workload:
+	PYTHONPATH=src $(PYTHON) experiments/run_rolling_logistic_workload.py
 	$(PYTHON) experiments/build_mpc_assets.py
 
 synthetic-data-fixture:
@@ -103,7 +107,7 @@ rational-certificates:
 	$(PYTHON) experiments/generate_rational_dual_certificates.py
 	$(PYTHON) tools/verify_rational_dual_certificates.py certificates/rational_sdp_dual_certificates.json
 
-studies: study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison synthetic-data-fixture nonlinear-pep-acceptance rational-certificates
+studies: study transcript-study pep-scaling-study generic-pep-scaling-study generic-pep-dual joint-only-certificate full-class-joint-only-certificate solver-benchmark pepit-comparison rolling-logistic-workload synthetic-data-fixture nonlinear-pep-acceptance rational-certificates
 
 test:
 	PYTHONPATH=src $(PYTHON) -m pytest -q tests
