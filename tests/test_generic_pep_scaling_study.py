@@ -11,7 +11,7 @@ from collections import Counter
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "generic_pep_scaling_study.json"
-EXPECTED_HASH = "fbf6f92784bea6d2d03994e9bc6e44308f8abd9f6c4fd333dd8c9d08f9d128c3"
+EXPECTED_HASH = "c95b62e10f20ad9786559c8693ad2495eed285da06caee6f7890e3d8376b95fd"
 
 
 def _canonical(value: dict) -> bytes:

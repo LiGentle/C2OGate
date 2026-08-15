@@ -36,6 +36,26 @@ def test_verified_attainable_bad_cell_rejects_immediately():
     assert decision.witnessed_count == 1
 
 
+def test_unverified_ledger_distinguishes_call_and_cost_only_witnesses():
+    cost_only = proof_carrying_gate(
+        [CellProof(1, 1, CellProofStatus.ATTAINABLE, True)],
+        0.5,
+        minimum_saved_calls=0,
+        horizon=1,
+        cost_ledger_verified=False,
+    )
+    assert cost_only.outcome is GateOutcome.UNCERTIFIED
+    call_violation = proof_carrying_gate(
+        [CellProof(1, 1, CellProofStatus.ATTAINABLE, True)],
+        0.5,
+        minimum_saved_calls=1,
+        horizon=1,
+        cost_ledger_verified=False,
+    )
+    assert call_violation.outcome is GateOutcome.REJECT
+    assert "call-violating" in call_violation.reason
+
+
 @pytest.mark.parametrize(
     "proofs,ledger_verified",
     [
@@ -56,6 +76,7 @@ def test_missing_unverified_or_unresolved_evidence_is_uncertified(
     )
     assert decision.outcome is GateOutcome.UNCERTIFIED
     assert decision.uncertified_count > 0
+    assert f"{decision.excluded_count}/{decision.bad_cell_count}" in decision.reason
 
 
 def test_rejects_duplicate_nonbad_and_out_of_horizon_proofs():

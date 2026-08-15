@@ -23,12 +23,12 @@
     "tolerance": 1e-06
   },
   "environment": {
-    "numpy": "2.5.1",
-    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
-    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
+    "numpy": "2.4.6",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.11.15 (main, Jun  2 2026, 22:36:57) [Clang 22.1.3 ]",
     "runner_sha256": "bf9afbc6210d21a031d5746fbc79f79f6f4f56dc1c7ddf7fc539d20ae6789278",
     "source_sha256": {
-      "src/c2ogate/__init__.py": "77fec144bba4d557d7ba463d5214d4fdb582fb1d0bf874f542fd984540a09738",
+      "src/c2ogate/__init__.py": "1d2c167003a926331207d653b83c2a53d282c1d04947c5a6939c4c3472b4d010",
       "src/c2ogate/active_set.py": "a99e1bd8813253b54527e0aa1ad01e7cc982cd47d60dd21834732e60ee263a61",
       "src/c2ogate/certificates.py": "9269b36d035c32aa49e127e900e39010773a5192a55386b96b12b09f95b32dab",
       "src/c2ogate/core.py": "e7cb009cca991d0b78b6a38cd149a973b1f9daf23beafa9c943273fff2be8924",
@@ -36,10 +36,11 @@
       "src/c2ogate/dynamic_certificates.py": "a7ae95e4859d677d9b49a9d495b1624be867374d33ec546eb7d5e561c0404618",
       "src/c2ogate/matrix_certificates.py": "40791545bede60e15c07c47ce39c5f9b4ba10280177f8373bd712293b01d318b",
       "src/c2ogate/quadratic.py": "2ae430690e7eb185bb09d8f59e28bda78332756773a73a870eb1752d537cec86",
-      "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d"
+      "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d",
+      "src/c2ogate/workflow.py": "cadbb156ba71b9eb9beebe16038c174390fd03609e4fe3e9678aa2119ec48687"
     }
   },
-  "payload_sha256": "b7f99102da629f49d11c57e125abb4fe33aa9424a50bf8212e458fac00ff9155",
+  "payload_sha256": "8d64b5e68e219176a6143a399af1b9884fda7a045391ff32a11866ef9d4f478c",
   "records": [
     {
       "always_cost_ratio": 1.0,

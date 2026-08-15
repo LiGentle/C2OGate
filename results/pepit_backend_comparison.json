@@ -1,0 +1,389 @@
+{
+  "declaration": {
+    "execution": "serial complete bad-cell enumeration for both backends",
+    "horizons": [
+      2,
+      6,
+      10
+    ],
+    "repeat_count": 3,
+    "scope": "PEPit is a generic modeling comparison; C2OGate's claimed increment is bad-cell generation, fail-closed aggregation, rational recovery, and independent verification, not a replacement PEP language",
+    "shared_model": "same function class, two trajectories, proposal equality/contract, terminal and survival signed-margin metrics",
+    "solver": "Clarabel through CVXPY"
+  },
+  "environment": {
+    "clarabel": "0.11.1",
+    "cvxpy": "1.9.2",
+    "numpy": "2.5.2",
+    "pepit": "0.5.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 11:23:37) [Clang 14.0.6 ]",
+    "runner_sha256": "8d55fa3a636e3f0171bb273e3ce4ebeddc75870a5338a60e42ed7ddabdc9c427"
+  },
+  "payload_sha256": "89dc25fffbbb5e29bc0301e37fae2315f9b7a8fd208b8aaee104b01ff52fff0c",
+  "runs": [
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 6,
+      "finite_value_count": 6,
+      "horizon": 2,
+      "maximum_margin": 1.7757184132857389,
+      "repeat": 0,
+      "status_counts": {
+        "optimal": 6
+      },
+      "wall_seconds": 0.20736958319321275
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 6,
+      "finite_value_count": 6,
+      "horizon": 2,
+      "maximum_margin": 1.7757184132857389,
+      "repeat": 1,
+      "status_counts": {
+        "optimal": 6
+      },
+      "wall_seconds": 0.20076895784586668
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 6,
+      "finite_value_count": 6,
+      "horizon": 2,
+      "maximum_margin": 1.7757184132857389,
+      "repeat": 2,
+      "status_counts": {
+        "optimal": 6
+      },
+      "wall_seconds": 0.20344179216772318
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 28,
+      "finite_value_count": 28,
+      "horizon": 6,
+      "maximum_margin": 0.4853175129660782,
+      "repeat": 0,
+      "status_counts": {
+        "optimal": 26,
+        "optimal_inaccurate": 2
+      },
+      "wall_seconds": 4.0198683752678335
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 28,
+      "finite_value_count": 28,
+      "horizon": 6,
+      "maximum_margin": 0.4853175129660782,
+      "repeat": 1,
+      "status_counts": {
+        "optimal": 26,
+        "optimal_inaccurate": 2
+      },
+      "wall_seconds": 3.915857792366296
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 28,
+      "finite_value_count": 28,
+      "horizon": 6,
+      "maximum_margin": 0.4853175129660782,
+      "repeat": 2,
+      "status_counts": {
+        "optimal": 26,
+        "optimal_inaccurate": 2
+      },
+      "wall_seconds": 3.9570170831866562
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 66,
+      "finite_value_count": 66,
+      "horizon": 10,
+      "maximum_margin": -0.070157779465896,
+      "repeat": 0,
+      "status_counts": {
+        "optimal": 44,
+        "optimal_inaccurate": 22
+      },
+      "wall_seconds": 24.877084707841277
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 66,
+      "finite_value_count": 66,
+      "horizon": 10,
+      "maximum_margin": -0.070157779465896,
+      "repeat": 1,
+      "status_counts": {
+        "optimal": 44,
+        "optimal_inaccurate": 22
+      },
+      "wall_seconds": 24.74906783318147
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 66,
+      "finite_value_count": 66,
+      "horizon": 10,
+      "maximum_margin": -0.070157779465896,
+      "repeat": 2,
+      "status_counts": {
+        "optimal": 44,
+        "optimal_inaccurate": 22
+      },
+      "wall_seconds": 24.849552334286273
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 6,
+      "finite_value_count": 6,
+      "horizon": 2,
+      "maximum_margin": 1.7757184138987347,
+      "repeat": 0,
+      "status_counts": {
+        "solved": 6
+      },
+      "wall_seconds": 0.11865658406168222
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 6,
+      "finite_value_count": 6,
+      "horizon": 2,
+      "maximum_margin": 1.7757184138987347,
+      "repeat": 1,
+      "status_counts": {
+        "solved": 6
+      },
+      "wall_seconds": 0.11447620904073119
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 6,
+      "finite_value_count": 6,
+      "horizon": 2,
+      "maximum_margin": 1.7757184138987347,
+      "repeat": 2,
+      "status_counts": {
+        "solved": 6
+      },
+      "wall_seconds": 0.11562787462025881
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 28,
+      "finite_value_count": 28,
+      "horizon": 6,
+      "maximum_margin": 0.4853174880073092,
+      "repeat": 0,
+      "status_counts": {
+        "solved": 28
+      },
+      "wall_seconds": 2.2300219577737153
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 28,
+      "finite_value_count": 28,
+      "horizon": 6,
+      "maximum_margin": 0.4853174880073092,
+      "repeat": 1,
+      "status_counts": {
+        "solved": 28
+      },
+      "wall_seconds": 2.2983064157888293
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 28,
+      "finite_value_count": 28,
+      "horizon": 6,
+      "maximum_margin": 0.4853174880073092,
+      "repeat": 2,
+      "status_counts": {
+        "solved": 28
+      },
+      "wall_seconds": 2.275035417173058
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 66,
+      "finite_value_count": 66,
+      "horizon": 10,
+      "maximum_margin": -0.07015779833652935,
+      "repeat": 0,
+      "status_counts": {
+        "solved": 66
+      },
+      "wall_seconds": 16.818936332594603
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 66,
+      "finite_value_count": 66,
+      "horizon": 10,
+      "maximum_margin": -0.07015779833652935,
+      "repeat": 1,
+      "status_counts": {
+        "solved": 66
+      },
+      "wall_seconds": 16.774200291838497
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 66,
+      "finite_value_count": 66,
+      "horizon": 10,
+      "maximum_margin": -0.07015779833652935,
+      "repeat": 2,
+      "status_counts": {
+        "solved": 66
+      },
+      "wall_seconds": 16.8376699173823
+    }
+  ],
+  "schema": "c2o-pepit-backend-comparison-v1",
+  "summary": [
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 6,
+      "horizon": 2,
+      "repeat_count": 3,
+      "status_counts_by_repeat": [
+        {
+          "optimal": 6
+        },
+        {
+          "optimal": 6
+        },
+        {
+          "optimal": 6
+        }
+      ],
+      "wall_seconds": {
+        "median": 0.20344179216772318,
+        "q25": 0.20210537500679493,
+        "q75": 0.20540568768046796
+      }
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 28,
+      "horizon": 6,
+      "repeat_count": 3,
+      "status_counts_by_repeat": [
+        {
+          "optimal": 26,
+          "optimal_inaccurate": 2
+        },
+        {
+          "optimal": 26,
+          "optimal_inaccurate": 2
+        },
+        {
+          "optimal": 26,
+          "optimal_inaccurate": 2
+        }
+      ],
+      "wall_seconds": {
+        "median": 3.9570170831866562,
+        "q25": 3.936437437776476,
+        "q75": 3.988442729227245
+      }
+    },
+    {
+      "backend": "c2ogate",
+      "bad_cell_count": 66,
+      "horizon": 10,
+      "repeat_count": 3,
+      "status_counts_by_repeat": [
+        {
+          "optimal": 44,
+          "optimal_inaccurate": 22
+        },
+        {
+          "optimal": 44,
+          "optimal_inaccurate": 22
+        },
+        {
+          "optimal": 44,
+          "optimal_inaccurate": 22
+        }
+      ],
+      "wall_seconds": {
+        "median": 24.849552334286273,
+        "q25": 24.79931008373387,
+        "q75": 24.863318521063775
+      }
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 6,
+      "horizon": 2,
+      "repeat_count": 3,
+      "status_counts_by_repeat": [
+        {
+          "solved": 6
+        },
+        {
+          "solved": 6
+        },
+        {
+          "solved": 6
+        }
+      ],
+      "wall_seconds": {
+        "median": 0.11562787462025881,
+        "q25": 0.115052041830495,
+        "q75": 0.11714222934097052
+      }
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 28,
+      "horizon": 6,
+      "repeat_count": 3,
+      "status_counts_by_repeat": [
+        {
+          "solved": 28
+        },
+        {
+          "solved": 28
+        },
+        {
+          "solved": 28
+        }
+      ],
+      "wall_seconds": {
+        "median": 2.275035417173058,
+        "q25": 2.2525286874733865,
+        "q75": 2.2866709164809436
+      }
+    },
+    {
+      "backend": "pepit",
+      "bad_cell_count": 66,
+      "horizon": 10,
+      "repeat_count": 3,
+      "status_counts_by_repeat": [
+        {
+          "solved": 66
+        },
+        {
+          "solved": 66
+        },
+        {
+          "solved": 66
+        }
+      ],
+      "wall_seconds": {
+        "median": 16.818936332594603,
+        "q25": 16.79656831221655,
+        "q75": 16.82830312498845
+      }
+    }
+  ]
+}

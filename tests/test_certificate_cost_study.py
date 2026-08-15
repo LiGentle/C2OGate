@@ -27,12 +27,15 @@ def test_certificate_cost_ledger_is_complete() -> None:
         + measurement["median_verification_seconds"]
     )
     saved = payload["declaration"]["saved_exact_calls_per_accepted_decision"]
+    budget = payload["declaration"]["certificate_budget_exact_call_units"]
+    base = payload["declaration"]["base_nonexact_cost_exact_call_units"]
+    assert budget == saved - base == 0.5
     assert payload["declaration"]["zero_credit_online_rejection_funded"] is False
     for scenario in payload["scenarios"]:
         units = total / scenario["exact_oracle_seconds"]
         assert scenario["certificate_cost_exact_call_units"] == units
-        assert scenario["one_shot_self_financing"] is (units <= saved)
-        assert scenario["minimum_offline_reuses"] == max(1, ceil(units / saved))
+        assert scenario["one_shot_self_financing"] is (units <= budget)
+        assert scenario["minimum_offline_reuses"] == max(1, ceil(units / budget))
 
 
 def test_manuscript_cost_macros_use_the_frozen_total() -> None:

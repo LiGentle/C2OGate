@@ -1,6 +1,6 @@
 \documentclass[10pt]{letter}
 
-\usepackage[letterpaper,margin=0.85in]{geometry}
+\usepackage[letterpaper,margin=0.65in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
@@ -8,10 +8,11 @@
 \usepackage{parskip}
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.45em}
+\setlength{\parskip}{0.28em}
 \pagestyle{empty}
 
 \begin{document}
+\fontsize{9.3}{10.8}\selectfont
 
 \begin{flushright}
 Jintao Li\\
@@ -27,9 +28,8 @@ Mathematical Optimization Society and Springer Nature
 Dear Editors,
 
 I am pleased to submit the manuscript
-``C2OGate: Proof-Carrying Joint Performance Estimation for Two-Oracle Cost
-Certification'' for consideration in \textit{Mathematical Programming
-Computation}.
+``C2OGate: Proof-Carrying Joint Performance Estimation for Certified Branch
+Decisions'' for consideration in \textit{Mathematical Programming Computation}.
 
 The manuscript presents a proof-carrying computational architecture for one
 certified branch decision.  An external proposal mechanism supplies a state
@@ -50,24 +50,47 @@ reductions, gives the fixed-dimension rank qualification, and shows that
 separate marginal call bounds can be arbitrarily more conservative even within
 one-dimensional quadratics.
 
-The central computational demonstration is a non-shift, nonquadratic
-two-dimensional acceptance with formula-derived horizon $H_0=2$.  Its
-deliberately one-layer-padded $H=3$ audit includes recovered rational duals for
-all ten cost-violating generic Gram-SDP cells.  A standard-library verifier
-reconstructs every cell, checks exact dual stationarity and a negative upper
-bound, and proves 100 positive leading principal minors.  Thus SDP computation,
-rather than an analytic contraction argument, carries the acceptance proof.
-The generic horizon-20 study is labeled
-only as a floating diagnostic with proof-carrying outcome
-\emph{uncertified}.  The paper also benchmarks two- and four-bin correlation-
-aware summaries on 2,000 constructed finite proxy families, measures the
-certificate break-even threshold, and reports the real-SPX full-quadratic
-result only as a constant-and-cost-pipeline stress test (common-ledger ratio
-0.495), not as short-transcript PEP acceptance.
+The central computational demonstration has natural horizon $H=10$, nonzero
+proposal-contract radius, 66 cost-violating generic Gram-SDP cells, Gram order
+at most 24, and up to 534 inequalities per cell.  Rational dual recovery
+succeeds for every cell in a recorded ordered threshold--regularizer search;
+incomplete recovery would report certified progress and return
+\emph{uncertified}.  A standard-library verifier reconstructs all affine
+systems, stationarity equations, dual objectives, and slack matrices and
+checks 1,584 exact positive $LDL^\top$ pivots.  Repeated Clarabel and SCS runs
+report timing quantiles and peak memory, and a same-model PEPit comparison
+separates generic PEP modeling from C2OGate's branch-disjunction,
+fail-closed-aggregation, and exact-proof layers.  A separate exact instance
+over the full infinite class $\mathcal F_{1/2,1}$ excludes all ten bad cells
+and accepts with the joint stopping-time set while sharp independent marginals
+reject.  It has a nonzero proposal radius and uses neither a shift identity nor
+full Hessian revelation.  Rational recovery is explicitly presented as a
+heuristic success-or-fail producer; the independent consumer supplies the
+guarantee.  The generic horizon-20 study remains \emph{uncertified}, delimiting
+the method as moderate-horizon exact infrastructure rather than promoting
+solver statuses to proofs.
 
-This submission is designed for MPC's software and data review. The accompanying
-artifact contains structured Python source, complete frozen derived proof inputs, canonical
-hashes, rebuild scripts, unit and integrity tests, four standard-library exact
+The manuscript also reports a fully charged cost ledger for this flagship
+suite: frozen search and rational recovery, one complete independent verifier
+replay, and the resulting prepaid-reuse thresholds are all charged against
+the certificate's remaining cost budget.  This accounting does not use a
+possibly rejected first online decision to finance its own proof.
+An explicit repeated-PDE calculation additionally charges acquisition of the
+curvature, distance, and residual envelope and gives a prepaid break-even
+threshold on the frozen timing ledger when one forward--adjoint
+gradient takes 60 seconds.
+
+The paper also reports a contract-misspecification audit on 2,000 finite
+families, including false-acceptance rates relative to the full class.  The
+real-SPX result remains a constant-and-cost-pipeline stress test rather than a
+short-transcript PEP acceptance.  Because the third-party snapshot cannot be
+redistributed, the artifact includes a synthetic raw option panel that runs
+the same filtering and data-to-rational-matrix reconstruction path.
+
+This submission is designed for MPC's software and data review.  The
+accompanying artifact contains structured Python source, complete frozen
+derived proof inputs, canonical hashes, rebuild scripts, unit and integrity
+tests, seven standard-library exact
 verifiers, and adversarial rehashed modifications. Exact proof replay is
 separated from optional CVXPY--Clarabel experiment regeneration, so a Technical
 Editor can inspect the acceptance evidence without trusting the search solver.

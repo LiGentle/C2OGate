@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "c2ogate"
-version = "0.3.0"
-description = "Cost-certified two-oracle optimization gates"
+version = "0.5.0"
+description = "Proof-carrying joint performance estimation for certified branch decisions"
 readme = "README.md"
 license = {file = "LICENSE"}
 authors = [
@@ -24,8 +24,9 @@ Repository = "https://github.com/LiGentle/C2OGate"
 Issues = "https://github.com/LiGentle/C2OGate/issues"
 
 [project.optional-dependencies]
-pep = ["cvxpy>=1.7"]
+pep = ["cvxpy==1.9.2", "PEPit==0.5.1", "sympy==1.14.0"]
 certificates = ["mpmath>=1.3"]
+dev = ["pytest==8.3.5", "ruff==0.12.10"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

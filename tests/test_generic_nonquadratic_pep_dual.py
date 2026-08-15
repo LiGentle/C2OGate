@@ -14,7 +14,7 @@ from tools.verify_generic_nonquadratic_pep_dual import verify_payload
 
 ROOT = Path(__file__).resolve().parents[1]
 CERTIFICATE = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
-EXPECTED_HASH = "058b231c33825d4e91f2a535514d88e668c34686225ba3f63866c693f3e384cb"
+EXPECTED_HASH = "4015676b7a618afadb12f733808902146a210ad3cce1c6ca3e5c8466ced3c9fc"
 
 
 def _load() -> dict:

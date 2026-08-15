@@ -8,10 +8,9 @@ software trust boundary, and technical-review protocol.
 
 Public repository: <https://github.com/LiGentle/C2OGate>
 
-Versioned MPC review snapshot:
-<https://github.com/LiGentle/C2OGate/releases/tag/v0.3.0>. This immutable Git
-tag is suitable for Zenodo import; no DOI is claimed until an archive service
-has actually minted one.
+The present MPC submission snapshot is version 0.5.0.  The public repository
+is the development record; no archival DOI is claimed until an immutable
+release has actually been deposited and minted by an archive service.
 
 ## Submission outputs
 
@@ -35,19 +34,27 @@ Official template source:
 
 Python 3.11 or later is required. Install the complete development environment:
 
-    python -m pip install -e '.[pep,certificates]' pytest ruff
+    python -m pip install -e '.[pep,certificates,dev]'
+
+Alternatively, create the pinned review environment and activate it:
+
+    conda env create -f environment.yml
+    conda activate c2ogate-mpc
 
 Run source and integrity checks:
 
     make check
 
-Replay the four independently checkable acceptance artifacts:
+Replay the seven independently checkable proof objects:
 
     make verify
 
 Expected summaries:
 
     VERIFIED: generic nonquadratic R^2 joint-PEP dual suite, natural H0=2, padded audit H=3, 10 cost-violating cells, all upper bounds < 0, 100 positive leading minors
+    VERIFIED: natural-H=10 generic joint-PEP dual suite, 66 cost-violating cells, Gram order <= 24, 1584 exact positive LDL pivots, progress=66/66 independently replayable exclusions constructed
+    VERIFIED: full infinite-class joint-only PEP acceptance, H=3, 10 bad cells, 100 positive LDL pivots, witness pairs=[[2, 1], [1, 0]]
+    VERIFIED: exact joint-only acceptance, rectangle rejection, pairs=[[3, 2], [1, 0]], formula horizon=26
     VERIFIED: 3 instances, 9 rational SDP dual certificates, 87 exact principal minors
     VERIFIED: ill-conditioned real-SPX certificate, dimension 10, calls 7840->3803, condition lower bound > 1325.96
     VERIFIED: two-dimensional nonquadratic joint PEP acceptance, natural H0=2, padded H=3, exact pair (1,0), 10 cost-violating cells excluded
@@ -59,9 +66,41 @@ Build the article, source archive, software/data artifact, and cover letter:
 See `ARTIFACT_EVALUATION.md` for the trusted/untrusted split, command sequence,
 expected run times, raw-data limitation, and directory map.
 
+The natural-$H=10$ verifier performs exact rational elimination for every
+cell and can take several minutes; it imports only the Python standard
+library and does not invoke an SDP solver.
+
+Replay the flagship verifier once, combine that charge with the frozen search
+and rational-recovery time, and rebuild the paper's complete break-even ledger:
+
+    make h10-certificate-cost-study
+
+This machine-specific ledger charges both construction and proof consumption
+against the remaining $0.6$ exact-call units; it is not part of the
+machine-independent acceptance proof.
+
 ## Evidence included
 
-- Complete structured and generic horizon-20 cell enumerations.
+- A natural-$H=10$ generic suite containing all 66 cost-violating cells,
+  66 exact rational dual exclusions, and 1,584 exact positive $LDL^\top$
+  pivots, with no structural prescreen. The payload records the ordered
+  threshold--regularizer recovery prefix for every cell: 69 attempts contain
+  66 successes and three failed attempts, with four of ten configurations
+  reached before all cells were certified.
+- Five complete bad-cell timing and peak-memory runs with Clarabel and SCS,
+  plus a same-model comparison with PEPit 0.5.1.  PEPit is faster in this
+  benchmark; C2OGate contributes the branch disjunction, fail-closed
+  aggregation, exact recovery, and independent proof consumer.
+- An exact nonzero-radius suite over the full infinite class
+  `F_{1/2,1}` in which the joint PEP accepts and sharp independent marginals
+  reject. Ten rational duals and 100 exact positive pivots are independently
+  replayed; the earlier two-function example remains a regression test.
+- A finite-family audit that quantifies false acceptance under deliberately
+  optimistic proposal contracts.
+- A redistributable 20-row synthetic option panel and frozen rational matrices
+  that exercise the same filtering, polynomial-feature, centering, scaling,
+  rounding, and sketch map used by the independent SPX verifier.
+- Complete structured and generic horizon-20 floating cell enumerations.
 - One exact non-shift, nonquadratic acceptance whose realized trajectory spans
   two dimensions. Its formula-derived horizon is H0=2; a one-layer-padded H=3
   audit includes independently replayed rational Gram-SDP duals for all ten
@@ -72,8 +111,10 @@ expected run times, raw-data limitation, and directory map.
 - A real-SPX positive cost certificate in dimension 10, with exact-call count
   7,840 to 3,803 and common-ledger all-in cost ratio 0.495; the full rational
   quadratic is revealed, so this is a constant-pipeline stress test.
-- A measured generic-certificate break-even ledger and a 27-configuration SPX
-  sensitivity grid over ridge, sketch stride, and tolerance.
+- Measured break-even ledgers for both the ten-cell cross-check and the
+  flagship natural-$H=10$ suite; each uses the certificate budget remaining
+  after proposal and non-certificate costs.  A 27-configuration SPX
+  sensitivity grid covers ridge, sketch stride, and tolerance.
 - Frozen canonical JSON payloads, source hashes, verifier hashes, and rehashed
   adversarial modifications.
 
@@ -92,7 +133,9 @@ The two market-data regeneration targets are optional:
 They require the external unofficial SPX snapshot whose hashes are recorded in
 the frozen payloads. The snapshot is not redistributed. A clean archive can
 still replay every frozen proof, run all tests, and rebuild the paper without
-that snapshot.
+that snapshot. The redistributable raw-row substitute is regenerated by
+`make synthetic-data-fixture`; it tests the complete data-to-matrix path but
+does not purport to reproduce the unavailable snapshot's empirical content.
 
 ## Scope and license
 
@@ -100,10 +143,13 @@ This is research code supporting the submitted manuscript, not a general PEP
 modeling language or production optimizer. Generic long-horizon floating
 statuses are diagnostic only; the proof-carrying aggregator returns
 `uncertified` unless a bad-cell witness or every exclusion is independently
-verified. The nonquadratic accepted instance has natural horizon two and a
-one-layer-padded horizon-three audit with ten recovered generic Gram-SDP duals.
-The positive real-SPX instance reveals
-its full rational quadratic.
+verified. For incomplete coverage it reports the exact `k/n` verified-cell
+progress without weakening the acceptance rule. The main proof suite has natural horizon ten and independently
+replays every cost-violating cell. Exact generic recovery is currently a
+moderate-horizon method, not a scalable long-horizon SDP solver. The smaller
+nonquadratic realization and the full-class joint-only suite are independent
+cross-checks. The positive real-SPX instance reveals its full rational
+quadratic.
 
 The software and supporting research artifact are released under the MIT
 License. See `LICENSE` for the complete terms. The raw third-party SPX snapshot

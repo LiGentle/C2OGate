@@ -86,9 +86,12 @@ def proof_carrying_gate(
 
     ``ACCEPT`` requires an independently verified exclusion for every
     cost-violating cell in ``{0, ..., horizon}^2`` and a verified all-in cost
-    ledger.  An independently verified attainable bad cell returns ``REJECT``.
-    Missing cells, failed verification, or explicitly uncertified cells return
-    ``UNCERTIFIED``.
+    ledger.  An independently verified attainable cell that violates the
+    requested call reduction returns ``REJECT`` even if the monetary ledger is
+    unavailable.  A cell that is bad only because of monetary cost returns
+    ``REJECT`` only with a verified ledger; otherwise it is ``UNCERTIFIED``.
+    Missing cells, failed verification, or explicitly uncertified cells also
+    return ``UNCERTIFIED``.
     """
 
     if cost_exact_units < 0.0:
@@ -119,11 +122,13 @@ def proof_carrying_gate(
             raise ValueError("duplicate proof for one stopping-time cell")
         provided[proof.pair] = proof
 
-    witnessed = sum(
-        proof.independently_verified
-        and proof.status is CellProofStatus.ATTAINABLE
+    witnessed_proofs = [
+        proof
         for proof in provided.values()
-    )
+        if proof.independently_verified
+        and proof.status is CellProofStatus.ATTAINABLE
+    ]
+    witnessed = len(witnessed_proofs)
     excluded = sum(
         proof.independently_verified
         and proof.status is CellProofStatus.EXCLUDED
@@ -137,10 +142,19 @@ def proof_carrying_gate(
     )
     uncertified = len(unresolved) + unverified
 
-    if witnessed:
+    witnessed_call_violation = any(
+        proof.candidate_calls
+        > proof.baseline_calls - minimum_saved_calls
+        for proof in witnessed_proofs
+    )
+    if witnessed and (cost_ledger_verified or witnessed_call_violation):
         return ProofCarryingDecision(
             outcome=GateOutcome.REJECT,
-            reason="an independently verified cost-violating cell is attainable",
+            reason=(
+                "an independently verified call-violating cell is attainable"
+                if witnessed_call_violation and not cost_ledger_verified
+                else "an independently verified cost-violating cell is attainable"
+            ),
             bad_cell_count=len(required),
             excluded_count=excluded,
             witnessed_count=witnessed,
@@ -156,7 +170,10 @@ def proof_carrying_gate(
         reason = "every cost-violating cell is independently excluded"
     else:
         outcome = GateOutcome.UNCERTIFIED
-        reason = "at least one bad cell or the all-in cost ledger is uncertified"
+        reason = (
+            f"verified exclusions cover {excluded}/{len(required)} bad cells; "
+            "at least one bad cell or the all-in cost ledger is uncertified"
+        )
     return ProofCarryingDecision(
         outcome=outcome,
         reason=reason,

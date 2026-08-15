@@ -92,6 +92,10 @@ Drori, Y., Teboulle, M.: Performance of first-order methods for smooth convex
 \newblock Mathematical Programming \textbf{145}(1--2), 451--482 (2014).
 \newblock \doi{10.1007/s10107-013-0653-0}
 
+\bibitem{Gatheral2006}
+Gatheral, J.: The Volatility Surface: A Practitioner's Guide.
+\newblock John Wiley \& Sons, Hoboken, NJ (2006)
+
 \bibitem{GoujaudPEPit2022}
 Goujaud, B., Moucer, C., Glineur, F., Hendrickx, J.M., Taylor, A.B.,
   Dieuleveut, A.: {PEPit}: Computer-assisted worst-case analyses of first-order
@@ -110,6 +114,10 @@ Grundvig, D.S., Heinkenschloss, M.: Line-search based optimization using
   function approximations with tunable accuracy.
 \newblock Optimization Methods and Software \textbf{40}(3), 579--610 (2025).
 \newblock \doi{10.1080/10556788.2024.2436192}
+
+\bibitem{GuyonHenryLabordere2014}
+Guyon, J., Henry-Labord\`ere, P.: Nonlinear Option Pricing.
+\newblock Chapman \& Hall/CRC (2014)
 
 \bibitem{HenrionNaldiSafeyElDin2016}
 Henrion, D., Naldi, S., Din, M.S.E.: Exact algorithms for linear matrix
@@ -151,10 +159,23 @@ Lykouris, T., Vassilvitskii, S.: Competitive caching with machine learned
   Learning, \emph{Proceedings of Machine Learning Research}, vol.~80, pp.
   3296--3305. PMLR (2018)
 
+\bibitem{Necula1997}
+Necula, G.C.: Proof-carrying code.
+\newblock In: Proceedings of the 24th ACM SIGPLAN-SIGACT Symposium on
+  Principles of Programming Languages, pp. 106--119 (1997).
+\newblock \doi{10.1145/263699.263712}
+
 \bibitem{NemirovskyYudin1983}
 Nemirovsky, A.S., Yudin, D.B.: Problem Complexity and Method Efficiency in
   Optimization.
 \newblock Wiley, New York (1983)
+
+\bibitem{ODonoghueEtAl2016}
+O'Donoghue, B., Chu, E., Parikh, N., Boyd, S.: Conic optimization via operator
+  splitting and homogeneous self-dual embedding.
+\newblock Journal of Optimization Theory and Applications \textbf{169}(3),
+  1042--1068 (2016).
+\newblock \doi{10.1007/s10957-016-0892-3}
 
 \bibitem{Peherstorfer2018}
 Peherstorfer, B., Willcox, K., Gunzburger, M.: Survey of multifidelity methods
@@ -180,6 +201,13 @@ Taylor, A.B., Hendrickx, J.M., Glineur, F.: Exact worst-case performance of
   first-order methods for composite convex optimization.
 \newblock SIAM Journal on Optimization \textbf{27}(3), 1283--1313 (2017).
 \newblock \doi{10.1137/16M108104X}
+
+\bibitem{TaylorPESTO2017}
+Taylor, A.B., Hendrickx, J.M., Glineur, F.: Performance estimation toolbox
+  ({PESTO}): Automated worst-case analysis of first-order optimization methods.
+\newblock In: Proceedings of the 56th IEEE Conference on Decision and Control,
+  pp. 1278--1283 (2017).
+\newblock \doi{10.1109/CDC.2017.8263832}
 
 \bibitem{TaylorInterpolation2017}
 Taylor, A.B., Hendrickx, J.M., Glineur, F.: Smooth strongly convex

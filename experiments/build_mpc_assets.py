@@ -22,7 +22,15 @@ REAL_SPX_POSITIVE_PAYLOAD = ROOT / "results" / "real_spx_ill_conditioned_study.j
 ACCOUNTING_PAYLOAD = ROOT / "results" / "study.json"
 RATIONAL_CERTIFICATES = ROOT / "certificates" / "rational_sdp_dual_certificates.json"
 GENERIC_DUAL_CERTIFICATE = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
+H10_GENERIC_DUAL_CERTIFICATE = ROOT / "certificates" / "h10_generic_pep_dual.json"
+JOINT_ONLY_CERTIFICATE = ROOT / "certificates" / "joint_only_shift_certificate.json"
+FULL_CLASS_JOINT_ONLY_CERTIFICATE = (
+    ROOT / "certificates" / "full_class_joint_only_pep_dual.json"
+)
+SOLVER_BENCHMARK_PAYLOAD = ROOT / "results" / "generic_pep_solver_benchmark.json"
+PEPIT_COMPARISON_PAYLOAD = ROOT / "results" / "pepit_backend_comparison.json"
 CERTIFICATE_COST_PAYLOAD = ROOT / "results" / "certificate_cost_study.json"
+H10_CERTIFICATE_COST_PAYLOAD = ROOT / "results" / "h10_certificate_cost_study.json"
 SPX_SENSITIVITY_PAYLOAD = ROOT / "results" / "spx_sensitivity_study.json"
 RATIONAL_VERIFIER = ROOT / "tools" / "verify_rational_dual_certificates.py"
 REAL_SPX_POSITIVE_VERIFIER = (
@@ -30,6 +38,9 @@ REAL_SPX_POSITIVE_VERIFIER = (
 )
 NONLINEAR_PEP_VERIFIER = ROOT / "tools" / "verify_nonlinear_joint_pep_acceptance.py"
 GENERIC_DUAL_VERIFIER = ROOT / "tools" / "verify_generic_nonquadratic_pep_dual.py"
+FULL_CLASS_JOINT_ONLY_VERIFIER = (
+    ROOT / "tools" / "verify_full_class_joint_only_pep_dual.py"
+)
 OUTPUT = ROOT / "paper_mpc" / "generated" / "metrics.tex"
 
 
@@ -65,7 +76,17 @@ def main() -> None:
     real_spx_positive_payload = _load_hashed_payload(REAL_SPX_POSITIVE_PAYLOAD)
     accounting_payload = _load_hashed_payload(ACCOUNTING_PAYLOAD)
     generic_dual_payload = _load_hashed_payload(GENERIC_DUAL_CERTIFICATE)
+    h10_dual_payload = _load_hashed_payload(H10_GENERIC_DUAL_CERTIFICATE)
+    joint_only_payload = _load_hashed_payload(JOINT_ONLY_CERTIFICATE)
+    full_class_joint_only_payload = _load_hashed_payload(
+        FULL_CLASS_JOINT_ONLY_CERTIFICATE
+    )
+    solver_benchmark_payload = _load_hashed_payload(SOLVER_BENCHMARK_PAYLOAD)
+    pepit_comparison_payload = _load_hashed_payload(PEPIT_COMPARISON_PAYLOAD)
     certificate_cost_payload = _load_hashed_payload(CERTIFICATE_COST_PAYLOAD)
+    h10_certificate_cost_payload = _load_hashed_payload(
+        H10_CERTIFICATE_COST_PAYLOAD
+    )
     spx_sensitivity_payload = _load_hashed_payload(SPX_SENSITIVITY_PAYLOAD)
     certificate_process = subprocess.run(
         [
@@ -84,6 +105,18 @@ def main() -> None:
             sys.executable,
             str(GENERIC_DUAL_VERIFIER),
             str(GENERIC_DUAL_CERTIFICATE),
+            "--root",
+            str(ROOT),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        [
+            sys.executable,
+            str(FULL_CLASS_JOINT_ONLY_VERIFIER),
+            str(FULL_CLASS_JOINT_ONLY_CERTIFICATE),
             "--root",
             str(ROOT),
         ],
@@ -175,6 +208,14 @@ def main() -> None:
         row["exact_oracle_seconds"]: row
         for row in certificate_cost_payload["scenarios"]
     }
+    h10_cost_measurement = h10_certificate_cost_payload["measurement"]
+    h10_cost_scenarios = {
+        row["exact_oracle_seconds"]: row
+        for row in h10_certificate_cost_payload["scenarios"]
+    }
+    pde_fixed_seconds = 720.0 + h10_cost_measurement["total_certificate_seconds"]
+    pde_break_even = ceil(pde_fixed_seconds / (0.6 * 60.0))
+    pde_amortized_at_64 = pde_fixed_seconds / (64.0 * 60.0)
     sensitivity = spx_sensitivity_payload["summary"]
     sensitivity_base = next(
         row
@@ -194,6 +235,26 @@ def main() -> None:
     proxy_horizon_p90 = proxy_horizons[ceil(0.9 * len(proxy_horizons)) - 1]
     nonlinear_actual = nonlinear_pep_payload["actual_instance"]
     dependence_gap = summary["joint_accept_count"] - summary["rectangle_accept_count"]
+    solver_benchmark = {
+        (row["solver"], row["horizon"]): row
+        for row in solver_benchmark_payload["summary"]
+    }
+    pepit_comparison = {
+        (row["backend"], row["horizon"]): row
+        for row in pepit_comparison_payload["summary"]
+    }
+    contract_sensitivity = {
+        row["contract_radius"]: row
+        for row in full_class_joint_only_payload[
+            "diagnostic_contract_radius_sensitivity"
+        ]
+    }
+    misspecification = summary["contract_misspecification"]
+    h10_recovery_grid = h10_dual_payload["summary"]["recovery_grid"]
+    h10_recovery_attempts = sum(row["attempted_cells"] for row in h10_recovery_grid)
+    h10_recovery_failures = sum(row["failed_cells"] for row in h10_recovery_grid)
+    h10_recovery_successes = sum(row["successful_cells"] for row in h10_recovery_grid)
+    h10_recovery_reached = sum(row["attempted_cells"] > 0 for row in h10_recovery_grid)
 
     def nonlinear_norm(field: str) -> float:
         return sqrt(sum(float(value) ** 2 for value in nonlinear_actual[field]))
@@ -344,6 +405,128 @@ def main() -> None:
             generic_dual_payload["summary"]["total_positive_leading_minors"]
         ),
         "GenericDualPayloadHash": generic_dual_payload["payload_sha256"],
+        "HtenDualCertificates": str(h10_dual_payload["summary"]["certificate_count"]),
+        "HtenDualPivots": f"{h10_dual_payload['summary']['positive_leading_principal_minor_count']:,}",
+        "HtenDualUpper": (
+            f"{float(Fraction(h10_dual_payload['summary']['maximum_certified_upper_bound'])):.6f}"
+        ),
+        "HtenDualGram": str(h10_dual_payload["summary"]["maximum_gram_order"]),
+        "HtenDualInequalities": f"{h10_dual_payload['summary']['maximum_inequality_count']:,}",
+        "HtenDualGenerationSeconds": (
+            f"{h10_dual_payload['summary']['generation_wall_seconds']:.1f}"
+        ),
+        "HtenDualPayloadHash": h10_dual_payload["payload_sha256"],
+        "HtenRecoveryAttempts": str(h10_recovery_attempts),
+        "HtenRecoveryFailures": str(h10_recovery_failures),
+        "HtenRecoverySuccesses": str(h10_recovery_successes),
+        "HtenRecoveryReachedConfigs": str(h10_recovery_reached),
+        "HtenRecoveryProgress": h10_dual_payload["summary"][
+            "certified_cell_progress"
+        ].split()[0],
+        "JointOnlyHorizon": str(joint_only_payload["declaration"]["formula_horizon"]),
+        "JointOnlyRectangleValue": joint_only_payload["certificate"][
+            "rectangle_certificate_value"
+        ],
+        "JointOnlyPayloadHash": joint_only_payload["payload_sha256"],
+        "FullClassJointCertificates": str(
+            full_class_joint_only_payload["summary"]["certificate_count"]
+        ),
+        "FullClassJointPivots": str(
+            full_class_joint_only_payload["summary"]["positive_ldl_pivot_count"]
+        ),
+        "FullClassJointUpper": (
+            f"{float(Fraction(full_class_joint_only_payload['summary']['maximum_certified_upper_bound'])):.6f}"
+        ),
+        "FullClassJointHorizon": str(
+            full_class_joint_only_payload["declaration"]["horizon"]
+        ),
+        "FullClassJointRectangleValue": full_class_joint_only_payload[
+            "marginal_certificate"
+        ]["rectangle_certificate_value"],
+        "FullClassJointGenerationSeconds": (
+            f"{full_class_joint_only_payload['summary']['generation_wall_seconds']:.2f}"
+        ),
+        "FullClassJointPayloadHash": full_class_joint_only_payload[
+            "payload_sha256"
+        ],
+        "FullClassMarginZero": (
+            f"{contract_sensitivity['0']['maximum_floating_signed_margin']:.6f}"
+        ),
+        "FullClassMarginOneHundred": (
+            f"{contract_sensitivity['1/100']['maximum_floating_signed_margin']:.6f}"
+        ),
+        "FullClassMarginOneFifty": (
+            f"{contract_sensitivity['1/50']['maximum_floating_signed_margin']:.6f}"
+        ),
+        "FullClassMarginThreeHundred": (
+            f"{contract_sensitivity['3/100']['maximum_floating_signed_margin']:.6f}"
+        ),
+        "FullClassMarginOneTwenty": (
+            f"{contract_sensitivity['1/20']['maximum_floating_signed_margin']:.6f}"
+        ),
+        "ClarabelHtenWall": (
+            f"{solver_benchmark[('CLARABEL', 10)]['wall_seconds']['median']:.2f}"
+        ),
+        "ScsHtenWall": (
+            f"{solver_benchmark[('SCS', 10)]['wall_seconds']['median']:.2f}"
+        ),
+        "ClarabelHtenMemory": (
+            f"{solver_benchmark[('CLARABEL', 10)]['peak_rss_mib']['median']:.0f}"
+        ),
+        "ScsHtenMemory": (
+            f"{solver_benchmark[('SCS', 10)]['peak_rss_mib']['median']:.0f}"
+        ),
+        "SolverBenchmarkPayloadHash": solver_benchmark_payload["payload_sha256"],
+        "CtwoHtenSerialWall": (
+            f"{pepit_comparison[('c2ogate', 10)]['wall_seconds']['median']:.2f}"
+        ),
+        "PepitHtenSerialWall": (
+            f"{pepit_comparison[('pepit', 10)]['wall_seconds']['median']:.2f}"
+        ),
+        "PepitVersion": pepit_comparison_payload["environment"]["pepit"],
+        "PepitComparisonPayloadHash": pepit_comparison_payload["payload_sha256"],
+        "MisspecTenFalseConditional": _pct(
+            misspecification["0.90"]["false_accept_rate_conditional_on_accept"]
+        ),
+        "MisspecTenAcceptCount": str(
+            misspecification["0.90"]["claim_accept_count"]
+        ),
+        "MisspecTenFalseCount": str(
+            misspecification["0.90"]["false_accept_count"]
+        ),
+        "MisspecTenExcluded": _pct(
+            misspecification["0.90"]["realized_member_excluded_rate"]
+        ),
+        "MisspecTenFalseOverall": _pct(
+            misspecification["0.90"]["false_accept_rate"]
+        ),
+        "MisspecTenRealizedViolation": _pct(
+            misspecification["0.90"]["realized_violation_rate"]
+        ),
+        "MisspecTwentyFiveFalseConditional": _pct(
+            misspecification["0.75"]["false_accept_rate_conditional_on_accept"]
+        ),
+        "MisspecTwentyFiveAcceptCount": str(
+            misspecification["0.75"]["claim_accept_count"]
+        ),
+        "MisspecTwentyFiveFalseCount": str(
+            misspecification["0.75"]["false_accept_count"]
+        ),
+        "MisspecTwentyFiveFalseOverall": _pct(
+            misspecification["0.75"]["false_accept_rate"]
+        ),
+        "MisspecTwentyFiveExcluded": _pct(
+            misspecification["0.75"]["realized_member_excluded_rate"]
+        ),
+        "MisspecHalfAcceptCount": str(
+            misspecification["0.50"]["claim_accept_count"]
+        ),
+        "MisspecHalfFalseCount": str(
+            misspecification["0.50"]["false_accept_count"]
+        ),
+        "MisspecHalfFalseConditional": _pct(
+            misspecification["0.50"]["false_accept_rate_conditional_on_accept"]
+        ),
         "CertificateCostSeconds": f"{cost_measurement['total_certificate_seconds']:.3f}",
         "CertificateVerifyMillis": (
             f"{1000.0 * cost_measurement['median_verification_seconds']:.2f}"
@@ -373,6 +556,39 @@ def main() -> None:
             cost_scenarios[60.0]["minimum_offline_reuses"]
         ),
         "CertificateCostPayloadHash": certificate_cost_payload["payload_sha256"],
+        "HtenCertificateSearchSeconds": (
+            f"{h10_cost_measurement['solver_and_rational_recovery_seconds']:.1f}"
+        ),
+        "HtenCertificateVerifySeconds": (
+            f"{h10_cost_measurement['median_verification_seconds']:.1f}"
+        ),
+        "HtenCertificateTotalSeconds": (
+            f"{h10_cost_measurement['total_certificate_seconds']:.1f}"
+        ),
+        "HtenCertificateBudget": (
+            f"{h10_certificate_cost_payload['declaration']['certificate_budget_exact_call_units']:.1f}"
+        ),
+        "HtenCertificateBreakEvenOneSecond": str(
+            h10_cost_scenarios[1.0]["minimum_offline_reuses"]
+        ),
+        "HtenCertificateBreakEvenTenSeconds": str(
+            h10_cost_scenarios[10.0]["minimum_offline_reuses"]
+        ),
+        "HtenCertificateBreakEvenSixtySeconds": str(
+            h10_cost_scenarios[60.0]["minimum_offline_reuses"]
+        ),
+        "HtenCertificateBreakEvenSixHundredSeconds": str(
+            h10_cost_scenarios[600.0]["minimum_offline_reuses"]
+        ),
+        "HtenCertificateBreakEvenHour": str(
+            h10_cost_scenarios[3600.0]["minimum_offline_reuses"]
+        ),
+        "HtenCertificateCostPayloadHash": h10_certificate_cost_payload[
+            "payload_sha256"
+        ],
+        "PdeIllustrationBreakEven": str(pde_break_even),
+        "PdeIllustrationAmortizedAtSixtyFour": f"{pde_amortized_at_64:.3f}",
+        "PdeIllustrationTotalAtSixtyFour": f"{0.4 + pde_amortized_at_64:.3f}",
         "RealSpxRawQuotes": f"{real_data['raw_quote_count']:,}",
         "RealSpxFilteredQuotes": f"{real_data['filtered_quote_count']:,}",
         "RealSpxExpiries": str(real_data["expiry_count"]),

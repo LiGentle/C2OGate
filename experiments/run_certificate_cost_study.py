@@ -21,7 +21,7 @@ GENERATOR = ROOT / "experiments" / "generate_generic_pep_dual_certificate.py"
 VERIFIER = ROOT / "tools" / "verify_generic_nonquadratic_pep_dual.py"
 CERTIFICATE = ROOT / "certificates" / "generic_nonquadratic_pep_dual.json"
 OUTPUT = ROOT / "results" / "certificate_cost_study.json"
-SCHEMA = "c2o-certificate-cost-study-v2"
+SCHEMA = "c2o-certificate-cost-study-v3"
 
 
 def _canonical(value: Any) -> bytes:
@@ -77,16 +77,18 @@ def main() -> None:
     median_verification = verification_times[len(verification_times) // 2]
     certificate_seconds = recovery_seconds + median_verification
     saved_exact_calls = 1
+    base_nonexact_cost = 0.5
+    certificate_budget = saved_exact_calls - base_nonexact_cost
     exact_oracle_scenarios = [0.0001, 1.0, 10.0, 60.0]
     scenarios = []
     for exact_seconds in exact_oracle_scenarios:
         overhead_units = certificate_seconds / exact_seconds
-        break_even_reuses = ceil(overhead_units / saved_exact_calls)
+        break_even_reuses = ceil(overhead_units / certificate_budget)
         scenarios.append(
             {
                 "exact_oracle_seconds": exact_seconds,
                 "certificate_cost_exact_call_units": overhead_units,
-                "one_shot_self_financing": overhead_units <= saved_exact_calls,
+                "one_shot_self_financing": overhead_units <= certificate_budget,
                 "minimum_offline_reuses": max(1, break_even_reuses),
             }
         )
@@ -100,6 +102,8 @@ def main() -> None:
                 "only offline or prepaid reuse is credited"
             ),
             "saved_exact_calls_per_accepted_decision": saved_exact_calls,
+            "base_nonexact_cost_exact_call_units": base_nonexact_cost,
+            "certificate_budget_exact_call_units": certificate_budget,
             "zero_credit_online_rejection_funded": False,
             "spx_exact_gradient_seconds_reference": 0.0001,
         },

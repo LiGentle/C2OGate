@@ -1,0 +1,40 @@
+{
+  "accepted_gate_cost_ratio": {
+    "mean": 0.6527586300727722,
+    "median": 0.6477272727272727,
+    "q05": 0.49137931034482757,
+    "q95": 0.8571428571428571
+  },
+  "accepted_realized_saved_calls": {
+    "mean": 9.997134670487107,
+    "median": 10.0,
+    "q05": 5.0,
+    "q95": 16.0
+  },
+  "always_cost_ratio": {
+    "mean": 0.7291155026842021,
+    "median": 0.7315943992773262,
+    "q05": 0.48788306451612906,
+    "q95": 0.9714682539682539
+  },
+  "always_worse_fraction": 0.026,
+  "case_count": 2000,
+  "contract_violation_count": 0,
+  "gate_accept_count": 349,
+  "gate_accept_rate": 0.1745,
+  "gate_cost_dominance_violation_count": 0,
+  "gate_exact_call_reduction_violation_count": 0,
+  "gated_cost_ratio": {
+    "mean": 0.9394063809476988,
+    "median": 1.0,
+    "q05": 0.5651972624798711,
+    "q95": 1.0
+  },
+  "posthoc_cost_ratio": {
+    "mean": 0.7291833380500558,
+    "median": 0.7315943992773262,
+    "q05": 0.48788306451612906,
+    "q95": 0.9722474747474747
+  },
+  "posthoc_worse_fraction": 0.027
+}

@@ -6,12 +6,12 @@ Full-Length Paper
 
 ## Title
 
-C2OGate: Proof-Carrying Joint Performance Estimation for Two-Oracle Cost
-Certification
+C2OGate: Proof-Carrying Joint Performance Estimation for Certified Branch
+Decisions
 
 ## Running title
 
-Proof-Carrying Two-Oracle Cost Certification
+Proof-Carrying Branch Certification
 
 ## Author and corresponding author
 
@@ -21,31 +21,31 @@ e0622340@u.nus.edu
 
 ## Abstract
 
-We present C2OGate, a proof-carrying method for one certified branch decision.
-An external proposal mechanism supplies a state and an auditable error-and-cost
-contract; both alternatives then continue with the same fixed-step gradient
-method. Conditioned on the available first-order transcript, C2OGate couples
-both continuations on the same unknown function, enumerates their joint
-stopping-time cells, and represents each cell over smooth strongly convex
-functions by a dimension-free Gram SDP. It accepts only after
-independently verified exclusion of every cost-violating cell; a verified
-attainable bad cell rejects, and unresolved numerical evidence returns
-uncertified. We prove the finite reduction, its fixed-dimension rank
-qualification, the maximality of the resulting robust gate, and an unbounded
-gap for independent marginal call bounds even on one-dimensional quadratics.
-In a non-shift, nonquadratic two-dimensional instance whose certified horizon
-is H0=2, all ten cost-violating cells in a deliberately padded H=3 audit are
-excluded by exact rational SDP duals; a standard-library verifier reconstructs
-every SDP and checks 100 positive leading principal minors. A generic H=20
-audit solves 231 bad-cell SDPs but remains uncertified, delimiting the current
-scalability of exact dual recovery. Measured certificate cost is charged
-explicitly and is self-financing only for sufficiently expensive calls or
-offline reuse.
+We present C2OGate, a proof-carrying method for deciding between two
+continuations after an external mechanism supplies a candidate and an
+auditable error-and-cost contract. Conditioned on one first-order transcript,
+the method couples fixed-step gradient descent from both starts on the same
+unknown smooth strongly convex function and represents every cost-violating
+joint stopping-time cell by a dimension-free Gram SDP. Acceptance requires
+independently verified exclusion of every bad cell; counterexamples reject,
+and incomplete evidence returns uncertified. We prove the finite reduction,
+its fixed-dimension rank qualification, transcript-relative maximality, and
+the possible loss from replacing the joint set by independent marginals. In
+the flagship audit, exact rational duals exclude all 66 bad cells at natural
+horizon H=10 (Gram order at most 24); a standard-library verifier reconstructs
+1,584 positive LDL pivots. A second nonzero-radius example over the full
+smooth strongly convex class with mu=1/2 and L=1 is accepted by the joint PEP
+while exact marginal bounds reject. Repeated Clarabel/SCS and PEPit comparisons expose
+moderate-horizon scaling and solver dependence. Rational certificate
+construction is a heuristic success-or-fail search; only the independent
+verification and resulting decisions are guaranteed; the generic H=20
+enumeration remains uncertified. Every reported construction and verification
+cost is charged explicitly.
 
 ## Keywords
 
 performance estimation; proof-carrying computation; semidefinite programming;
-multifidelity optimization; stopping time; evaluation cost
+certified branch decision; stopping time; evaluation cost
 
 ## MSC 2020
 
@@ -79,7 +79,8 @@ or public review repository and provide the access link.
 - Author contributions: all roles performed by Jintao Li.
 - Data availability: frozen derived payloads included; raw unofficial SPX rows
   are not redistributed; expected hashes and reconstruction procedure are
-  documented.
+  documented; a redistributable synthetic raw-row substitute exercises the
+  complete data-to-matrix path.
 - Code availability: source, tests, exact verifiers, and build scripts are
   released under the MIT License at <https://github.com/LiGentle/C2OGate> and
   included in the technical-review artifact.

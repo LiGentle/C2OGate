@@ -157,6 +157,44 @@ def _determinant(matrix: Matrix) -> Fraction:
     return determinant
 
 
+def _positive_ldl_pivots(matrix: Matrix) -> list[Fraction]:
+    """Return exact positive pivots of an unpivoted LDL^T factorization.
+
+    For a symmetric matrix, positivity of every pivot is equivalent to positive
+    definiteness.  Compared with recomputing every leading determinant, this
+    reuses the elimination work and avoids severe rational-expression growth.
+    """
+    size = len(matrix)
+    lower = _zero_matrix(size)
+    pivots: list[Fraction] = []
+    for column in range(size):
+        pivot = matrix[column][column] - sum(
+            (
+                lower[column][index] ** 2 * pivots[index]
+                for index in range(column)
+            ),
+            Fraction(0),
+        )
+        if pivot <= 0:
+            raise RuntimeError(
+                f"rational dual slack is not positive definite at pivot {column + 1}"
+            )
+        pivots.append(pivot)
+        lower[column][column] = Fraction(1)
+        for row in range(column + 1, size):
+            numerator = matrix[row][column] - sum(
+                (
+                    lower[row][index]
+                    * lower[column][index]
+                    * pivots[index]
+                    for index in range(column)
+                ),
+                Fraction(0),
+            )
+            lower[row][column] = numerator / pivot
+    return pivots
+
+
 def _matrix_to_json(matrix: Matrix) -> list[list[str]]:
     return [[str(value) for value in row] for row in matrix]
 
@@ -165,6 +203,17 @@ def _build_problem(
     cell: tuple[int, int] = (3, 3),
     *,
     signed_terminal_margin: bool = False,
+    horizon: int = HORIZON,
+    mu: Fraction = Fraction(9, 10),
+    smoothness: Fraction = Fraction(1),
+    step_size: Fraction = Fraction(1),
+    proposal_step: Fraction = Fraction(1),
+    proposal_lower: Fraction = Fraction(24, 25),
+    proposal_upper: Fraction = Fraction(97, 100),
+    contract_radius: Fraction = Fraction(1, 100),
+    initial_distance_upper: Fraction = Fraction(6, 5),
+    tolerance: Fraction = Fraction(7, 50),
+    trace_bound: Fraction = Fraction(27),
 ) -> tuple[
     cp.Problem,
     list[LinearConstraint],
@@ -172,19 +221,9 @@ def _build_problem(
     list[cp.Constraint],
     list[cp.Constraint],
 ]:
-    horizon = HORIZON
     baseline_calls, hybrid_calls = cell
     if not (0 <= baseline_calls <= horizon and 0 <= hybrid_calls <= horizon):
         raise ValueError(f"cell outside horizon: {cell}")
-    mu = Fraction(9, 10)
-    smoothness = Fraction(1)
-    step_size = Fraction(1)
-    proposal_step = Fraction(1)
-    proposal_lower = Fraction(24, 25)
-    proposal_upper = Fraction(97, 100)
-    contract_radius = Fraction(1, 100)
-    initial_distance_upper = Fraction(6, 5)
-    tolerance = Fraction(7, 50)
 
     baseline_size = horizon + 1
     hybrid_size = horizon + 1
@@ -280,7 +319,7 @@ def _build_problem(
             [Fraction(int(i == j)) for j in range(atom_count)]
             for i in range(atom_count)
         ],
-        rhs=Fraction(27),
+        rhs=trace_bound,
     )
 
     denominator = 2 * (1 - mu / smoothness)
@@ -377,6 +416,10 @@ def _recover_rational_dual(
     equalities: list[LinearConstraint],
     numeric_lambdas: np.ndarray,
     numeric_nus: np.ndarray,
+    *,
+    active_threshold: float = 1.0e-6,
+    denominator_limit: int = 10**6,
+    trace_regularizer: Fraction = Fraction(1, 100_000),
 ) -> tuple[list[Fraction], list[Fraction], Matrix, Fraction]:
     import sympy as sp
 
@@ -395,7 +438,7 @@ def _recover_rational_dual(
     target = sp.Matrix([*[sp.Rational(0) for _ in range(value_count)], sp.Rational(1)])
     numeric = [*numeric_lambdas.tolist(), *numeric_nus.tolist()]
     rational = [
-        Fraction(str(float(value))).limit_denominator(10**6)
+        Fraction(str(float(value))).limit_denominator(denominator_limit)
         if abs(float(value)) >= 1.0e-10
         else Fraction(0)
         for value in numeric
@@ -405,14 +448,14 @@ def _recover_rational_dual(
         for index, item in enumerate(inequalities)
         if item.name == "derived_trace_bound"
     )
-    rational[trace_index] = Fraction(1, 100_000)
+    rational[trace_index] = trace_regularizer
 
     equality_indices = list(range(len(inequalities), len(columns)))
     inequality_indices = sorted(
         (
             index
             for index, value in enumerate(numeric_lambdas)
-            if value > 1.0e-6 and index != trace_index
+            if value > active_threshold and index != trace_index
         ),
         key=lambda index: numeric_lambdas[index],
         reverse=True,
@@ -462,14 +505,7 @@ def _recover_rational_dual(
         slack = _matrix_add((Fraction(1), slack), (multiplier, item.matrix))
     for multiplier, item in zip(nus, equalities, strict=True):
         slack = _matrix_add((Fraction(1), slack), (multiplier, item.matrix))
-    leading_minors = [
-        _determinant([row[:order] for row in slack[:order]])
-        for order in range(1, size + 1)
-    ]
-    if any(value <= 0 for value in leading_minors):
-        raise RuntimeError(
-            f"rational dual slack is not positive definite: {leading_minors}"
-        )
+    _positive_ldl_pivots(slack)
     dual_objective = sum(
         (multiplier * item.rhs for multiplier, item in zip(lambdas, inequalities, strict=True)),
         Fraction(0),

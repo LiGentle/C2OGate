@@ -157,7 +157,7 @@
     ],
     "generic_dual_certificate_count": 10,
     "generic_dual_positive_leading_minors": 100,
-    "generic_dual_payload_sha256": "058b231c33825d4e91f2a535514d88e668c34686225ba3f63866c693f3e384cb"
+    "generic_dual_payload_sha256": "4015676b7a618afadb12f733808902146a210ad3cce1c6ca3e5c8466ced3c9fc"
   },
   "pep_enumeration": {
     "cell_count": 16,
@@ -294,11 +294,11 @@
     "python": "3.13.5",
     "runner_sha256": "a0878d07e512f033c7ed0bf562d3e1826c66623fa4c558c24e06704641be8820",
     "verifier_sha256": "8acd99e2ff41e0cbf3086f4910d72655885bd213cdafcdddf4ab00d0839d528e",
-    "generic_dual_file_sha256": "ca171f81f06e9ff655dfecbe6b7a38de933bd16079683766e2f4c52f2a1e8f2f",
+    "generic_dual_file_sha256": "024900bcd232c3190744171d2985b825233e5ec9d5004ef82193af3d68058c48",
     "source_sha256": {
       "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d",
-      "experiments/run_transcript_pep_study.py": "6c0314b9aca7b55c1e085fba50cc8de06fab6c61ca7514acbeb7b43394edf31f"
+      "experiments/run_transcript_pep_study.py": "c5098a2aa1401bb1a1b68fe94910c3a24e315db2603994f037cd0c1e6608f386"
     }
   },
-  "payload_sha256": "d973a0da85b227881782a7a253e555ef99aa4e108109abbe4380c88b180f76f8"
+  "payload_sha256": "08598c77e19e0f1434ced0dd963ae53359e69cc5d4956dd77bafed3310d1c9fc"
 }

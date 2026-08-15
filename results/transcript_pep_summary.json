@@ -8,6 +8,58 @@
   },
   "always_policy_worse_fraction": 0.2415,
   "case_count": 2000,
+  "contract_misspecification": {
+    "0.25": {
+      "claim_accept_count": 0,
+      "claim_accept_rate": 0.0,
+      "false_accept_count": 0,
+      "false_accept_rate": 0.0,
+      "false_accept_rate_conditional_on_accept": 0.0,
+      "realized_member_excluded_rate": 1.0,
+      "realized_violation_count": 0,
+      "realized_violation_rate": 0.0
+    },
+    "0.50": {
+      "claim_accept_count": 7,
+      "claim_accept_rate": 0.0035,
+      "false_accept_count": 4,
+      "false_accept_rate": 0.002,
+      "false_accept_rate_conditional_on_accept": 0.5714285714285714,
+      "realized_member_excluded_rate": 1.0,
+      "realized_violation_count": 0,
+      "realized_violation_rate": 0.0
+    },
+    "0.75": {
+      "claim_accept_count": 106,
+      "claim_accept_rate": 0.053,
+      "false_accept_count": 38,
+      "false_accept_rate": 0.019,
+      "false_accept_rate_conditional_on_accept": 0.3584905660377358,
+      "realized_member_excluded_rate": 0.98,
+      "realized_violation_count": 0,
+      "realized_violation_rate": 0.0
+    },
+    "0.90": {
+      "claim_accept_count": 297,
+      "claim_accept_rate": 0.1485,
+      "false_accept_count": 78,
+      "false_accept_rate": 0.039,
+      "false_accept_rate_conditional_on_accept": 0.26262626262626265,
+      "realized_member_excluded_rate": 0.874,
+      "realized_violation_count": 4,
+      "realized_violation_rate": 0.002
+    },
+    "1.00": {
+      "claim_accept_count": 896,
+      "claim_accept_rate": 0.448,
+      "false_accept_count": 0,
+      "false_accept_rate": 0.0,
+      "false_accept_rate_conditional_on_accept": 0.0,
+      "realized_member_excluded_rate": 0.0,
+      "realized_violation_count": 0,
+      "realized_violation_rate": 0.0
+    }
+  },
   "four_bin_accept_count": 487,
   "four_bin_accept_rate": 0.2435,
   "four_bin_policy_cost_ratio": {

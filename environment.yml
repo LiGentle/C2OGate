@@ -1,0 +1,8 @@
+name: c2ogate-mpc
+channels:
+  - conda-forge
+dependencies:
+  - python=3.13
+  - pip
+  - pip:
+      - -e .[pep,certificates,dev]

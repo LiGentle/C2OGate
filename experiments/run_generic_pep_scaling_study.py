@@ -60,7 +60,7 @@ def _inner(matrix: cp.Variable, left: np.ndarray, right: np.ndarray) -> Any:
     return cp.sum(cp.multiply(np.outer(left, right), matrix))
 
 
-def _solve_cell(task: tuple[int, int, dict[str, float]]) -> dict[str, Any]:
+def _solve_cell(task: tuple[int, int, dict[str, Any]]) -> dict[str, Any]:
     baseline_calls, hybrid_calls, parameters = task
     strong_convexity = parameters["strong_convexity"]
     smoothness = parameters["smoothness"]
@@ -132,6 +132,8 @@ def _solve_cell(task: tuple[int, int, dict[str, float]]) -> dict[str, Any]:
             constraints.append(left >= right)
 
     threshold_squared = tolerance**2
+    signed_terminal_margin = bool(parameters.get("signed_terminal_margin", False))
+    margin = cp.Variable() if signed_terminal_margin else None
     constraints.extend(
         [
             _inner(
@@ -139,14 +141,15 @@ def _solve_cell(task: tuple[int, int, dict[str, float]]) -> dict[str, Any]:
                 baseline_gradients[-1],
                 baseline_gradients[-1],
             )
-            <= threshold_squared,
+            <= threshold_squared - (margin if signed_terminal_margin else 0.0),
             _inner(gram, hybrid_gradients[-1], hybrid_gradients[-1])
-            <= threshold_squared,
+            <= threshold_squared - (margin if signed_terminal_margin else 0.0),
         ]
     )
     strict_gradients = baseline_gradients[:-1] + hybrid_gradients[:-1]
-    if strict_gradients:
-        margin = cp.Variable()
+    if strict_gradients or signed_terminal_margin:
+        if margin is None:
+            margin = cp.Variable()
         constraints.append(
             margin <= smoothness**2 * (initial_distance_upper + proposal_norm) ** 2
         )
@@ -161,34 +164,50 @@ def _solve_cell(task: tuple[int, int, dict[str, float]]) -> dict[str, Any]:
     problem = cp.Problem(objective, constraints)
     setup_seconds = perf_counter() - setup_started
 
-    solver = "CLARABEL"
+    solver = str(parameters.get("solver", "CLARABEL"))
     solve_started = perf_counter()
+    solver_error: str | None = None
     try:
-        value = problem.solve(
-            solver=solver,
-            tol_gap_abs=1.0e-8,
-            tol_feas=1.0e-8,
-            tol_gap_rel=1.0e-8,
-            max_iter=500,
-            verbose=False,
-        )
-    except cp.error.SolverError:
-        solver = "SCS"
-        value = problem.solve(
-            solver=solver,
-            eps=1.0e-7,
-            max_iters=100_000,
-            verbose=False,
-        )
+        if solver == "CLARABEL":
+            value = problem.solve(
+                solver=solver,
+                tol_gap_abs=1.0e-8,
+                tol_feas=1.0e-8,
+                tol_gap_rel=1.0e-8,
+                max_iter=500,
+                verbose=False,
+            )
+        elif solver == "SCS":
+            value = problem.solve(
+                solver=solver,
+                eps=float(parameters.get("solver_tolerance", 1.0e-7)),
+                max_iters=int(parameters.get("solver_max_iterations", 100_000)),
+                verbose=False,
+            )
+        else:
+            raise ValueError(f"unsupported solver: {solver}")
+    except cp.error.SolverError as error:
+        if solver == "CLARABEL" and parameters.get("allow_solver_fallback", True):
+            solver = "SCS"
+            value = problem.solve(
+                solver=solver,
+                eps=float(parameters.get("solver_tolerance", 1.0e-7)),
+                max_iters=int(parameters.get("solver_max_iterations", 100_000)),
+                verbose=False,
+            )
+        else:
+            value = None
+            solver_error = str(error)
     solve_seconds = perf_counter() - solve_started
     margin_value = None
-    if problem.status in {cp.OPTIMAL, cp.OPTIMAL_INACCURATE}:
+    status = "solver_error" if solver_error is not None else problem.status
+    if status in {cp.OPTIMAL, cp.OPTIMAL_INACCURATE}:
         margin_value = float(value if margin is not None else 1.0)
     return {
         "baseline_calls": baseline_calls,
         "hybrid_calls": hybrid_calls,
         "call_difference": hybrid_calls - baseline_calls,
-        "status": problem.status,
+        "status": status,
         "strict_margin": margin_value,
         "attainable": bool(
             margin_value is not None and margin_value > CLASSIFICATION_THRESHOLD
@@ -197,6 +216,7 @@ def _solve_cell(task: tuple[int, int, dict[str, float]]) -> dict[str, Any]:
             margin_value is not None and abs(margin_value) <= CLASSIFICATION_THRESHOLD
         ),
         "solver": solver,
+        "solver_error": solver_error,
         "gram_order": atom_count,
         "interpolation_point_count": len(points),
         "constraint_count": len(constraints),

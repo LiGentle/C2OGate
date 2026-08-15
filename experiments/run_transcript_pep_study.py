@@ -363,6 +363,7 @@ def _run_ensemble_case(
     uncertainty_fraction = float(10.0 ** rng.uniform(-3.0, 0.0))
     maximum_initial_distance = 0.0
     maximum_contract_error = 0.0
+    family_members: list[dict[str, Any]] = []
     realized_index = case_id % family_size
     realized_pair: StoppingPair | None = None
     for family_index in range(family_size):
@@ -383,13 +384,13 @@ def _run_ensemble_case(
         )
         true_gradient = nominal_gradient + error_norm * error_direction
         linear = -true_gradient
-        maximum_contract_error = max(
-            maximum_contract_error,
-            float(np.linalg.norm(hybrid_start + proposal_step * true_gradient)),
+        member_contract_error = float(
+            np.linalg.norm(hybrid_start + proposal_step * true_gradient)
         )
+        member_initial_distance = float(np.linalg.norm(np.linalg.solve(matrix, linear)))
+        maximum_contract_error = max(maximum_contract_error, member_contract_error)
         maximum_initial_distance = max(
-            maximum_initial_distance,
-            float(np.linalg.norm(np.linalg.solve(matrix, linear))),
+            maximum_initial_distance, member_initial_distance
         )
         baseline_calls = _gradient_calls(
             matrix, linear, baseline_start, step_size, tolerance
@@ -399,6 +400,14 @@ def _run_ensemble_case(
         )
         pair = StoppingPair(baseline_calls, hybrid_calls)
         pairs.add(pair)
+        family_members.append(
+            {
+                "family_index": family_index,
+                "contract_error": member_contract_error,
+                "initial_distance": member_initial_distance,
+                "pair": pair,
+            }
+        )
         if family_index == realized_index:
             realized_pair = pair
     if realized_pair is None:
@@ -406,6 +415,40 @@ def _run_ensemble_case(
     cost = float(rng.uniform(0.05, 1.25))
     decision = transcript_optimal_gate(pairs, cost)
     threshold = max(1.0, cost)
+    contract_misspecification: dict[str, dict[str, Any]] = {}
+    for scale in (1.0, 0.9, 0.75, 0.5, 0.25):
+        claimed_members = [
+            member
+            for member in family_members
+            if member["contract_error"]
+            <= scale * maximum_contract_error + 1.0e-15
+            and member["initial_distance"]
+            <= scale * maximum_initial_distance + 1.0e-15
+        ]
+        claimed_pairs = {member["pair"] for member in claimed_members}
+        if claimed_pairs:
+            claimed_decision = transcript_optimal_gate(claimed_pairs, cost)
+            claimed_accept = claimed_decision.accept_joint
+        else:
+            claimed_accept = False
+        realized_member_covered = any(
+            member["family_index"] == realized_index for member in claimed_members
+        )
+        realized_violation = bool(
+            claimed_accept
+            and realized_pair.call_difference + threshold > 1.0e-12
+        )
+        contract_misspecification[f"{scale:.2f}"] = {
+            "scale": scale,
+            "claimed_member_count": len(claimed_members),
+            "claimed_pair_count": len(claimed_pairs),
+            "claimed_accept": claimed_accept,
+            "false_accept_against_full_family": bool(
+                claimed_accept and not decision.accept_joint
+            ),
+            "realized_member_covered": realized_member_covered,
+            "realized_cost_or_saving_violation": realized_violation,
+        }
     partitioned_differences = {
         partitions: _partitioned_rectangle_difference(pairs, partitions)
         for partitions in (2, 4)
@@ -481,6 +524,7 @@ def _run_ensemble_case(
                 for pair in pairs
             )
         ),
+        "contract_misspecification": contract_misspecification,
         "pairs": [
             [pair.baseline_calls, pair.hybrid_calls] for pair in sorted(pairs)
         ],
@@ -504,6 +548,28 @@ def _summarize(records: list[dict[str, Any]], pep: dict[str, Any]) -> dict[str, 
     two_bin = [row for row in records if row["two_bin_accept"]]
     four_bin = [row for row in records if row["four_bin_accept"]]
     shift = [row for row in records if row["proposal_ratio"] == 1.0]
+    misspecification: dict[str, dict[str, float | int]] = {}
+    for scale in ("1.00", "0.90", "0.75", "0.50", "0.25"):
+        rows = [row["contract_misspecification"][scale] for row in records]
+        accepted = [row for row in rows if row["claimed_accept"]]
+        false_accepts = sum(row["false_accept_against_full_family"] for row in rows)
+        realized_violations = sum(
+            row["realized_cost_or_saving_violation"] for row in rows
+        )
+        misspecification[scale] = {
+            "claim_accept_count": len(accepted),
+            "claim_accept_rate": len(accepted) / len(rows),
+            "false_accept_count": false_accepts,
+            "false_accept_rate": false_accepts / len(rows),
+            "false_accept_rate_conditional_on_accept": (
+                false_accepts / len(accepted) if accepted else 0.0
+            ),
+            "realized_violation_count": realized_violations,
+            "realized_violation_rate": realized_violations / len(rows),
+            "realized_member_excluded_rate": float(
+                np.mean([not row["realized_member_covered"] for row in rows])
+            ),
+        }
     return {
         "case_count": len(records),
         "pep_cell_count": pep["cell_count"],
@@ -586,6 +652,7 @@ def _summarize(records: list[dict[str, Any]], pep: dict[str, Any]) -> dict[str, 
         "always_policy_worse_fraction": float(
             np.mean([row["always_cost_ratio"] > 1.0 + 1.0e-12 for row in records])
         ),
+        "contract_misspecification": misspecification,
     }
 
 
@@ -665,6 +732,11 @@ def main() -> None:
             "strict_cell_test": "optimal common margin tau > 1e-5",
             "ensemble_scope": (
                 "finite transcript-consistent strongly convex quadratic families"
+            ),
+            "contract_misspecification_audit": (
+                "simultaneously scale the valid R and delta declarations, discard "
+                "family members outside the optimistic declared class, and compare "
+                "the resulting decision with the full finite family"
             ),
         },
         "environment": {

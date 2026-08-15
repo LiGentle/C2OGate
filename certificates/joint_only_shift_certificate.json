@@ -1,0 +1,56 @@
+{
+  "certificate": {
+    "baseline_lower_calls": 1,
+    "hybrid_upper_calls": 2,
+    "joint_accept": true,
+    "joint_certificate_value": "0",
+    "rectangle_accept": false,
+    "rectangle_call_difference": 1,
+    "rectangle_certificate_value": "2",
+    "shift_identity": "N_f(y)=N_f(x)-1",
+    "worst_joint_call_difference": -1
+  },
+  "declaration": {
+    "attainable_pairs": [
+      [
+        3,
+        2
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "candidate_distance_upper": "44/5",
+    "claim": "joint gate accepts and the independent rectangle rejects",
+    "cost_exact_units": "2/5",
+    "formula_horizon": 26,
+    "function_class": "two-element subset of F_{1/10,1}",
+    "initial_distance_upper": "8",
+    "minimum_saved_calls": 1,
+    "proposal": "y=x-grad f(x)=-4/5",
+    "shared_transcript": "x=0, f(x)=0, grad f(x)=4/5",
+    "step_size": "1",
+    "tolerance": "3/5"
+  },
+  "environment": {
+    "generator_sha256": "70b9776da0073d18fbb0bf27ebda494b28f519b4e2837d94024385e5a91aee43",
+    "verifier_sha256": "9c415d7da4336923c4068d8402f01a4e60edf8de45f18f111d8555af918b63d3"
+  },
+  "payload_sha256": "2b82b861ea19f5d2fd2bc2f7bf2a927e19adbd84d9baf63b2b128183fcc3d3ca",
+  "schema": "c2o-joint-only-shift-v1",
+  "witnesses": [
+    {
+      "baseline_calls": 3,
+      "curvature": "1/10",
+      "function": "f(t)=(1/10)*t^2/2+(4/5)*t",
+      "hybrid_calls": 2
+    },
+    {
+      "baseline_calls": 1,
+      "curvature": "1",
+      "function": "f(t)=(1)*t^2/2+(4/5)*t",
+      "hybrid_calls": 0
+    }
+  ]
+}
