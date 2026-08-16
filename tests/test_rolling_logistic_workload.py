@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+from fractions import Fraction
 from hashlib import sha256
 import json
+from math import isclose
 from pathlib import Path
+from typing import Any
 
 from experiments.run_rolling_logistic_workload import run_workload
 
@@ -12,10 +15,79 @@ PAYLOAD = ROOT / "results" / "rolling_logistic_workload.json"
 CERTIFICATE = ROOT / "certificates" / "h6_joint_only_pep_dual.json"
 
 
+_PLATFORM_DERIVED_RATIONAL_FIELDS = {
+    "contract_residual_squared_exact",
+    "exact_maximum_feature_row_squared_norm",
+    "exact_smoothness_upper",
+    "gradient_squared_norm_exact",
+    "proposal_squared_norm_exact",
+}
+_FLOAT_REL_TOL = 1e-12
+_FLOAT_ABS_TOL = 1e-14
+
+
 def _canonical(value: object) -> bytes:
     return json.dumps(
         value, sort_keys=True, separators=(",", ":"), allow_nan=False
     ).encode("utf-8")
+
+
+def _assert_cross_platform_regeneration(
+    regenerated: Any,
+    frozen: Any,
+    *,
+    path: tuple[str, ...] = (),
+) -> None:
+    """Compare stable semantics exactly and BLAS-derived diagnostics numerically."""
+    if isinstance(frozen, dict):
+        assert isinstance(regenerated, dict), ".".join(path)
+        assert regenerated.keys() == frozen.keys(), ".".join(path)
+        for key in frozen:
+            _assert_cross_platform_regeneration(
+                regenerated[key],
+                frozen[key],
+                path=(*path, key),
+            )
+        return
+
+    if isinstance(frozen, list):
+        assert isinstance(regenerated, list), ".".join(path)
+        assert len(regenerated) == len(frozen), ".".join(path)
+        for index, (regenerated_item, frozen_item) in enumerate(
+            zip(regenerated, frozen, strict=True)
+        ):
+            _assert_cross_platform_regeneration(
+                regenerated_item,
+                frozen_item,
+                path=(*path, str(index)),
+            )
+        return
+
+    field = path[-1] if path else ""
+    if field in _PLATFORM_DERIVED_RATIONAL_FIELDS:
+        regenerated_fraction = Fraction(regenerated)
+        frozen_fraction = Fraction(frozen)
+        scale = max(abs(regenerated_fraction), abs(frozen_fraction), Fraction(1))
+        assert (
+            abs(regenerated_fraction - frozen_fraction)
+            <= Fraction(1, 10**12) * scale
+        ), ".".join(path)
+        return
+
+    if isinstance(frozen, float):
+        assert isinstance(regenerated, float), ".".join(path)
+        assert isclose(
+            regenerated,
+            frozen,
+            rel_tol=_FLOAT_REL_TOL,
+            abs_tol=_FLOAT_ABS_TOL,
+        ), ".".join(path)
+        return
+
+    # Booleans, counts, decisions, reasons, and other semantic fields remain
+    # bit-for-bit checks.  In particular, a platform-dependent threshold flip
+    # cannot be hidden by the numerical tolerances above.
+    assert regenerated == frozen, ".".join(path)
 
 
 def test_rolling_workload_payload_integrity() -> None:
@@ -91,6 +163,14 @@ def test_rolling_workload_regenerates_deterministically() -> None:
     frozen = json.loads(PAYLOAD.read_text(encoding="utf-8"))
     regenerated = run_workload()
     assert regenerated["configuration"] == frozen["configuration"]
-    assert regenerated["summary"] == frozen["summary"]
-    assert regenerated["cold_cost_scenarios"] == frozen["cold_cost_scenarios"]
-    assert regenerated["records"] == frozen["records"]
+    _assert_cross_platform_regeneration(
+        regenerated["summary"], frozen["summary"], path=("summary",)
+    )
+    _assert_cross_platform_regeneration(
+        regenerated["cold_cost_scenarios"],
+        frozen["cold_cost_scenarios"],
+        path=("cold_cost_scenarios",),
+    )
+    _assert_cross_platform_regeneration(
+        regenerated["records"], frozen["records"], path=("records",)
+    )
