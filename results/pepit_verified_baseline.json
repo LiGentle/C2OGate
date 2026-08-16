@@ -1,0 +1,675 @@
+{
+  "certificates": [
+    {
+      "cell": [
+        0,
+        1
+      ],
+      "dual": {
+        "certified_upper_bound": "-725635247037/4739964246875",
+        "equality_multipliers": {},
+        "inequality_multipliers": {
+          "baseline_terminal": "1",
+          "derived_trace_bound": "1/100000",
+          "interpolation_11_5": "1/1000000",
+          "interpolation_12_6": "1/716334",
+          "interpolation_13_7": "1/441205",
+          "interpolation_5_11": "1/1000000",
+          "interpolation_6_12": "1/716334",
+          "interpolation_7_13": "1/441205",
+          "proposal_contract": "37389281/853567",
+          "proposal_norm_lower": "7207/8885"
+        },
+        "positive_ldl_pivot_count": 16
+      },
+      "primal": {
+        "equality_count": 1,
+        "floating_objective": -0.153748759533209,
+        "floating_status": "PEPit/Clarabel solved",
+        "function_value_count": 15,
+        "generation_seconds": 1.3495374997146428,
+        "gram_order": 16,
+        "inequality_count": 219,
+        "objective": "maximize signed cell-feasibility margin tau"
+      },
+      "recovery": {
+        "active_threshold": 1e-10,
+        "denominator_limit": 1000000,
+        "trace_regularizer": "1/100000"
+      }
+    },
+    {
+      "cell": [
+        0,
+        2
+      ],
+      "dual": {
+        "certified_upper_bound": "-717210217751129/4684930780475000",
+        "equality_multipliers": {},
+        "inequality_multipliers": {
+          "baseline_terminal": "1",
+          "derived_trace_bound": "1/100000",
+          "interpolation_0_14": "1/701591",
+          "interpolation_10_4": "2/941717",
+          "interpolation_11_5": "2/537655",
+          "interpolation_12_6": "4/868459",
+          "interpolation_13_14": "1/693425",
+          "interpolation_13_7": "14736187/736187000000",
+          "interpolation_14_0": "1/701591",
+          "interpolation_14_13": "67737/27737000000",
+          "interpolation_2_8": "1/1000000",
+          "interpolation_3_9": "1/846241",
+          "interpolation_4_10": "2/941717",
+          "interpolation_5_11": "2/537655",
+          "interpolation_6_12": "4/868459",
+          "interpolation_7_13": "14/736187",
+          "interpolation_7_14": "1/1000000",
+          "interpolation_8_2": "1/1000000",
+          "interpolation_9_3": "1/846241",
+          "proposal_contract": "30773191/702607",
+          "proposal_norm_lower": "216345/266717"
+        },
+        "positive_ldl_pivot_count": 16
+      },
+      "primal": {
+        "equality_count": 1,
+        "floating_objective": -0.15374875399563823,
+        "floating_status": "PEPit/Clarabel solved",
+        "function_value_count": 15,
+        "generation_seconds": 1.399503749795258,
+        "gram_order": 16,
+        "inequality_count": 220,
+        "objective": "maximize signed cell-feasibility margin tau"
+      },
+      "recovery": {
+        "active_threshold": 1e-10,
+        "denominator_limit": 1000000,
+        "trace_regularizer": "1/100000"
+      }
+    },
+    {
+      "cell": [
+        0,
+        3
+      ],
+      "dual": {
+        "certified_upper_bound": "-2328638028376841/15211032115150000",
+        "equality_multipliers": {},
+        "inequality_multipliers": {
+          "baseline_terminal": "1",
+          "derived_trace_bound": "1/100000",
+          "interpolation_11_5": "1/1000000",
+          "interpolation_12_6": "1/669023",
+          "interpolation_13_7": "1/660107",
+          "interpolation_5_11": "1/1000000",
+          "interpolation_6_12": "1/669023",
+          "interpolation_7_13": "1/660107",
+          "proposal_contract": "43089018/983791",
+          "proposal_norm_lower": "501663/618466"
+        },
+        "positive_ldl_pivot_count": 16
+      },
+      "primal": {
+        "equality_count": 1,
+        "floating_objective": -0.15374875882858355,
+        "floating_status": "PEPit/Clarabel solved",
+        "function_value_count": 15,
+        "generation_seconds": 1.3653939999639988,
+        "gram_order": 16,
+        "inequality_count": 221,
+        "objective": "maximize signed cell-feasibility margin tau"
+      },
+      "recovery": {
+        "active_threshold": 1e-10,
+        "denominator_limit": 1000000,
+        "trace_regularizer": "1/100000"
+      }
+    },
+    {
+      "cell": [
+        0,
+        4
+      ],
+      "dual": {
+        "certified_upper_bound": "-269183404435649/1758348581425000",
+        "equality_multipliers": {},
+        "inequality_multipliers": {
+          "baseline_terminal": "1",
+          "derived_trace_bound": "1/100000",
+          "proposal_contract": "17582433/401405",
+          "proposal_norm_lower": "710639/876097"
+        },
+        "positive_ldl_pivot_count": 16
+      },
+      "primal": {
+        "equality_count": 1,
+        "floating_objective": -0.15374876025556186,
+        "floating_status": "PEPit/Clarabel solved",
+        "function_value_count": 15,
+        "generation_seconds": 1.348003541585058,
+        "gram_order": 16,
+        "inequality_count": 222,
+        "objective": "maximize signed cell-feasibility margin tau"
+      },
+      "recovery": {
+        "active_threshold": 1e-10,
+        "denominator_limit": 1000000,
+        "trace_regularizer": "1/100000"
+      }
+    },
+    {
+      "cell": [
+        0,
+        6
+      ],
+      "dual": {
+        "certified_upper_bound": "-581746989283111/3800063424000000",
+        "equality_multipliers": {},
+        "inequality_multipliers": {
+          "baseline_terminal": "1",
+          "derived_trace_bound": "1/100000",
+          "interpolation_0_14": "1/1000000",
+          "interpolation_10_4": "1/1000000",
+          "interpolation_11_5": "1/587120",
+          "interpolation_12_6": "1/310962",
+          "interpolation_13_14": "1/1000000",
+          "interpolation_13_7": "2/373077",
+          "interpolation_14_0": "1/1000000",
+          "interpolation_14_13": "1/1000000",
+          "interpolation_4_10": "1/1000000",
+          "interpolation_5_11": "1/587120",
+          "interpolation_6_12": "1/310962",
+          "interpolation_7_13": "2/373077",
+          "proposal_contract": "35760563/816384",
+          "proposal_norm_lower": "755133/930950"
+        },
+        "positive_ldl_pivot_count": 16
+      },
+      "primal": {
+        "equality_count": 1,
+        "floating_objective": -0.1537487577494491,
+        "floating_status": "PEPit/Clarabel solved",
+        "function_value_count": 15,
+        "generation_seconds": 1.3735970412380993,
+        "gram_order": 16,
+        "inequality_count": 224,
+        "objective": "maximize signed cell-feasibility margin tau"
+      },
+      "recovery": {
+        "active_threshold": 1e-10,
+        "denominator_limit": 1000000,
+        "trace_regularizer": "1/100000"
+      }
+    }
+  ],
+  "declaration": {
+    "bad_cell_rule": "candidate_calls >= baseline_calls",
+    "baseline_role": "generic verified-pipeline comparator; acceptance is still decided only by the parameter-level stdlib consumer",
+    "cells": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        0,
+        6
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        6,
+        6
+      ]
+    ],
+    "claim": "at natural H=6 and a declared nonzero proposal radius, the joint PEP accepts while exact independent marginals reject",
+    "cost_exact_units": "2/5",
+    "function_class": "full infinite class F_{3/10,1} consistent with the transcript",
+    "horizon": 6,
+    "minimum_saved_calls": 1,
+    "producer": "PEPit 0.5.1 semantic front end and Clarabel duals, followed by the frozen success-or-fail rational recovery grid"
+  },
+  "environment": {
+    "generator_sha256": "e524721c365e9fbf3699d8d111b0e3426780ad604b9ff2c1ae53a2df904c29b1",
+    "native_comparator_payload_sha256": "6a4855ee5f84f3264ad7fac9d4c36d2e369fe02d3b45b174df6fb8f3e3aab627",
+    "pepit": "0.5.1",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.11.15 (main, Jun  2 2026, 22:36:57) [Clang 22.1.3 ]",
+    "verifier_sha256": "289e4a11137db4d9842d7619af8b066c0b554a06086d306c346f01bf21b1840a"
+  },
+  "joint_certificate": {
+    "certificate_value": "0",
+    "joint_accept": true,
+    "rectangle_accept": false,
+    "worst_call_difference": -1
+  },
+  "marginal_certificate": {
+    "baseline_lower_calls": 1,
+    "candidate_gradient_upper": "3929/11000",
+    "candidate_upper_calls": 1,
+    "current_gradient_lower": "53/110",
+    "current_gradient_upper": "57/110",
+    "one_step_candidate_gradient_upper": "27503/110000",
+    "proposal_step_contraction": "67/100",
+    "rectangle_call_difference": 0,
+    "rectangle_certificate_value": "1"
+  },
+  "parameters": {
+    "contract_radius": "1/100",
+    "derived_trace_bound": "66",
+    "initial_distance_upper": "9/5",
+    "proposal_norm_lower": "27/50",
+    "proposal_norm_upper": "14/25",
+    "proposal_step": "11/10",
+    "smoothness": "1",
+    "step_size": "1",
+    "strong_convexity": "3/10",
+    "tolerance": "7/25"
+  },
+  "payload_sha256": "6d147db82554bde791a1d3962c8321c0bb205c719f60ba030aa969312cf0337e",
+  "rows": [
+    {
+      "cell": [
+        0,
+        0
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 14",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.4770618746988475
+    },
+    {
+      "cell": [
+        0,
+        1
+      ],
+      "floating_objective": -0.153748759533209,
+      "outcome": "verified",
+      "wall_seconds": 1.3530182079412043
+    },
+    {
+      "cell": [
+        0,
+        2
+      ],
+      "floating_objective": -0.15374875399563823,
+      "outcome": "verified",
+      "wall_seconds": 1.40285237506032
+    },
+    {
+      "cell": [
+        0,
+        3
+      ],
+      "floating_objective": -0.15374875882858355,
+      "outcome": "verified",
+      "wall_seconds": 1.3685631672851741
+    },
+    {
+      "cell": [
+        0,
+        4
+      ],
+      "floating_objective": -0.15374876025556186,
+      "outcome": "verified",
+      "wall_seconds": 1.3512391671538353
+    },
+    {
+      "cell": [
+        0,
+        5
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.2558296667411923
+    },
+    {
+      "cell": [
+        0,
+        6
+      ],
+      "floating_objective": -0.1537487577494491,
+      "outcome": "verified",
+      "wall_seconds": 1.3771355003118515
+    },
+    {
+      "cell": [
+        1,
+        1
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 3",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3552185418084264
+    },
+    {
+      "cell": [
+        1,
+        2
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.347828249912709
+    },
+    {
+      "cell": [
+        1,
+        3
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.1815124158747494
+    },
+    {
+      "cell": [
+        1,
+        4
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3906081672757864
+    },
+    {
+      "cell": [
+        1,
+        5
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.4357946668751538
+    },
+    {
+      "cell": [
+        1,
+        6
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3455255408771336
+    },
+    {
+      "cell": [
+        2,
+        2
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3699891660362482
+    },
+    {
+      "cell": [
+        2,
+        3
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3676811666227877
+    },
+    {
+      "cell": [
+        2,
+        4
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3750892085954547
+    },
+    {
+      "cell": [
+        2,
+        5
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.4615761670283973
+    },
+    {
+      "cell": [
+        2,
+        6
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.551678542047739
+    },
+    {
+      "cell": [
+        3,
+        3
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.1840203339233994
+    },
+    {
+      "cell": [
+        3,
+        4
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3935712920501828
+    },
+    {
+      "cell": [
+        3,
+        5
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.4502078746445477
+    },
+    {
+      "cell": [
+        3,
+        6
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3380564581602812
+    },
+    {
+      "cell": [
+        4,
+        4
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.391176332719624
+    },
+    {
+      "cell": [
+        4,
+        5
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.4337761248461902
+    },
+    {
+      "cell": [
+        4,
+        6
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3513522502034903
+    },
+    {
+      "cell": [
+        5,
+        5
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.2659401246346533
+    },
+    {
+      "cell": [
+        5,
+        6
+      ],
+      "failure_category": "rational dual slack is not positive definite at pivot 8",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.5664317919872701
+    },
+    {
+      "cell": [
+        6,
+        6
+      ],
+      "failure_category": "rational correction made a multiplier negative",
+      "failure_stage": "rational recovery",
+      "outcome": "uncertified",
+      "wall_seconds": 1.3446710002608597
+    }
+  ],
+  "schema": "c2o-pepit-verified-baseline-v1",
+  "summary": {
+    "attempted_cell_count": 28,
+    "certificate_count": 5,
+    "generation_wall_seconds": 38.571207124739885,
+    "maximum_certified_upper_bound": "-717210217751129/4684930780475000",
+    "maximum_gram_order": 16,
+    "maximum_inequality_count": 230,
+    "positive_ldl_pivot_count": 80,
+    "uncertified_cell_count": 23
+  },
+  "witnesses": [
+    {
+      "baseline_calls": 1,
+      "candidate": "-11/20",
+      "candidate_calls": 0,
+      "candidate_gradient": "-1/20",
+      "current_gradient": "1/2",
+      "curvature": "1",
+      "proposal_residual": "0"
+    },
+    {
+      "baseline_calls": 2,
+      "candidate": "-27/50",
+      "candidate_calls": 1,
+      "candidate_gradient": "169/500",
+      "current_gradient": "1/2",
+      "curvature": "3/10",
+      "proposal_residual": "1/100"
+    }
+  ]
+}

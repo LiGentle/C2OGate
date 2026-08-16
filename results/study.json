@@ -28,19 +28,20 @@
     "python": "3.11.15 (main, Jun  2 2026, 22:36:57) [Clang 22.1.3 ]",
     "runner_sha256": "bf9afbc6210d21a031d5746fbc79f79f6f4f56dc1c7ddf7fc539d20ae6789278",
     "source_sha256": {
-      "src/c2ogate/__init__.py": "1d2c167003a926331207d653b83c2a53d282c1d04947c5a6939c4c3472b4d010",
+      "src/c2ogate/__init__.py": "4c0b01fe2d196e5c1e13875ba66d2b8cceee5976b41b2f43b8ab748343b988fb",
       "src/c2ogate/active_set.py": "a99e1bd8813253b54527e0aa1ad01e7cc982cd47d60dd21834732e60ee263a61",
       "src/c2ogate/certificates.py": "9269b36d035c32aa49e127e900e39010773a5192a55386b96b12b09f95b32dab",
       "src/c2ogate/core.py": "e7cb009cca991d0b78b6a38cd149a973b1f9daf23beafa9c943273fff2be8924",
       "src/c2ogate/costs.py": "3689aba1452c209e3a7a2d793db7bdf5c8eb65667e2cef351d27013f4d211a23",
       "src/c2ogate/dynamic_certificates.py": "a7ae95e4859d677d9b49a9d495b1624be867374d33ec546eb7d5e561c0404618",
+      "src/c2ogate/exact_membership.py": "a602173aff1129b89422930ba5fe705702faa894f18d5419f4fc482c5e62f02b",
       "src/c2ogate/matrix_certificates.py": "40791545bede60e15c07c47ce39c5f9b4ba10280177f8373bd712293b01d318b",
       "src/c2ogate/quadratic.py": "2ae430690e7eb185bb09d8f59e28bda78332756773a73a870eb1752d537cec86",
       "src/c2ogate/transcript.py": "9f3aeb06d6c2cbd99c1af2b0a59949a6d8802bd7c33a527e49ccff06be2a483d",
-      "src/c2ogate/workflow.py": "cadbb156ba71b9eb9beebe16038c174390fd03609e4fe3e9678aa2119ec48687"
+      "src/c2ogate/workflow.py": "e4ba53ed85353cf831a387012bee9163e3dabab26630c2b29d221e99355f792e"
     }
   },
-  "payload_sha256": "8d64b5e68e219176a6143a399af1b9884fda7a045391ff32a11866ef9d4f478c",
+  "payload_sha256": "5564ce6270e00015d89aec54de1049a29470f94d5bd5afd4b6435737edab7fa5",
   "records": [
     {
       "always_cost_ratio": 1.0,

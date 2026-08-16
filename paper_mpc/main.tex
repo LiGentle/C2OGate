@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{microtype}
 \usepackage{xurl}
 \usepackage[square,numbers,sort&compress]{natbib}
@@ -17,9 +18,6 @@
 \makeatother
 \usepackage[nameinlink,capitalise,noabbrev]{cleveref}
 
-\spnewtheorem{assumption}[theorem]{Assumption}{\bfseries}{\rmfamily}
-\crefname{assumption}{assumption}{assumptions}
-\Crefname{assumption}{Assumption}{Assumptions}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\cF}{\mathcal{F}}
@@ -31,12 +29,13 @@
 \newcommand{\eps}{\varepsilon}
 \DeclareMathOperator{\rank}{rank}
 \DeclareMathOperator{\diag}{diag}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 \input{generated/metrics.tex}
 
 \journalname{Mathematical Programming Computation}
-\title{C2OGate: Proof-Carrying Joint Performance Estimation for
-Certified Branch Decisions}
-\titlerunning{Proof-Carrying Branch Certification}
+\title{C2OGate: Externally Checkable Joint Performance Estimation for
+Cost-Dominant Continuation Decisions}
+\titlerunning{Verifiable Continuation Decisions}
 \author{Jintao Li}
 \authorrunning{J. Li}
 \institute{Jintao Li \at
@@ -44,45 +43,34 @@ NUS (Chongqing) Research Institute, Chongqing, China \\
 \email{e0622340@u.nus.edu}}
 \date{}
 \hypersetup{
-  pdftitle={C2OGate: Proof-Carrying Joint Performance Estimation for Certified Branch Decisions},
+  pdftitle={C2OGate: Externally Checkable Joint Performance Estimation for Cost-Dominant Continuation Decisions},
   pdfauthor={Jintao Li}
 }
 
 \begin{document}
+\raggedbottom
 \maketitle
 
 \begin{abstract}
-We present C2OGate, a proof-carrying method for deciding between two
-continuations after an external mechanism supplies a candidate and an
-auditable error-and-cost contract.  Conditioned on a first-order transcript,
-the method couples fixed-step gradient descent from both starts on the same
-unknown smooth strongly convex function and represents every cost-violating
-joint stopping-time cell by a dimension-free Gram SDP.  Acceptance requires
-independently verified exclusion of every bad cell; counterexamples reject,
-and incomplete evidence returns \emph{uncertified}.  The consumer rebuilds
-every SDP coefficient from the declared parameters in exact rational
-arithmetic before checking the supplied dual.  We prove the finite
-reduction, its fixed-dimension rank qualification, transcript-relative
-maximality, and the possible loss from replacing the joint set by independent
-marginals.  Five natural-$H=10$ envelopes yield 330 exact bad-cell exclusions:
-198 are independently recovered across three distinct source
-envelopes and 132 follow by checked homogeneous transport.  The flagship
-profile has Gram order at most 24 and 1,584 exact positive $LDL^\top$ pivots;
-an independent SymPy rational-arithmetic check confirms all 1,584 exact
-$LDL^\top$ pivots.  Its exact marginal rectangle also accepts, at boundary value
-zero.  A separate nonzero-radius example over the full infinite class
-$\cF_{1/2,1}$ is accepted only by the joint PEP.  Rational certificate
-construction remains heuristic success-or-fail; only independent verification
-and the resulting decisions are guaranteed, and the generic $H=20$
-enumeration remains uncertified.  The deployment ledger separately charges
-proof construction, envelope acquisition, and verification.  In a synthetic
-rolling nonlinear logistic workload, the frozen $H=10$ proof accepts
-\RollingLogisticAccepted{} of \RollingLogisticEpisodes{} decisions using only
-short transcripts; post-decision full-model evaluation finds zero accepted
-violations and a prepaid-proof cost ratio of \RollingLogisticWarmRatio{} after
-charging every \RollingLogisticMinibatchPercent{} minibatch proposal.
-\keywords{performance estimation \and proof-carrying computation \and
-semidefinite programming \and certified branch decision \and stopping time
+Consider a continuation decision between a baseline state and a paid proposal.
+Separate worst-case bounds for their remaining stopping times can combine two
+incompatible functions and therefore reject a decision that is safe on every
+single compatible function.  C2OGate conditions on the observed first-order
+transcript, enumerates the \emph{joint} stopping-time cells of the two
+fixed-step gradient continuations, and reduces each cost-violating cell to a
+Gram semidefinite program.  A numerical producer may fail, but acceptance
+requires externally checkable rational dual exclusions for every bad cell; a
+standard-library consumer reconstructs all interpolation, stopping, and trace
+coefficients from semantic parameters before checking the dual identities.
+This gives an exact, dimension-free decision whenever cell exclusion is
+complete and returns \emph{uncertified} otherwise.  On the infinite class
+$\cF_{3/10,1}$, a complete $H=6$ suite excludes all 28 bad cells with 448 exact
+$LDL^\top$ pivots and accepts, whereas sharp separately conditioned marginals
+reject.  This controlled decision reversal is the headline result; exact
+recovery is currently demonstrated only through moderate horizons and remains
+heuristic success-or-fail.
+\keywords{performance estimation \and externally checkable certificate \and
+semidefinite programming \and continuation decision \and stopping time
 \and evaluation cost}
 \subclass{90C25 \and 90C22 \and 65K05 \and 68Q25}
 \end{abstract}
@@ -98,15 +86,12 @@ when proposal and certification work is prepaid, reusable, or itself advances
 the fallback, can one guarantee that the candidate path costs no more than the
 unchanged exact baseline?
 
-The scope is deliberately narrower than a complete multifidelity optimizer.
-C2OGate does not construct the proposal, train a surrogate, or certify an
-arbitrary future cheap-oracle sequence.  It certifies one branch after an
-external mechanism has supplied a candidate $y$, deterministic transcript
-bounds, and a charged cost.  From either $x$ or $y$, the continuation analyzed
-here is the same fixed-step gradient method.  The motivating implementation
-may use two oracles, but the proved object is exactly this one-shot continuation
-comparison; the title and claims are therefore stated in terms of a certified
-branch decision rather than a full two-oracle algorithm.
+The scope is narrower than a complete multifidelity optimizer.  C2OGate does
+not construct the proposal, train a surrogate, or certify an arbitrary future
+cheap-oracle sequence.  An external mechanism supplies a candidate $y$,
+deterministic transcript bounds, and a charged cost; from either $x$ or $y$,
+the certified continuation is the same fixed-step gradient method.  The
+proved object is therefore one auditable continuation comparison.
 
 Convergence and resource dominance are logically distinct.  An objective
 decrease can rotate error toward a slow mode.  A high-fidelity complexity upper
@@ -125,7 +110,7 @@ bounds show that every method faces a hard member of a function class
 with the transcript currently in hand is hard for the unchanged baseline.
 Conversely, learning-augmented algorithms combine predictions with worst-case
 robustness \citep{LykourisVassilvitskii2018}.  Their usual object is a
-competitive-ratio tradeoff as prediction error varies.  Our object is an
+competitive-ratio tradeoff as prediction error varies.  The object here is an
 absolute, same-instance comparison after every proposal and certification cost
 has been converted to exact-oracle units.  With an unchanged fallback and zero
 initial credit, any positive rejected cost makes such a guarantee impossible;
@@ -135,207 +120,113 @@ experiments.
 Performance estimation (PEP) replaces loose rate manipulations by finite
 optimization over interpolation data \citep{DroriTeboulle2014,TaylorPEP2017,
 TaylorInterpolation2017}.  General PEP software can encode the same numerical
-cell models used below.  Our computational object conditions on an observed
+cell models used below.  The computational object here conditions on an observed
 transcript and couples \emph{two continuations on the same unknown function}.
 The relevant object is not a separate worst case for each continuation, but
-their joint attainable stopping-time set.  The contribution is a software and
-computational architecture that evaluates this object with explicit failure
-semantics, cost accounting, and independently replayable proofs:
+their joint attainable stopping-time set.  The contribution is a computational
+architecture with explicit failure semantics, cost accounting, and replayable
+certificates:
 
 \begin{enumerate}
-  \item C2OGate generates the complete set of cost-violating joint
-  stopping-time cells, applies only proved presolve reductions, constructs a
-  semidefinite program for every residual cell, and aggregates the results as
-  \emph{accept}, \emph{reject}, or \emph{uncertified}.  The numerical solver is
-  deliberately outside the trusted acceptance boundary.
-  \item Excluded cells become conic dual proof objects.  The flagship audit
-  has formula-derived horizon $H=10$, a nonzero proposal-contract radius, and
-  no structural cell prescreen.  Exact rational duals exclude all 66 bad cells
-  (Gram order at most 24 and up to 534 inequalities).  A standard-library
-  verifier independently rebuilds every interpolation, transcript, stopping,
-  margin, anchor, and trace coefficient from the declared parameters before
-  checking dual stationarity, objective, slack, and 1,584 exact positive
-  $LDL^\top$ pivots.  Two additional source envelopes are recovered
-  independently and two scaled envelopes are transported exactly, giving
-  \HtenFamilyExactCells{} exclusions across \HtenFamilyProfiles{} profiles.
-  Rational recovery is an explicitly heuristic, success-or-fail producer;
-  certificate verification is the guaranteed part.  A separate ten-cell suite
-  proves joint-only acceptance over a full infinite $\cF_{1/2,1}$ transcript
-  class with nonzero proposal radius.
-  \item For fixed-step gradient descent over $\cF_{\mu,L}$, the infinite
-  continuation reduces to finitely many cells, and each cell has an exact
-  dimension-free SDP representation.  A rank constraint gives the precise
-  qualification for a fixed physical dimension.
-  \item The computed object is the exact transcript-conditioned certificate
-  $\Gamma^*$.  It is maximal among deterministic robust gates using the same
-  information.  The usual comparator-lower/candidate-upper rectangle is a
-  relaxation whose loss is unbounded even inside one-dimensional
-  $\cF_{\mu,L}$ quadratics.
+  \item \textbf{Verified architecture.}  C2OGate generates
+  every cost-violating joint cell, uses only proved presolve rules, and returns
+  \emph{accept}, \emph{reject}, or \emph{uncertified}.  The numerical solver and
+  producer matrices are outside the acceptance boundary: the consumer rebuilds
+  named rational rows from the parameter tuple and verifies each dual identity.
+  \item \textbf{New coupled query.}  For fixed-step gradient descent over
+  $\cF_{\mu,L}$, the infinite continuation reduces to finitely many exact
+  dimension-free SDPs, with a rank qualification for fixed dimension.  The
+  SDP decides whether one \emph{same-function stopping pair} is attainable;
+  two separately conditioned PEPs return only marginal endpoints and cannot
+  answer that query.  Given
+  exact exclusion of every bad cell, the resulting rule is transcript-relative
+  optimal; the implemented heuristic may instead return \emph{uncertified}.
+  Separate marginal bounds can lose an unbounded number of calls in the
+  one-dimensional exact-step construction of \cref{thm:class-gap}.
+  \item \textbf{Controlled computational comparison.}  Across five frozen
+  transcripts, the joint and sharp marginal decisions differ on four and agree
+  on the retained $H=10$ control.  The $H=6$ flagship excludes 28 bad cells and
+  accepts while sharp marginals reject.  A nonsharing SymPy implementation and
+  randomized exact differential tests audit the semantic builder.
+  \item \textbf{Measured value and reuse.}  A stable schema separates stopping
+  rules, producers, consumers, and ledgers.  UCI and nonlinear replays remain
+  adverse mean-cost controls.  A full-grid heat-inverse study measures both
+  oracle tiers and shows when one prepaid certificate is worthwhile under an
+  explicit pointwise-overrun penalty; it is not cheaper than the unpenalized
+  baseline.
 \end{enumerate}
 
-The artifact additionally includes an exact marginal audit showing that the
-flagship rectangle accepts at value zero, a SymPy exact-arithmetic cross-check,
-five-repeat Clarabel/SCS scaling runs,
-a same-model PEPit comparison, structured and generic $H=20$ diagnostics,
-an exact-proposal rolling logistic simulation, and exact nonlinear and
-rational-quadratic ledgers.  Its 2,000 finite quadratic
-families remain a constructed proxy, hence optimistic for an infinite
-consistency class; their new contract-perturbation audit measures this
-optimism.  The full-revelation SPX quadratic tests constant and cost
-acquisition rather than short-transcript PEP certification.
-The verified computational envelope is deliberately moderate-horizon: exact
-generic recovery is demonstrated through $H=10$, whereas the generic $H=20$
-enumeration remains uncertified.
-
-The paper deliberately stops at smooth strongly convex gradient descent.  A
-general interpolation calculus for linear operators is available
-\citep{Bousselmi2024}, and proximal or active-manifold extensions are plausible,
-but including them here would obscure the joint-certificate result and would
-require separate exact interpolation theorems.
+The verified envelope is deliberately moderate-horizon: generic exact recovery
+is demonstrated through $H=10$, not at $H=15$ or $H=20$.  The paper stops at
+smooth strongly convex gradient descent; proximal, adaptive-step, or
+active-manifold variants require new exact interpolation models rather than a
+mechanical use of the current verifier.
 
 \section{Relation to prior work}
 
-Inexact-oracle analysis typically assumes a deterministic or stochastic error
-model and proves convergence or an evaluation-complexity upper bound for the
-resulting method \citep{Carter1991,Devolder2014,Bellavia2019}.  PEP has also
-been used directly for inexact gradient and Newton directions
-\citep{DeKlerkGlineurTaylor2020}, and exact worst-case rates are known for
-several fixed-step gradient settings \citep{Abbaszadehpeivasti2022}.  These
-results control one algorithmic continuation.  Cost dominance needs a coupled
-statement: on every function still compatible with the observed data, the
-hybrid stopping time must be smaller than the stopping time of the unchanged
-baseline on that same function.  A worst-case upper bound for the baseline
-cannot supply the required comparator.
+Inexact-oracle and multifidelity methods control convergence or evaluation
+complexity for one continuation under an error or model-management rule
+\citep{Carter1991,Devolder2014,Bellavia2019,Alexandrov1998,
+ConnScheinbergVicente2009,Peherstorfer2018}.  Exact fixed-step iteration bounds
+are also available \citep{Abbaszadehpeivasti2022}.  C2OGate asks a different
+quantified question: every function compatible with the observed transcript
+must make the proposal continuation no more expensive than the unchanged
+baseline on that same function.  Minimax lower bounds
+\citep{NemirovskyYudin1983,DroriTaylor2022} and competitive guarantees for
+learning-augmented algorithms \citep{LykourisVassilvitskii2018,
+MitzenmacherVassilvitskii2022} motivate this distinction but do not provide the
+required instance-conditioned pair of stopping times.
 
-Evaluation-complexity theory systematically counts objective, derivative, and
-subproblem evaluations required to reach approximate optimality
-\citep{CartisGouldToint2022}.  That accounting viewpoint is close in spirit,
-but its usual guarantee is again a class-wide upper bound for one algorithm.
-Our branch certificate instead needs a transcript-specific lower comparison on
-the unchanged continuation, jointly with an upper comparison on the proposal
-continuation.
+PEP supplies the interpolation machinery
+\citep{DroriTeboulle2014,TaylorPEP2017,TaylorInterpolation2017}.  PESTO and
+PEPit automate numerical model construction \citep{TaylorPESTO2017,
+GoujaudPEPit2024}.  Exact fixed-step analyses optimize one method's performance
+over a class \citep{Abbaszadehpeivasti2022}.
+Data-driven PEP--DRO instead conditions a probabilistic performance functional
+on a sample of problem instances \citep{ParkRanjanStellato2025}; operator PEP
+couples several oracle relations within one algorithmic model
+\citep{RyuTaylorBergelingGiselsson2020}.  None of these distinctions is a claim
+that interpolation or transcript conditioning is new here.  The new query is
+the attainable \emph{pair} $(N_f(x),N_f(y))$ for two continuations sharing one
+unknown $f$, followed by a discontinuous cell disjunction.  Running two sharp
+conditioned single-track PEPs gives $L_x$ and $U_y$, but it erases whether their
+extremizers are the same function.  The experiment in
+\cref{sec:joint-marginal-comparison} holds every other datum fixed and shows the
+consequence: four of five joint acceptances are lost by this marginalization,
+while the fifth control agrees.
 
-Information-based complexity formalizes what can be guaranteed from a fixed
-oracle model over a function class \citep{NemirovskyYudin1983,DroriTaylor2022}.
-Modern exact lower bounds sharpen this minimax question, but they establish the
-existence of hard functions, whereas our comparator
-requires a lower bound for every function compatible with one observed
-transcript.  This quantifier reversal is why a class-wide lower complexity
-bound cannot fund an instance-wise branch decision.
+PEPit 0.5.1 is 1.54--1.96 times faster on the matched floating models.  A new
+adapter also feeds its Clarabel duals to the same rational recovery and exact
+consumer: only \PepitVerifiedCells{}/\PepitVerifiedAttempted{} cells certify,
+versus 28/28 for the named-row producer.  Thus the reason for retaining a
+domain-specific front end is measured recovery robustness, not floating model
+speed.  Acceptance uses stable rational rows, and the verifier imports neither
+PEPit, CVXPY, nor a conic solver.
 
-Learning-augmented algorithms seek consistency when predictions are accurate
-and robustness when they are not \citep{LykourisVassilvitskii2018}.  That
-literature motivates protecting a trusted baseline, but commonly uses
-competitive ratios over an online input sequence.  Here the prediction is an
-optimization proposal, the benchmark is the same exact continuation on the
-same function, and a rejected proposal still incurs its already-paid cost.
+Rigorous SDP postprocessing is established: interval validation, exact rational
+LMIs, and symbolic--numeric recovery have complementary assumptions
+\citep{JanssonVSDP2006,HenrionNaldiSafeyElDin2016,PeyrlParrilo2008,
+DavisPapp2022}.  C2OGate contributes no generic recovery theorem.  Its producer
+is heuristic success-or-fail; its guaranteed component reconstructs each PEP
+dual identity over $\mathbb Q$ and fails closed.  A second SymPy implementation
+below shares neither the coefficient builder nor the $LDL^\top$ code with the
+acceptance consumer.
 
-Multifidelity and derivative-free model management accept or reject
-approximate models using trust regions, poisedness, consistency tests, or
-high-fidelity validation \citep{Alexandrov1998,ConnScheinbergVicente2009,
-Kouri2014,Ziems2011,Peherstorfer2018}.  Those mechanisms can reduce
-high-fidelity evaluations in practice and preserve convergence.  Here the
-acceptance criterion is different: every online cost is normalized against the
-exact oracle, rejection is itself an accounted branch, and the claim is
-deterministic non-inferiority rather than expected or empirical savings.
-Recent methods use tunable-accuracy function models inside a line search
-\citep{GrundvigHeinkenschloss2025} or alternate full and low evaluations in
-derivative-free optimization \citep{BerahasSohabVicente2023}.
-C2OGate is complementary: it does not prescribe how the proposal is produced,
-but supplies a separately verifiable, same-instance cost decision for a
-declared baseline and proposal.
-
-\paragraph{Performance estimation and conditioning.}
-PEP supplies the interpolation machinery used here
-\citep{DroriTeboulle2014,TaylorPEP2017,TaylorInterpolation2017}.
-PESTO automated the modeling layer \citep{TaylorPESTO2017}, and PEPit is a
-general Python implementation \citep{GoujaudPEPit2024}.  Operator-splitting PEP
-already couples several oracle relations
-\citep{RyuTaylorBergelingGiselsson2020}; BnB-PEP obtains certifiably global
-method-design solutions by branch and bound \citep{DasGuptaVanParysRyu2024}.
-Data-driven PEP conditions distributional guarantees on sampled trajectories
-\citep{ParkRanjanStellato2025}.  These works preclude a claim that coupling,
-conditioning, or certified PEP computation is new by itself.  Our narrower
-object is a deterministic one-transcript branch comparison with a
-discontinuous stopping rule.  PEPit 0.5.1 encodes the same signed cells and is
-faster in the reported same-model numerical comparison.  It would be a natural
-floating-point producer front end.  We do not make it the acceptance boundary
-because the consumer must reconstruct stable, named rational coefficient rows
-from parameters, reject missing or unknown rows, and replay the dual identity
-without importing PEPit, CVXPY, or a conic solver.  The present artifact
-therefore retains a small domain-specific exact builder; a future PEPit adapter
-could emit the same proof schema without changing the consumer.  The
-implemented increment is the cost-violating cell disjunction, three-valued
-aggregation, proof producer and small consumer, and explicit cost ledger; it is
-not a new general PEP language or interpolation theorem.
-
-\paragraph{Rational recovery and verified SDP.}
-Rigorous SDP postprocessing predates this work.  Interval methods bound
-optimal values from numerical conic solutions \citep{JanssonChaykinKeil2007};
-SPECTRA treats small rational LMIs in exact arithmetic
-\citep{HenrionNaldiSafeyElDin2016}.  Davis and Papp recover exact dual
-certificates for weighted sum-of-squares cones \citep{DavisPapp2022}, while
-Roux, Voronin, and Sankaranarayanan validate polynomial-invariant SDPs using
-rational reconstruction and exact positive-semidefiniteness checks
-\citep{RouxVoroninSankaranarayanan2018}.  C2OGate claims neither a general
-recovery theorem nor a replacement for these systems.  Its heuristic producer
-is successful-or-fail; the guaranteed component is the domain-specific
-consumer, which reconstructs each PEP dual identity over $\mathbb Q$ and
-requires every cost-violating cell to be excluded.  Section~\ref{sec:numerics}
-reports an independent SymPy exact-arithmetic cross-check and states why VSDP
-and SPECTRA are not runnable dependencies of the clean Python artifact.
-
-\paragraph{Checkable and interpretable proofs.}
-The phrase ``proof carrying'' follows the producer--consumer separation of
-proof-carrying code \citep{Necula1997}; we use the analogy, not its machine-code
-safety model.  Recent work sparsifies PEP duals into simpler proof structures
-\citep{ThomsenEtAl2026}, and certificate-to-proof compilation can verify
-rational SDP evidence inside Lean in another domain
-\citep{JeongEtAl2026}.  Our certificates remain dense numerical discoveries
-checked by a small exact program; they are independently replayable but not
-formalized or optimized for human interpretability.
-
-\paragraph{Contribution boundary.}
-The mathematical reductions below assemble standard smooth strongly convex
-interpolation, a finite stopping-time disjunction, and weak duality.  The paper
-is therefore evaluated as a software and computational architecture: which
-cells must be solved, what evidence permits acceptance, how incomplete recovery
-fails closed, how the intended conic model is reconstructed independently of
-the producer, and how every paid component enters the branch ledger.
-Table~\ref{tab:method-position} summarizes that boundary.  Linear-operator
-interpolation \citep{Bousselmi2024} could extend the architecture but is not
-used in the verified implementation.
-
-\begin{table}[H]
-\centering
-\small
-\setlength{\tabcolsep}{4pt}
-\caption{Computational roles of the closest PEP-based alternatives.  The
-entries describe the objects used in this paper, not a general impossibility
-claim about extensible software.}
-\label{tab:method-position}
-\begin{tabular}{p{0.24\linewidth}p{0.21\linewidth}p{0.22\linewidth}p{0.23\linewidth}}
-\toprule
-Method & Coupled object & Discontinuous stopping rule & Acceptance evidence\\
-\midrule
-Separate PEP bounds & Two marginal extrema & Applied after separate solves &
-Numerical or analytic bounds\\
-Generic PEP modeling (for example, PEPit) & User-specified worst-case
-performance measure & Requires an explicit custom encoding & Numerical solver
-output for the encoded PEP\\
-C2OGate & Same-function pair $(N_f(x),N_f(y))$ & Complete finite cell
-disjunction with strict survival margin & Verified exclusion of every bad
-cell, otherwise \emph{uncertified}\\
-\bottomrule
-\end{tabular}
-\end{table}
+The producer--consumer separation is analogous to proof-carrying code
+\citep{Necula1997}, but the artifact carries rational optimization
+certificates, not machine-checked proofs.  Related work extracts sparse
+human-readable proofs from PEP duals \citep{ThomsenEtAl2026}; no proof-assistant
+compilation is claimed here.  The term ``externally checkable'' is deliberate:
+the consumers are separate from the numerical producer, but their shared
+semantic specification remains trusted code.  Linear-operator interpolation
+\citep{Bousselmi2024} is a possible extension, not part of the verified backend.
 
 \section{Cost model and transcript contract}
 \label{sec:model}
 
 Normalize one call to the exact oracle to unit cost.  Fix a deterministic
 baseline algorithm $\Alg$, a termination rule, a current state $x$, and
-a candidate state $y$.  All data already observed before the branch decision
+a candidate state $y$.  All data already observed before the continuation decision
 form a transcript $\cT$.  The transcript may include exact interpolation data
 from earlier iterations, cheap-oracle output, deterministic error contracts,
 and bounds on the location of a solution.  It must not contain an uncharged
@@ -355,7 +246,10 @@ $\cT$.  For $f\in\mathfrak F(\cT)$, write
 \]
 for the numbers of \emph{future} exact calls made by $\Alg$ from $x$ and
 $y$, using the same call-counting convention.  Shared past calls are sunk and
-are excluded from both numbers.  Let $m\in\N_0$ be a required reduction in
+are excluded from both numbers.  At this abstract level, assume that these
+stopping times are finite for every $f\in\mathfrak F(\cT)$; the gradient
+specialization proves this property from checkable distance and curvature
+bounds.  Let $m\in\N_0$ be a required reduction in
 exact calls, and let $c\geq0$ be every charged cost of taking the hybrid branch,
 measured in exact-call units.  This includes proposal construction,
 certificate construction and verification whenever they are performed online.
@@ -375,13 +269,13 @@ The transcript-conditioned stopping-time set and its directed support value are
  \Delta^*(\cT,y)
    &:=\sup_{(r,s)\in\cC(\cT)}(s-r).                 \label{eq:delta}
 \end{align}
-We assume throughout that $\mathfrak F(\cT)$ is nonempty.
+Assume throughout that $\mathfrak F(\cT)$ is nonempty.
 \end{definition}
 
-The supremum is taken over a \emph{single} consistent function in each pair.
-This coupling is the source of the improvement over separate bounds.
+The supremum is taken over a \emph{single} consistent function in each pair;
+this coupling is the source of the improvement over separate bounds.
 
-\subsection{Software contract and trust boundaries}
+\subsection{Software and reusability contract}
 \label{sec:software-contract}
 
 C2OGate treats certification as a pipeline whose components have different
@@ -389,19 +283,20 @@ trust requirements.  A numerical optimizer may propose a candidate or locate
 a counterexample, but only a verified exclusion may support acceptance.  The
 implementation therefore exposes the following interfaces.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\small
+\scriptsize
 \setlength{\tabcolsep}{4pt}
 \caption{C2OGate components and their trust boundaries.}
 \label{tab:software-contract}
-\begin{tabular}{p{0.20\linewidth}p{0.36\linewidth}p{0.34\linewidth}}
+\begin{tabular}{P{0.20\linewidth}P{0.36\linewidth}P{0.34\linewidth}}
 \toprule
 Component & Input/output & Acceptance requirement\\
 \midrule
-Transcript builder & Cached exact data, cheap contracts, class and distance
-bounds $\mapsto\cT$ & Every retained constraint is auditable; no uncharged
-exact call is hidden in $\cT$.\\
+Transcript builder and interface validator & Cached exact data, cheap
+contracts, class and distance bounds $\mapsto\cT$ & Every retained relation
+has an exact affine Gram/function-value representation or a verified exact
+lifting; no uncharged exact call is hidden in $\cT$.\\
 Cost ledger & Wall-clock or resource costs $\mapsto c$ in exact-call units &
 Proposal, solution, verification, and rejected work are charged.\\
 Cell generator & $(\cT,H,c,m)\mapsto\mathcal B(c,m)$ and conic models &
@@ -411,7 +306,7 @@ cells & Only mathematically proved exclusions are removed before solving.\\
 SDP backend & Remaining cells $\mapsto$ candidate witnesses or dual data &
 A positive-margin primal witness may reject; a solver status alone may not
 accept.\\
-Independent verifier & Reconstructed proof objects $\mapsto$ verified or
+External consumer & Reconstructed proof objects $\mapsto$ verified or
 unverified & Acceptance requires a checked exclusion for every remaining bad
 cell and a passing cost ledger.\\
 \bottomrule
@@ -419,17 +314,39 @@ cell and a passing cost ledger.\\
 \end{table}
 
 The public decision has three outcomes.  \emph{Accept} means that all bad
-cells are excluded by safe screening or independently verified proof objects
+cells are excluded by safe screening or externally checked certificates
 and that the all-in cost inequality passes.  \emph{Reject} means that an
 attainable bad cell has been witnessed, or that the verified ledger cannot
 break even.  \emph{Uncertified} covers time limits, inaccurate statuses,
 failed reconstruction, missing constants, or any uncovered cell.  This third
 state is operationally important: it prevents numerical uncertainty from
 being silently interpreted as safety.
-The reference implementation exposes this aggregation as
-\texttt{proof\_carrying\_gate}; unit tests cover complete exclusion,
+Unsupported transcript syntax is treated the same way: the interface is
+rejected before model construction and the continuation result is
+\emph{uncertified}, not \emph{reject}.  The latter remains reserved for a
+verified attainable bad cell or a verified ledger failure.
+The reference implementation exposes preflight and aggregation as
+\texttt{validate\_transcript\_interface},
+\texttt{certified\_branch\_workflow}, and
+\texttt{proof\_carrying\_gate}; unit tests cover pre-solver nonaffine failure,
+complete exclusion,
 verified counterexamples, missing cells, failed verification, duplicate cells,
 and incomplete ledgers.
+
+The reusable object is not the CVXPY model.  It is the tuple of (i) a semantic
+parameter schema and exact named coefficient rows, (ii) a stopping-cell
+enumerator, (iii) a consumer returning one verified status per bad cell, and
+(iv) the solver-independent three-valued aggregator and ledger.  To add a new
+stopping rule while retaining fixed-step gradient descent, a user supplies its
+finite horizon and terminal/survival rows, emits the same cell-record schema,
+and calls \texttt{certified\_branch\_workflow}; interpolation, exact arithmetic,
+hashing, and aggregation are reused unchanged.  A new function class or
+continuation map requires a new exact interpolation builder and cannot be
+admitted by relabeling the old schema.  The artifact's
+\texttt{REUSABILITY\_CONTRACT.md} gives a minimal extension and a fail-closed
+nonaffine example.  This interface remains useful beyond $H=10$ even when the
+current dense producer cannot find certificates: it preserves the decision and
+verification semantics but makes no scalability claim.
 
 \section{Joint transcript-conditioned cost certificate}
 \label{sec:optimal-gate}
@@ -441,7 +358,7 @@ Define the scalar certificate
  \label{eq:gamma}
 \end{equation}
 
-\begin{theorem}[Joint certificate characterization]
+\begin{theorem}[Transcript-relative optimality of the exact certificate]
 \label{thm:maximal-gate}
 For a fixed transcript $\cT$, accepting $y$ satisfies both inequalities in
 \eqref{eq:two-requirements} for every consistent function if and only if
@@ -473,11 +390,15 @@ consistent functions.  Therefore no robust acceptance region can strictly
 contain \eqref{eq:accept}.
 \end{proof}
 
-The final maximality statement is information relative: strengthening the
+The final maximality statement is information relative and assumes exact
+knowledge of the support value: strengthening the
 transcript shrinks $\mathfrak F(\cT)$ and can only decrease $\Delta^*$.
 Weakening the function class without evidence would make the certificate less
 reliable.  The characterization motivates the software contract, whereas the
 computational work is to evaluate it without losing joint dependence.
+The implemented producer is not itself maximal: if even one required exact
+cell exclusion is unavailable, it returns \emph{uncertified} although the
+ideal rule may accept.
 
 \begin{proposition}[Information monotonicity]
 \label{prop:information}
@@ -539,7 +460,7 @@ computes that dependence for an optimization class.
 \section{A finite horizon for gradient descent}
 \label{sec:horizon}
 
-We now specialize to Euclidean fixed-step gradient descent
+The analysis now specializes to Euclidean fixed-step gradient descent
 \begin{equation}
  z_{k+1}=z_k-\alpha\nabla f(z_k),\qquad
  N_f(z_0)=\min\{k\geq0:\norm{\nabla f(z_k)}\leq\eps\},
@@ -548,7 +469,7 @@ We now specialize to Euclidean fixed-step gradient descent
 over the class $\cF_{\mu,L}$ of differentiable, $L$-smooth,
 $\mu$-strongly convex functions, where $0<\mu<L<\infty$.  Let $x_*$ denote
 the unique minimizer.  Throughout the finite-horizon and cell-SDP development
-we assume $0<\alpha<2/L$; this makes the gradient map contractive and the
+assume $0<\alpha<2/L$; this makes the gradient map contractive and the
 stopping time finite under the distance bounds below.
 
 \begin{remark}[$\mu=L$ boundary]
@@ -592,38 +513,38 @@ cell-SDP results in \cref{thm:cell,thm:sdp-exact} are stated only for
 $\mu<L$.
 \end{remark}
 
-\begin{assumption}[Transcript bounds]
-\label{ass:transcript}
-The transcript certifies
+\begin{definition}[SDP-admissible transcript interface]
+\label{def:transcript-interface}
+An input contract is admitted by the implemented joint-cell backend only if
+it certifies
 \begin{equation}
  \norm{x-x_*}\leq R,\qquad \norm{y-x}\leq D,
  \label{eq:distance-bounds}
 \end{equation}
-and may impose additional constraints that are affine in sampled function
-values and inner products among sampled points and gradients.  A representative
-cheap-oracle contract is
+and every additional relation has an exact finite representation affine in
+sampled function values and Gram inner products.  An exact affine lifting is
+also admissible when its equivalence to the original relation is separately
+verified.  For every stopping cell, the retained relations must describe all
+and only the sampled data of functions in
+$\mathfrak F(\cT)\cap\cF_{\mu,L}$; no predicate may be silently dropped.
+\end{definition}
+
+A representative admissible cheap-oracle contract is
 \begin{equation}
  \norm{y-x+\gamma\nabla f(x)}\leq\delta.            \label{eq:cheap-contract}
 \end{equation}
-\end{assumption}
-
-\begin{assumption}[Exact finite transcript representation]
-\label{ass:exact-transcript}
-For every stopping cell considered below, the finite transcript constraints
-are affine in sampled function values and Gram inner products and describe all
-and only the sampled data of functions in
-$\mathfrak F(\cT)\cap\cF_{\mu,L}$.  In particular, no nonaffine transcript
-condition is silently dropped when forming the cell SDP.
-\end{assumption}
-
 A product constraint such as $f(z_1)f(z_2)=1$, or an unmodeled nonlinear
-line-search predicate, violates this assumption: neither is affine in the
-finite function values and Gram entries without an additional exact lifting.
+line-search predicate, fails the interface: neither is affine in the finite
+function values and Gram entries without an additional exact lifting.  The
+validator stops before SDP construction and returns \emph{uncertified}.  It
+does not erase the relation, solve a relaxation, or label the proposal
+\emph{reject}.  Thus this definition is an input specification, not a theorem
+assumption about arbitrary user data.
 
 Contract \eqref{eq:cheap-contract} is informative when the proposal is close
 to the damped gradient step $x-\gamma\nabla f(x)$.  It does not, by itself,
 certify an arbitrary Newton or quasi-Newton proposal.  Such a proposal enters
-the present full-class theorem only if an independently verified residual
+the present full-class theorem only if a separately verified residual
 bound of the form \eqref{eq:cheap-contract} is available.  The modal, Krylov,
 and active-face modules documented in the companion artifact are restricted
 quadratic or local screeners, not substitutes for that full-class contract.
@@ -648,6 +569,37 @@ The smaller residual ball is contained in the larger one.  The result follows
 from \cref{prop:information} and the monotonicity of \eqref{eq:gamma} in
 $\Delta^*$.
 \end{proof}
+
+\begin{proposition}[Certified radius-error propagation]
+\label{prop:radius-error}
+Suppose a verified dual for cell $(r,s)$ at radius $\delta_0$ has upper bound
+$u_{rs}<0$ and multiplier $\lambda_{rs}\geq0$ on the row
+$\norm{y-x+\gamma g_x}^2\leq\delta_0^2$.  The same dual is valid at any
+$\delta\geq\delta_0$ and has upper bound
+\[
+ u_{rs}+\lambda_{rs}(\delta^2-\delta_0^2).
+\]
+Consequently, a measured residual $\widehat\delta$ with certified absolute
+error $e$ must be tested at $\delta=\widehat\delta+e$; acceptance remains valid
+only if the displayed bound is negative for every bad cell.
+\end{proposition}
+
+\begin{proof}
+Only the right-hand side of the proposal-contract row changes.  Dual
+stationarity, multiplier signs, and the positive semidefinite slack are
+unchanged, while the dual objective changes by the stated amount.
+\end{proof}
+
+This rule makes deployment uncertainty explicit.  The original $\delta=1/100$
+duals remain strict only through radius $0.0113158\ldots$; beyond that value a
+new recovery is needed.  A separate complete exact suite at
+$\delta=\HsixMediumRadius{}$ verifies \HsixMediumCertificates{} cells and
+\HsixMediumPivots{} positive pivots, with largest upper bound
+\HsixMediumUpper{}$<0$.  The critical $(1,1)$ floating SDP is already positive
+at $\delta=2/125$, and at $1/50$ it is approximately $7.41\times10^{-4}$.
+Thus the present envelope cannot certify those radii; the correct outcome is
+\emph{uncertified}, not an extrapolated acceptance.  The older $H=3$ sweep in
+the artifact provides a wider diagnostic but no exact exclusion claim.
 
 If the current exact gradient is not already in the transcript, contract
 \eqref{eq:cheap-contract} does not reveal it; the inequality only restricts
@@ -731,15 +683,17 @@ $T_\alpha=I-\alpha\nabla f$ in \eqref{eq:gd} is $q$-Lipschitz.  To justify
 this without assuming a classical Hessian everywhere, restrict $\nabla f$ to
 the segment from $u$ to $v$.  Lipschitz continuity makes that restriction
 absolutely continuous.  Rademacher's theorem gives a derivative almost
-everywhere; because the gradient is a conservative Lipschitz field, this
-derivative is symmetric almost everywhere, and strong monotonicity and
-$L$-Lipschitz continuity give eigenvalues in $[\mu,L]$.  Therefore
+  everywhere; the a.e. second differentiability of $C^{1,1}$ functions implies
+  that this derivative is symmetric almost everywhere
+  \citep[Sec.~6.3]{EvansGariepy2015}, and strong monotonicity and
+$L$-Lipschitz continuity give eigenvalues in $[\mu,L]$.  Denote this
+almost-everywhere derivative by $\mathcal H$.  Therefore
 \[
- \nabla f(u)-\nabla f(v)=\bar H(u-v),\qquad
- \bar H:=\int_0^1 H(v+t(u-v))\,dt,
+ \nabla f(u)-\nabla f(v)=\bar{\mathcal H}(u-v),\qquad
+ \bar{\mathcal H}:=\int_0^1 \mathcal H(v+t(u-v))\,dt,
 \]
-where $\mu I\preceq\bar H\preceq LI$.  Spectral calculus yields
-$\norm{I-\alpha\bar H}\leq q$, hence
+where $\mu I\preceq\bar{\mathcal H}\preceq LI$.  Spectral calculus yields
+$\norm{I-\alpha\bar{\mathcal H}}\leq q$, hence
 $\norm{T_\alpha u-T_\alpha v}\leq q\norm{u-v}$.  Because
 $x_*$ is fixed by the map,
 \[
@@ -838,7 +792,7 @@ equivalent to the pairwise inequalities
  &-\frac{2\mu}{L}\ip{g_i-g_j}{z_i-z_j}\bigg),
  \label{eq:interpolation}
 \end{align}
-for every $i,j$ \citep{TaylorInterpolation2017}.  We include all points and
+for every $i,j$ \citep{TaylorInterpolation2017}.  The construction includes all points and
 gradients from both trajectories and $(x_*,f_*,0)$ in this list, together with
 any exact anchors already in $\cT$.
 
@@ -851,12 +805,13 @@ replace every strict inequality in \eqref{eq:xstop}--\eqref{eq:ystop} by
 Let $\tau_{rs}^*$ be the supremum of $\tau$ subject to
 \eqref{eq:xtraj}--\eqref{eq:ytraj}, \eqref{eq:interpolation}, the terminal
 weak inequalities, \eqref{eq:margin}, and every transcript constraint.  If
-$r=s=0$, there are no strict constraints; in that one cell we use ordinary
+$r=s=0$, there are no strict constraints; that one cell uses ordinary
 feasibility rather than maximizing $\tau$.
 
 \begin{theorem}[Exact cell test]
 \label{thm:cell}
-Under \cref{ass:exact-transcript}, for $(r,s)\neq(0,0)$,
+For a transcript admitted by \cref{def:transcript-interface}, and for
+$(r,s)\neq(0,0)$,
 there exists a consistent function with
 $(N_f(x),N_f(y))=(r,s)$ if and only if $\tau_{rs}^*>0$.  Cell $(0,0)$ is
 attainable if and only if its weak feasibility problem is feasible.
@@ -936,6 +891,12 @@ rank constraint, the SDP is an outer problem and hence gives a safe upper
 certificate for exclusion.
 \end{theorem}
 
+Thus ``dimension-free'' has a strong operational meaning: one verified outer
+SDP exclusion contains no physical dimension parameter and rules out the cell
+simultaneously in every finite dimension.  A feasible witness of rank $r_G$ is
+realizable in every $d\geq r_G$; only using that witness to reject in a
+prespecified smaller dimension requires the additional rank qualification.
+
 \begin{proof}
 Given any consistent function and its two sampled trajectories, form $P$ from
 the actual vectors.  Its matrix $G=P^\top P$ is positive semidefinite and
@@ -960,6 +921,25 @@ enlarged cell has no positive margin remains valid for the fixed-dimensional
 subclass.
 \end{proof}
 
+\begin{lemma}[Three-point reduction for a terminal marginal]
+\label{lem:three-point-marginal}
+Suppose a transcript contains only exact affine Gram/function-value relations
+among $x$, $y$, and $x_*$, and the marginal objective is
+$\norm{\nabla f(y)}^2$.  Then its dimension-free worst case over
+$\cF_{\mu,L}$ equals the Gram SDP containing precisely the three sampled
+triples $(x,f_x,g_x)$, $(y,f_y,g_y)$, and $(x_*,f_*,0)$, with all ordered
+interpolation inequalities and the transcript rows.  No unobserved continuation
+point is needed.
+\end{lemma}
+
+\begin{proof}
+Every consistent function supplies a feasible three-triple interpolation
+record with the same objective.  Conversely, the necessary-and-sufficient
+interpolation theorem \citep[Thm.~4]{TaylorInterpolation2017} realizes every
+feasible record by a function in $\cF_{\mu,L}$, and the transcript relations
+are among those same triples.  The two suprema therefore coincide.
+\end{proof}
+
 This theorem is the main reason for using exact interpolation rather than a
 collection of ad hoc inequalities: a positive-margin SDP point is not merely a
 relaxation artifact in the dimension-free class.  It reconstructs an
@@ -974,9 +954,10 @@ For a prescribed $d<p$, the software semantics are necessarily asymmetric.
 An exclusion of the outer SDP remains a valid \emph{accept} proof.  A positive
 outer-SDP witness is a fixed-$d$ \emph{reject} proof only after exact
 verification of $\rank(G)\leq d$ or reconstruction of explicit coordinates
-in $\R^d$.  The verifier may establish rank by rational row reduction,
-equivalently by vanishing and nonvanishing exact minors; floating singular
-values are not proof objects.  A higher-rank positive witness therefore leaves
+in $\R^d$.  A future verifier could establish rank by rational row reduction,
+equivalently by vanishing and nonvanishing exact minors; the current consumer
+does not implement this route, and floating singular values are not proof
+objects.  A higher-rank positive witness therefore leaves
 the fixed-$d$ decision uncertified.  The rank-constrained fixed-dimensional
 gate is exact but nonconvex, while the implemented outer gate is complete only
 for exclusion.
@@ -989,19 +970,23 @@ Within the horizon, define
  \mathcal B(c,m):=\{(r,s):s>r-m\ \text{or}\ c+s>r\}.   \label{eq:bad}
 \end{equation}
 By \eqref{eq:two-requirements}, these are exactly the stopping pairs that
-violate at least one desired inequality.
+violate at least one desired inequality.  No rounding is implicit: because
+$r,s$ are integers, $c+s>r$ is equivalent to
+$s\geq r+1-\lceil c\rceil$ for $c>0$ (and to $s>r$ for $c=0$).  In the
+reported case $m=1$ and $0<c\leq1$, either disjunct gives $s\geq r$.
 
-\begin{theorem}[Finite bad-cell acceptance test]
+\begin{theorem}[Exact finite bad-cell acceptance test]
 \label{thm:finite-gate}
-Under \cref{ass:transcript,ass:exact-transcript}, with
+For a transcript admitted by \cref{def:transcript-interface}, with
 $0<\alpha<2/L$ and the exact interpolation model of \cref{thm:cell}, a
 candidate is robustly acceptable if and only if
 every cell in $\mathcal B(c,m)$ is excluded: for $(r,s)\neq(0,0)$,
 $\tau_{rs}^*\leq0$ or the SDP is infeasible, and for $(0,0)$ the feasibility
 problem is infeasible.  Solving only these bad cells decides robust acceptance;
 solving all cells additionally recovers $\Delta^*$ and hence $\Gamma^*$ in
-\eqref{eq:gamma}.  The resulting finite SDP gate is maximal among all
-deterministic rules using the same transcript and class.
+\eqref{eq:gamma}.  With exact cell decisions, the resulting finite SDP rule is
+transcript-relative optimal among deterministic rules using the same
+transcript and class.
 \end{theorem}
 
 \begin{proof}
@@ -1015,7 +1000,12 @@ safe.
 If some bad cell has positive margin, SDP exactness constructs a consistent
 function whose stopping pair is that cell.  It violates at least one required
 inequality, so acceptance is unsafe.  Thus the test is necessary and
-sufficient for acceptance.  If all cells are solved, maximizing $s-r$ over
+sufficient for acceptance.  Conversely, if $\Gamma^*>0$, the definition of a
+supremum gives a consistent function with a positive violation (or an
+arbitrarily close one that is still positive); its stopping pair belongs to
+the finite grid and hence to a bad cell.  By \cref{thm:cell}, that cell has
+positive strict margin, with the stated $(0,0)$ feasibility convention.  If
+all cells are solved, maximizing $s-r$ over
 the attainable set gives $\Delta^*$ and therefore \eqref{eq:gamma}; maximality
 then follows from \cref{thm:maximal-gate}.  Solving only the bad cells does not
 by itself return the numerical value of $\Delta^*$.
@@ -1023,31 +1013,43 @@ by itself return the numerical value of $\Delta^*$.
 
 Only bad cells must be solved.  A positive-margin bad cell immediately rejects
 the proposal in the dimension-free semantics.  For a prescribed dimension
-$d<p$, it rejects only under the exact rank or coordinate checks specified
-above; otherwise it is a warning, not a realized counterexample.  Acceptance
-remains safe without the rank constraint because the SDP is an outer problem.
-In operational form,
-C2OGate executes the following steps:
+$d<p$, the present implementation does not claim a rejection: it returns
+\emph{uncertified} unless an external exact rank or coordinate witness is
+supplied.  No fixed-$d$ rejection experiment is reported.  Acceptance remains
+safe without the rank constraint because the SDP is an outer problem.
+
+\begin{center}
+\fbox{\begin{minipage}{0.93\linewidth}
+\textbf{Algorithm 1: three-valued C2OGate decision.}
 \begin{enumerate}
-  \item validate transcript constants and compute the finite horizon;
+  \item validate the interface of \cref{def:transcript-interface}.  If a
+  relation is nonaffine, has inexact coefficients, or invokes an unverified
+  lifting, stop before invoking a solver and return \emph{uncertified};
+  otherwise validate the constants and compute the finite horizon;
   \item create $\mathcal B(c,m)$ and remove only cells covered by exact
   structural or analytic screeners;
   \item solve the remaining cells, stopping with \emph{reject} after any
-  independently validated positive-margin witness;
-  \item reconstruct and independently verify an exclusion proof for every
+  exactly validated positive-margin witness;
+  \item reconstruct and externally check an exclusion proof for every
   unresolved bad cell; and
   \item return \emph{accept} only if no cell is left uncertified and the full
   ledger satisfies \eqref{eq:two-requirements}; otherwise return
   \emph{uncertified}.
 \end{enumerate}
+\end{minipage}}
+\end{center}
 This asymmetry makes rejection easier than acceptance and ensures that solver
-failure cannot improve the declared outcome.
+failure cannot improve the declared outcome.  The algorithm terminates after a
+finite cell list and a finite recovery grid, but it is deliberately incomplete:
+unsupported transcript syntax, a solver time limit, failed rational recovery,
+a signed-margin boundary cell, or a missing ledger item all produce
+\emph{uncertified} rather than a guessed decision.
 
-\section{Proof-carrying exclusion verification}
+\section{Externally checkable exclusion verification}
 \label{sec:dual}
 
 A floating-point solver status is not a mathematical proof of cell exclusion.
-The SDP formulation supports independently checkable conic certificates.  In
+The SDP formulation supports externally checkable conic certificates.  In
 generic conic form, a margin cell is
 \begin{equation}
  \sup_X\{\ip{C}{X}:\mathcal A X=b,\ \mathcal D X\leq h,\ X\in K\},
@@ -1064,9 +1066,9 @@ The entries of $v$ are nonnegative weights on interpolation, transcript, and
 stopping inequalities; $Z$ is a positive-semidefinite remainder.
 
 \paragraph{Consumer-side model reconstruction.}
-The proof payload does not supply authoritative primal coefficient matrices.
+The certificate payload does not supply authoritative primal coefficient matrices.
 For each declared parameter tuple and cell label, the standard-library
-consumer independently rebuilds the vector atoms, the two affine
+consumer rebuilds the vector atoms, the two affine
 gradient-descent trajectories, every ordered smooth strongly convex
 interpolation inequality, the distance and proposal-contract rows, the
 terminal and strict-survival stopping rows, the margin row, the value anchor,
@@ -1077,16 +1079,60 @@ multiplier names, incorrect row counts, or a parameter mismatch are rejected.
 Only after this reconstruction does the consumer form stationarity, the dual
 objective, and the slack matrix and check them exactly.  Thus the
 producer-side modeling and solver layers are outside the trusted acceptance
-boundary; the trusted kernel includes the smaller, independently implemented
+boundary; the trusted kernel includes the smaller, separately implemented
 semantic-to-coefficient reconstruction and exact rational algebra.  This is a
 machine check of the instantiated finite SDP, not a formalization of the
 smooth strongly convex interpolation theorem proved in the paper.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\caption{Trusted semantic-to-coefficient reconstruction.  The consumer
+rebuilds these rows from parameters; a bug in this mapping is part of the
+explicit trust root, whereas producer matrices and solver statuses are not.}
+\label{tab:semantic-map}
+\begin{tabular}{P{0.24\linewidth}P{0.30\linewidth}P{0.34\linewidth}}
+\toprule
+Mathematical source & Reconstructed rows & Exact consumer check\\
+\midrule
+\Cref{eq:gd} & Two affine trajectory coefficient maps & Atom count and every
+iterate coefficient\\
+Smooth strongly convex interpolation & Every ordered pair of sampled triples
+& Row names, count, rational Gram/value coefficients\\
+\Cref{def:transcript-interface} & Distance, proposal norm/residual, anchor &
+Declared parameters and exact right-hand sides\\
+\Cref{eq:margin,eq:signed-terminal} & Survival, terminal, signed-margin rows &
+Cell indices, signs, and strict negative dual objective\\
+\Cref{lem:trace-bound} & Trace and margin-upper rows & Derived rational bounds
+and multiplier signs\\
+\Cref{eq:dual-identity} & Stationarity, objective, slack & Exact identity and
+positive rational $LDL^\top$ pivots\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Here ``external'' means outside the numerical producer and solver, not
+independently authored.  The twelve standard-library command-line
+verifiers are payload-specific entry points, not twelve unrelated
+implementations: they share rational matrix utilities, and the H6 entry point
+reuses the full-class builder.  Their semantic mapper is therefore in the
+trust root.  A second H6 consumer, written directly with SymPy, imports no
+producer or standard-library verifier module; it reconstructs all
+\HsixIndependentSympyCells{} cells and confirms
+\HsixIndependentSympyPivots{} exact positive pivots.  Moreover,
+\ConsumerFuzzCases{} randomized legal rational tuples compare the CVXPY
+producer and nonsharing SymPy builder in \ConsumerFuzzComparisons{} exact
+scalar coefficients without a mismatch.  PEPit 0.5.1 also rebuilds
+\PaddedCrosscheckCells{} padded cells numerically, with maximum objective
+difference \PaddedCrosscheckMaxDifference{}.  These checks diversify the
+implementation and would expose row-level errors; they do not formalize the
+interpolation theorem or prove either program correct.
 
 \paragraph{Implemented rational recovery.}
 For each cell, the artifact applies the following heuristic success-or-fail
 procedure to a numerical dual.  There is no completeness, termination, or
 recovery-success theorem; the mathematical guarantee begins only after a
-candidate proof object has been reconstructed.  The producer (i) removes tiny
+candidate certificate has been reconstructed.  The producer (i) removes tiny
 entries and reconstructs the others as
 fractions with denominator at most $10^6$; (ii) gives a proved redundant trace
 constraint a small positive multiplier, creating strict slack; (iii) forms the
@@ -1106,17 +1152,44 @@ rounding \citep{DostertDeLaatMoustrou2021}, or hybrid symbolic--numeric and
 facial-reduction methods for degenerate SDPs
 \citep{KolmogorovNaldiZapata2025}.  Those methods enlarge the set of instances
 on which a producer may succeed; C2OGate's contribution is the domain-specific
-consumer and all-cells decision rule once a supported proof object exists.
-The producer records the ordered threshold--regularizer prefix attempted for
-each cell.  If only $k$ of $n$ bad cells receive independently verifiable
-exclusions, the public result is \emph{uncertified} with progress $k/n$; partial
-coverage is never promoted to partial acceptance.
+consumer and all-cells decision rule once a supported certificate exists.
+For reproducibility, the implemented producer has the following
+pseudocode-level input/output and failure contract.
 
-\begin{proposition}[Conditional proof-carrying acceptance]
-\label{cor:dual}
-Suppose relative Slater regularity on the minimal cone face is established for
-each excluded feasible bad-cell SDP.  Then it admits a dual solution with
-objective at most zero.  A strongly infeasible cell admits a separating conic
+\paragraph{Algorithm 2 (finite-grid rational recovery producer).}
+\begin{enumerate}
+  \item \textbf{Input:} an exact parameter tuple, one bad-cell index, an
+  ordered finite grid of activity thresholds and trace regularizers, a
+  denominator cap, and a numerical primal--dual solution.
+  \item For each grid point, zero numerical multipliers below its threshold,
+  recover the remaining entries with the denominator cap, and insert the
+  selected positive trace multiplier.
+  \item Rebuild the exact stationarity equations.  Select an exact
+  full-row-rank correction subset, solve it over $\mathbb Q$, and update only
+  that subset.  Skip the grid point if no such subset exists or the rational
+  system is inconsistent.
+  \item Reject the candidate if a multiplier is negative, stationarity or the
+  dual objective identity is nonzero, the required objective sign fails, or
+  any exact $LDL^\top$ pivot is nonpositive.
+  \item \textbf{Output:} the first passing rational dual together with the
+  attempted-grid prefix and exact row names; if the finite grid is exhausted,
+  output \emph{recovery failure}.  The public gate maps that failure to
+  \emph{uncertified}.
+\end{enumerate}
+This is a deterministic specification once the frozen numerical solution and
+grid are supplied; it is not a convergence theorem.  The producer records the
+ordered threshold--regularizer prefix attempted for each cell.  If only $k$ of
+$n$ bad cells receive externally checkable exclusions, the public result
+is \emph{uncertified} with progress $k/n$; partial coverage is never promoted
+to partial acceptance.  The design follows the verified-rounding philosophy
+in \citep{PeyrlParrilo2008,KaltofenLiYangZhi2008}; degenerate-face failure is
+handled conservatively as in \citep{MonniauxCorbineau2011}.
+
+\begin{proposition}[Conditional certificate routes]
+\label{prop:dual-routes}
+Suppose a feasible bad-cell SDP has finite optimal value at most zero and relative
+Slater regularity is established on its minimal cone face.  Then it admits a
+dual solution with objective at most zero.  A strongly infeasible cell admits a separating conic
 alternative.  If instead an explicit extended dual or facial-reduction
 sequence is supplied for a weakly infeasible or degenerate cell, that object
 can be checked as its exclusion certificate.  These are conditional
@@ -1131,7 +1204,11 @@ conditions.  If no supported object verifies, the cell remains
 Relative Slater regularity gives conic strong duality and attainment for a
 feasible finite-dimensional SDP.  A cell with primal optimum at most zero
 therefore has a dual feasible point with the same nonpositive objective; weak
-duality alone makes that point a verifiable exclusion certificate.  Strong
+duality alone makes that point a verifiable exclusion certificate for the
+\emph{strict-survival} margin of \cref{thm:cell}, where attainability requires
+a strictly positive optimum.  The signed-margin implementation below has a
+different boundary convention: a value of zero may be attainable, so its
+consumer requires a strictly negative dual objective.  Strong
 infeasibility is precisely strict separation from the affine constraint set,
 which gives a conic alternative.  Semidefinite systems can also be weakly
 infeasible, so an ordinary Farkas ray must not be asserted in that case.
@@ -1140,34 +1217,54 @@ Facial reduction identifies the minimal face for feasible degenerate systems
 remaining pathologies \citep{Ramana1997}.
 \end{proof}
 
-\begin{lemma}[Redundant padded trace bound]
+\begin{lemma}[Redundant padded trace and margin bounds]
 \label{lem:trace-bound}
-Let $\mu=9/10$, $L=\alpha=\gamma=1$, $R=6/5$,
-$\norm{y-x}\leq97/100$, and use the padded $H=3$ construction.  If the Gram
-atoms are four gradients from each trajectory, the minimizer displacement,
-and the proposal displacement, every feasible cell satisfies
+Suppose $0<\alpha<2/L$, $\norm{x-x_*}\leq R$, and
+$\norm{y-x}\leq D$.  In the padded horizon-$H$ construction whose atoms are
+$H+1$ gradients from each trajectory, the minimizer displacement, and the
+proposal displacement, every feasible cell satisfies
 \begin{equation}
  \operatorname{tr}G
- \leq 4R^2+4(R+97/100)^2+R^2+(97/100)^2<27.
- \label{eq:trace-bound}
+ \leq (H+1)L^2\{R^2+(R+D)^2\}+R^2+D^2.             \label{eq:trace-bound}
 \end{equation}
-Thus adjoining $\operatorname{tr}G\leq27$ does not alter any cell feasible
-set, including a prefix cell represented with postterminal padding.
+Moreover, if $\eps\leq L(R+D)$, adjoining
+\begin{equation}
+ \widehat\tau\leq L^2(R+D)^2                       \label{eq:margin-upper}
+\end{equation}
+to the signed-margin formulation does not change its feasible set.  In
+particular, the right side of \eqref{eq:trace-bound} is less than $27$, $49$,
+and $66$ for the padded $H=3$ cross-check, the natural-$H=10$ stress suite,
+and the natural-$H=6$ unified flagship, respectively.
 \end{lemma}
 
 \begin{proof}
-Here $L=1$ and $\alpha=1$, so gradient descent is nonexpansive.  Every padded
+By \cref{thm:sdp-exact}, each feasible Gram/function-value point admits a
+realization by one function in $\cF_{\mu,L}$ (in the dimension-free
+semantics), so the trajectory bounds may be applied to that realization.
+The gradient map is contractive and hence nonexpansive.  Every padded
 baseline point remains within $R$ of $x_*$ and every padded candidate point
-within $R+\norm{y-x}\leq R+97/100$.  Smoothness gives
-$\norm{\nabla f(z)}\leq\norm{z-x_*}$, hence the eight gradient atoms
-contribute at most the first two terms in \eqref{eq:trace-bound}.  The
-minimizer displacement and proposal displacement contribute at most the last
-two.  Summation gives
-$4(6/5)^2+4(217/100)^2+(6/5)^2+(97/100)^2<27$.
+within $R+D$.  Smoothness gives
+$\norm{\nabla f(z)}\leq L\norm{z-x_*}$, so the $2(H+1)$ gradient atoms
+contribute the first term in \eqref{eq:trace-bound}; the two displacement
+atoms contribute $R^2+D^2$.  The terminal signed row gives
+$\widehat\tau\leq\eps^2\leq L^2(R+D)^2$, proving
+\eqref{eq:margin-upper} redundant.
 Postterminal iterates are the unique continuation of the interpolated
 prefixes and carry no additional stopping constraint, so the same norm bounds
-hold without changing the prefix-cell semantics.
+hold without changing the prefix-cell semantics.  Direct substitution gives
+\[
+4(6/5)^2+4(217/100)^2+(6/5)^2+(97/100)^2<27,
+\]
+$11+11(181/100)^2+1+(81/100)^2<49$, and
+$7(9/5)^2+7(59/25)^2+(9/5)^2+(14/25)^2<66$.
 \end{proof}
+
+There is no circular use of the trace inequality in the exactness theorem.
+First, \cref{thm:sdp-exact} realizes every point of the \emph{unpadded,
+unbounded} cell SDP.  Applying the trajectory contraction to that realized
+function proves \eqref{eq:trace-bound}; only then is the redundant row adjoined
+to help the dual producer.  Removing the row recovers the original exact cell
+semantics.
 
 \paragraph{Signed cell margin used in the experiments.}
 For a padded cell $(r,s)$, the producer replaces the two terminal inequalities
@@ -1178,12 +1275,72 @@ by
  \norm{g_s^y}^2+\widehat\tau\leq\eps^2,              \label{eq:signed-terminal}
 \end{equation}
 and uses \eqref{eq:margin} with $\tau=\widehat\tau$ before each terminal.
-Attainability implies $\widehat\tau_{rs}^*\geq0$; an independently verified
+Thus $\tau=\widehat\tau$ in every signed experimental model; the hat only
+distinguishes the two-sided signed convention from the survival-only margin of
+\cref{thm:cell}.
+Attainability implies $\widehat\tau_{rs}^*\geq0$; an externally checked
 negative dual upper bound therefore excludes the cell, including $(0,0)$.
-This is the common computational object used by the ten-cell and natural
-$H=10$ suites in \cref{sec:full-class-joint-only,sec:h10-suite}.  Their cell
+This is the common computational object used by the natural-$H=6$ unified
+flagship, nonzero-radius ten-cell regression, and natural-$H=10$ stress suite.
+Their cell
 counts, rational objectives, and exact replay records are reported there as
 computational results rather than propositions.
+
+\begin{proposition}[Completeness boundary of the signed-dual consumer]
+\label{prop:signed-boundary}
+The implemented signed-margin consumer can exclude a cell only from a dual
+feasible point with objective strictly below zero.  Consequently, if
+$\widehat\tau_{rs}^*=0$, no ordinary dual satisfying this sign convention can
+certify exclusion.  Such a cell remains \emph{uncertified} unless a separately
+implemented infeasibility, facial-reduction, or extended-dual proof is
+provided.  This limitation affects completeness, not soundness.
+\end{proposition}
+
+\begin{proof}
+Weak duality makes every feasible dual objective an upper bound on
+$\widehat\tau_{rs}^*$.  A strictly negative upper bound is impossible when the
+primal optimum equals zero.  Returning \emph{uncertified} therefore cannot
+create a false acceptance.  Facial reduction and Ramana's extended dual
+\citep{BorweinWolkowicz1981,Ramana1997} are possible proof formats, but the
+current consumer does not parse them.
+\end{proof}
+
+A cross-suite audit covers \SignedBoundaryCells{} signed cells from five
+distinct $H=3$, $H=6$, and $H=10$ transcripts.  Exactly
+\SignedBoundaryExactZero{} have a verified rational upper bound equal to zero,
+and \SignedBoundaryFloatingNearZero{} lie within $10^{-8}$ of zero even before
+rational recovery.  The UCI and rolling deployments reuse a strict H6 suite:
+among their \SignedBoundaryWorkloadAccepted{} accepted transcripts,
+\SignedBoundaryWorkloadZero{} depend on a zero-boundary exclusion.  These are
+observed frequencies, not a distribution-free claim that boundary cells are
+rare.
+
+\begin{lemma}[Homogeneous transport of a verified cell dual]
+\label{lem:homogeneous-transport}
+Fix a signed-margin cell model whose transcript relations are homogeneous under
+the positive scaling
+\[
+ (z,g,R,D,\delta,\eps)\mapsto
+ (az,ag,aR,aD,a\delta,a\eps),\qquad
+ (f,\widehat\tau,B_{\rm tr})\mapsto
+ (a^2f,a^2\widehat\tau,a^2B_{\rm tr}),
+\]
+where $a>0$ and $B_{\rm tr}$ is the redundant trace bound.  If a rational dual
+is feasible with objective $u<0$ for the source cell, the same multipliers and
+slack matrix are dual feasible for the scaled cell with objective $a^2u<0$.
+Thus the exclusion transports without a second numerical recovery.
+\end{lemma}
+
+\begin{proof}
+After the displayed change of primal variables, every interpolation,
+transcript, terminal, survival, trace, and margin-upper relation has the same
+coefficient row and a right-hand side multiplied by $a^2$.  Hence the dual
+stationarity identity and positive-semidefinite slack are unchanged, while the
+dual objective is multiplied by $a^2$.  Positivity of $a$ preserves its strict
+sign.  The activity threshold and trace regularizer used to \emph{discover} the
+source dual are not transported assumptions: once the rational source dual has
+verified, only its exact multipliers enter this argument.
+\end{proof}
 
 At the smaller padded $H=3$ cross-check, the ten cell models share
 substantially more than their dimensions.  Their 72
@@ -1195,21 +1352,10 @@ core, but currently solves and reconstructs every cell separately.  Shared
 factorizations or a common dual basis are therefore plausible computational
 improvements; the present timings do not claim them.
 
-In exact arithmetic, checking a certificate consists of verifying signs,
-linear identities, and positive semidefiniteness.  In floating point, one can
-use rational reconstruction or interval residual bounds.  Exact algebraic LMI
-algorithms can produce feasible points under explicit genericity conditions
-\citep{HenrionNaldiSafeyElDin2016}, and exact rounding has proved effective in
-structured SDPs \citep{DostertDeLaatMoustrou2021}.  Degenerate SDPs can still
-require hybrid symbolic--numeric or facial-reduction machinery because a
-nearby rational point need not exist in the original formulation
-\citep{KolmogorovNaldiZapata2025}.  Our general PEP study below therefore
-reports solver margins as an audit only and does not label near-zero statuses
-as proofs.  The following reduced quadratic construction supplies additional,
-more structured rational certificates at dimensions two through four.
-
 \begin{proposition}[Exact rational residual certificate]
 \label{prop:rational-residual}
+In this proposition only, uppercase $Q$ denotes a rational Hessian; it is
+unrelated to the lowercase contraction factor $q$ in \cref{prop:horizon}.
 Let $Q\in\mathbb S_{++}^n\cap\mathbb Q^{n\times n}$,
 $\alpha\in\mathbb Q$, $A=I-\alpha Q$, and
 $0<\alpha\lambda_j(Q)<2$ for every $j$.  Consider
@@ -1226,8 +1372,13 @@ $Z_k$ satisfying
  C_k=\nu_k I+Z_k,\qquad Z_k\succeq0,\qquad
  \nu_k>\eps^2,                                      \label{eq:rational-dual}
 \end{equation}
-then $N_f(y)=N_f(x)-d$.  Hence the joint branch gate accepts for every
-$m\leq d$ and $c\leq d$.  Equations \eqref{eq:rational-dual} are exact dual
+then $N_f(y)=N_f(x)-d$.  If, in addition, the transcript fully reveals
+$(Q,x,y)$ so that its
+consistency class is this singleton quadratic, then the joint continuation
+gate accepts for every $m\leq d$ and $c\leq d$.  Without full revelation the
+stopping-time identity is only a statement about this fixed quadratic, not
+about every other function compatible with a coarser transcript.  Equations
+\eqref{eq:rational-dual} are exact dual
 certificates for \eqref{eq:residual-sdp}; their verification requires no
 eigendecomposition or floating-point tolerance.
 \end{proposition}
@@ -1244,8 +1395,9 @@ $\norm{QA^kx}^2=x^\top C_kx>\eps^2$ for every
 $k<d$, so $N_f(x)\geq d$.  The trajectories from $x$ and $y=A^dx$ satisfy
 $y_k=A^ky=A^{k+d}x=x_{k+d}$.  Since $A$ is a strict contraction, the stopping
 index is finite; its first index from $y$ is exactly $N_f(x)-d$.
-Consequently the fixed quadratic transcript has $\Delta^*=-d$, and
-\eqref{eq:gamma} becomes $\max\{-d+m,c-d\}\leq0$ under the stated conditions.
+Consequently, under the stated full-revelation condition, the consistency set
+is a singleton and has $\Delta^*=-d$; \eqref{eq:gamma} becomes
+$\max\{-d+m,c-d\}\leq0$ under the stated conditions.
 Finally, the dual of \eqref{eq:residual-sdp} is
 $\max_\nu\{\nu:C_k-\nu I\succeq0\}$, which proves the certificate claim.
 \end{proof}
@@ -1253,29 +1405,17 @@ $\max_\nu\{\nu:C_k-\nu I\succeq0\}$, which proves the certificate claim.
 For a rational symmetric matrix, positive semidefiniteness is equivalent to
 nonnegativity of all principal minors.  Thus \eqref{eq:rational-dual} can be
 checked using only integer arithmetic after clearing denominators.  This
-criterion is exponential in $n$ and is used here for independent validation,
+criterion is exponential in $n$ and is used here for additional validation,
 not proposed as the scalable online PSD test.
 
 \section{Cost ledger and funded fallback}
 \label{sec:cost}
 
-Let $c=c_{\rm prop}+c_{\rm solve}+c_{\rm verify}$ include proposal,
-cell-solution, and proof-verification cost in exact-call units.  With $p$ vector
-atoms, each dense SDP has a $p\times p$ Gram block, and up to $(H+1)^2$ cells
-may be inspected.  This can be attractive when the exact oracle is a large PDE
-solve and the certificate is amortized across repeated instances; it is not
-automatically attractive when gradients are cheap.  Analytic modal, Krylov,
-or interval bounds can be used as safe early screeners, but they are relaxations
-of the joint PEP rather than replacements for the joint certificate.
-
-Reuse does not mean replaying one certificate on an identical numerical
-transcript.  A verified suite applies to every later branch satisfying the same
-envelope $(\mu,L,R,D,\delta,\eps,c,m)$ because its SDPs quantify over the
-entire declared consistency class.  Plausible settings include repeated PDE
-right-hand sides or scenarios with a shared mesh and preconditioner, and
-repeated calibration surfaces with a fixed design and certified curvature
-envelope.  The artifact measures only the resulting break-even arithmetic; it
-does not estimate how often a production stream satisfies such an envelope.
+Let $c$ include proposal, solution, verification, and rejected work in
+exact-call units.  A verified suite applies to any later branch satisfying the
+same envelope $(\mu,L,R,D,\delta,\eps,c,m)$; it is not tied to an identical
+numerical transcript.  Offline search is amortized only across such compatible
+uses, and any envelope-acquisition work is charged separately.
 
 \begin{proposition}[Zero-credit rejection path]
 \label{prop:zero-credit}
@@ -1297,112 +1437,57 @@ if and only if their worst difference is nonpositive, which is
 $\kappa$.
 \end{proof}
 
-Thus an unchanged fallback cannot fund the first paid decision with zero
-initial credit.  The deterministic remedies are to compute the certificate
-offline or from already sunk work, prepay it from certified credit, or make the
-computation productive so that its fallback advances the exact baseline enough
-to satisfy \eqref{eq:fallback}.  This obstruction is independent of PEP
-tightness.
+Thus an unchanged fallback cannot fund the first paid decision.  The
+certificate must be prepaid, computed from sunk work, or made productive enough
+that the fallback advances; this obstruction is independent of PEP tightness.
 
-\subsection{Measured certificate cost and self-financing threshold}
-\label{sec:certificate-cost}
-
-For an offline certificate of measured cost $T_{\rm cert}$ seconds reused for
-$K$ funded decisions, with one exact call taking $t_f$ seconds, the amortized
-charge is
+For a prepaid certificate of measured cost $T_{\rm cert}$ seconds reused for
+$K$ compatible decisions, with one exact call taking $t_f$ seconds, the charge is
 \begin{equation}
  c_{\rm cert}(K)=\frac{T_{\rm cert}}{K t_f}
  \quad\text{exact-call units}.                         \label{eq:cost-amortization}
 \end{equation}
-For the smaller padded-$H=3$ suite, search, rational recovery, and one median
-independent replay total \CertificateCostSeconds{} seconds.  With its remaining
-half-call budget, break-even requires \CertificateBreakEvenOneSecond{},
-\CertificateBreakEvenTenSecond{}, and \CertificateBreakEvenSixtySecond{}
-accepted reuses when $t_f$ is 1, 10, and 60 seconds, respectively; the complete
-four-scenario table remains in the artifact.  This is not economical on the
-$0.1$ ms SPX gradient without roughly \CertificateBreakEvenTinyOracle{} reuses.
-
-For the flagship natural-$H=10$ suite, we separately charge the entire frozen
-four-worker search and rational-recovery wall time,
-\HtenCertificateSearchSeconds{} seconds, and one complete independent
-standard-library replay, \HtenCertificateVerifySeconds{} seconds.  The
-measured proof-kernel total is therefore \HtenCertificateTotalSeconds{} seconds;
-no solver time or proof replay is omitted.  This accepted branch has declared
-non-certificate cost $c_{\rm base}=2/5$ and certifies at least one saved exact
-call, leaving only $3/5=\HtenCertificateBudget{}$ exact-call units for proof
-construction and replay.  With the same amortization convention, the exact
-condition is
-\[
- \frac25+\frac{\HtenCertificateTotalSeconds{}}{K t_f}\leq1.
-\]
-
-\begin{table}[H]
-\centering
-\caption{Machine-specific break-even for the flagship natural-$H=10$ suite.
-The proof-only column charges search, recovery, and replay.  The deployment
-column additionally charges a 12-exact-call envelope acquisition, so the
-headline accounting includes the constants used by the PDE illustration.}
-\label{tab:h10-certificate-cost}
-\begin{tabular}{rrr}
-\toprule
-Exact-oracle seconds $t_f$ & Proof-only $K$ & With envelope $K$\\
-\midrule
-$1$    & \HtenCertificateBreakEvenOneSecond{} & \PdeBreakEvenOneSecond{}\\
-$10$   & \HtenCertificateBreakEvenTenSeconds{} & \PdeBreakEvenTenSeconds{}\\
-$60$   & \HtenCertificateBreakEvenSixtySeconds{} & \PdeBreakEvenSixtySeconds{}\\
-$600$  & \HtenCertificateBreakEvenSixHundredSeconds{} & \PdeBreakEvenSixHundredSeconds{}\\
-$3600$ & \HtenCertificateBreakEvenHour{} & \PdeBreakEvenHour{}\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-This flagship suite is not a one-use certificate unless its proof-kernel wall time
-is at most $0.6t_f$.  The table reports prepaid reuse thresholds rather than
-using a rejected first online decision to finance its own proof; the latter is
-excluded by \cref{prop:zero-credit}.  The right column is the all-in headline
-for the stated deployment envelope; no constant-acquisition charge is kept in
-a separate accounting table.
-
-\paragraph{Illustrative repeated-PDE envelope.}
-Consider repeated coercive elliptic inverse problems on one mesh with a shared
-multigrid preconditioner, where one exact forward--adjoint gradient takes 60
-seconds.  Suppose verified generalized-eigenvalue residual bounds and an
-energy estimate certify, after normalization, $\mu=0.1$, $L=1$, $R=1$, while an
-a posteriori proposal residual certifies $\delta=0.1$.  Charge 720 seconds (12
-exact calls) once for these envelope checks, and $0.4$ call per right-hand side
-for proposal and residual work.  Combining that charge with the measured
-$H=10$ proof cost gives the prepaid threshold
-\[
+The H6 four-worker search takes \HsixCertificateSearchSeconds{} seconds and the
+median complete standard-library replay takes
+\HsixCertificateVerifySeconds{} seconds, for
+$T_{\rm cert}=\HsixCertificateTotalSeconds{}$ seconds.  More generally, with
+one-time envelope cost $C_{\rm env}$, measured in exact-call units, and per-branch
+noncertificate cost $c_{\rm branch}<1$, complete funding requires
+\begin{equation}
+ c_{\rm branch}+\frac{C_{\rm env}+T_{\rm cert}/t_f}{K}\leq1,
+ \qquad
  K\geq\left\lceil
- \frac{720+\HtenCertificateTotalSeconds{}}{(1-0.4)60}
- \right\rceil=\PdeIllustrationBreakEven{}.
-\]
-At 64 compatible right-hand sides, constants and proof consume
-\PdeIllustrationAmortizedAtSixtyFour{} call per branch, so the total extra
-charge is \PdeIllustrationTotalAtSixtyFour{} against a certified saving of at
-least one call.  This is a physically consistent break-even calculation, not
-an empirical PDE benchmark; its purpose is to identify the economic regime
-that the certificate ledger requires.
+ \frac{C_{\rm env}+T_{\rm cert}/t_f}{1-c_{\rm branch}}
+ \right\rceil.                                       \label{eq:full-envelope-cost}
+\end{equation}
+Changing any envelope field requires a proved containment relation or a new
+charge.  The heat-inverse experiment below replaces the earlier hypothetical
+60-second conversion by measured $t_f=\HeatExactMedianSeconds{}$ seconds.  Its
+prepaid proof costs \HeatCertificateUnits{} exact-call units and becomes
+worthwhile only relative to the explicitly penalized unsafe comparator; it
+does not beat the unpenalized baseline.
 
 \section{Computational experiments and artifact evaluation}
 \label{sec:numerics}
 
 The implementation has four aims: test the SDP construction on a case with a
-known analytic answer, independently verify exact accepted instances, quantify
+known analytic answer, externally verify exact accepted instances, quantify
 the conservatism of discarding dependence, and expose the difference between
 deterministic safety and mean cost.  The numerical PEP is written in Python
 with CVXPY, Clarabel, and SCS
-\citep{DiamondBoyd2016,GoulartChen2024,ODonoghueEtAl2016}.  Each study
+\citep{DiamondBoyd2016,GoulartChen2026,ODonoghueEtAl2016}.  Each study
 stores every parameter, cell status, random case, environment version, runner
 hash, source hash, and aggregate claim in a canonical hash-bound JSON payload.
-Table~\ref{tab:validation-map} states what each experiment can and cannot
-certify before the detailed results.
-The principal numerical environment is macOS arm64 with Python 3.13.5,
-NumPy 2.5.2, CVXPY 1.9.2, Clarabel 0.11.1, SCS 3.2.11, and PEPit 0.5.1;
-every frozen payload records the full platform string and exact runner hash.
+The artifact guide maps each claim to its command and limitation.
+The principal PEP certificate and backend payloads were produced on macOS
+arm64 with Python 3.11.15, NumPy 2.4.6, CVXPY 1.9.2, Clarabel 0.11.1, SCS
+3.2.11, and PEPit 0.5.1.  Ancillary payloads made in other environments carry
+their own version strings; every frozen payload records the full platform and
+runner hash, so no global environment label overrides per-payload provenance.
 
-The executable artifact separates numerical producers from ten
-standard-library proof consumers.  The commands \texttt{make check},
+The executable artifact separates numerical producers from a shared-core
+standard-library consumer family and the nonsharing SymPy H6 consumer.  The
+commands \texttt{make check},
 \texttt{make verify}, and \texttt{make mpc-paper} perform integrity testing,
 exact replay, and article reconstruction; \texttt{make studies} is optional
 numerical regeneration.  None of the first three requires the unavailable raw
@@ -1413,362 +1498,223 @@ missing, duplicate, unverified, or unresolved record as an error or
 
 \subsection{Validation overview}
 
-\begin{table}[H]
-\centering
-\small
-\setlength{\tabcolsep}{3.5pt}
-\caption{Validation map.  ``Exact'' means that the reported decision does not
-depend on accepting a floating-point infeasibility status.}
-\label{tab:validation-map}
-\begin{tabular}{p{0.20\linewidth}p{0.18\linewidth}p{0.19\linewidth}p{0.32\linewidth}}
-\toprule
-Study & Scale & Outcome & Evidence and limitation\\
-\midrule
-Nonzero-radius $H=10$ family & \HtenFamilyProfiles{} envelopes,
-\HtenFamilyExactCells{} bad cells & Exact class-wide acceptance &
-\HtenFamilyIndependentCells{} exclusions recovered independently across three
-source envelopes; \HtenFamilyTransportedCells{} follow by exact homogeneous
-transport.  The balanced source has \HtenDualPivots{} positive exact
-$LDL^\top$ pivots.\\
-Full-class joint-only $H=3$ & \FullClassJointCertificates{} bad cells,
-Gram order $10$ & Exact joint acceptance; exact marginals reject & Full
-$\cF_{1/2,1}$ transcript class, nonzero radius, and
-\FullClassJointPivots{} replayed positive $LDL^\top$ pivots.\\
-Exact-shift $H=20$ & \PepScaleTwentyNominal{} nominal cells,
-\PepScaleTwentySolved{} SDPs & Exact structural acceptance & Demonstrates
-screening and cell generation; the coupling identity is special.\\
-Generic non-shift $H=20$ & \GenericPepBadCells{} bad cells,
-Gram order $\leq\GenericPepMaxGram{}$ & Floating witness; proof outcome
-uncertified & Three positive-margin candidates trigger rejection in the
-numerical prototype; they are not independent proof objects.\\
-Nonquadratic $\R^2$, $H_0=2$; padded $H=3$ & \NonlinearPepCells{} cells,
-\NonlinearPepBadCells{} bad & Exact acceptance & All ten bad cells have
-independently replayed rational generic PEP duals; contraction bounds
-cross-check the realized pair.\\
-Rolling nonlinear logistic workload & \RollingLogisticEpisodes{} episodes,
-\RollingLogisticSamples{} rows, dimension \RollingLogisticDimension{} &
-\RollingLogisticAccepted{} short-transcript acceptances; zero post-decision
-violations & Reuses the exact $H=10$ suite after checking its envelope.  The
-\RollingLogisticMinibatchPercent{} proposals are charged; the workload is
-synthetic and its anchor distribution is chosen to cross the certified band.\\
-Rational quadratic suite & \RationalCertificateInstances{} instances,
-\RationalDualCertificates{} duals & Exact acceptance &
-\RationalPrincipalMinors{} exact principal minors; reduced quadratic SDPs.\\
-Finite consistency audit & \TranscriptCases{} families, 40 members each &
-Exact finite-proxy comparison & Constructed quadratics; acceptance rates are
-optimistic upper bounds for an infinite consistency class.\\
-Safety--mean audit & \AccountingCases{} dimension-64 cases & Accounting only &
-Contrasts deterministic dominance with always-query mean cost; not a PEP
-acceptance study.\\
-Real-SPX ledger & dimension 10, condition number $>\PositiveSpxConditionLower{}$
-& Exact full-model cost acceptance & Common-ledger ratio
-\PositiveSpxCostRatio{}; the rational quadratic is fully revealed, so this is
-a constant-pipeline stress test rather than a PEP claim.\\
-\bottomrule
-\end{tabular}
-\end{table}
+The executable artifact contains a claim-to-command validation matrix for all
+supporting studies.  The paper focuses on the $H=6$ joint-over-marginal
+flagship and radius extension, the $H=10$ production stress, the external
+consumer audits, and the measured heat-inverse ledger.  UCI, nonlinear, SPX,
+finite-family, and $H=15$ records are controls or scaling diagnostics.
 
-\subsection{Scaling diagnostics: structured and generic}
-
-\paragraph{Shift-identity audit.}
-
-We use $\mu=0.5$, $L=1$, $\alpha=\gamma=1$, $R=2$,
-$\norm{y-x}=1$, $\delta=0$, and $\eps=0.15$.  The contract is exact:
-\[
- y=x-\alpha\nabla f(x).
-\]
-Therefore the hybrid trajectory is the baseline trajectory shifted by one
-index.  Induction gives $y_k=x_{k+1}$ for all $k$, and because
-$\norm{\nabla f(x)}=1>\eps$,
-\begin{equation}
- N_f(y)=N_f(x)-1.                                   \label{eq:shift}
-\end{equation}
-This identity is an analytic certificate for every function in the transcript
-class.
-
-The horizon formula used branch-specific distance bounds and produced
-\PepCells{} cells.  The SDP solver found positive margins above $10^{-5}$ for
-\PepPositiveCells{} cells, namely $(1,0),(2,1),(3,2)$, and no classified
-positive cell off the line \eqref{eq:shift}.  Four additional cells had
-absolute optimized margin below $10^{-5}$ and are explicitly recorded as
-numerically ambiguous; they are therefore not classified positive and do not
-contradict the preceding count.  We do not use their floating-point labels to prove
-acceptance: the exact shift identity excludes every off-shift bad cell.  For
-$c=0.4$ and $m=1$, the joint gate accepts.  The rectangle rejects because it
-combines extrema from different attainable pairs.
-
-\paragraph{Structure-exploiting medium-horizon enumeration.}
-
-To separate generic dense cost from exploitable transcript structure, we bind
-a second timing audit.  The dense reference solves all 36 two-trajectory cells
-at $H=5$.  For the exact-shift transcript $y=x-\alpha\nabla f(x)$ with
-$\norm{\nabla f(x)}>\eps$, every attainable pair satisfies $s=r-1$ and
-$r\geq1$.  This identity excludes all off-shift cells and $(0,0)$ before any
-SDP is formed.  Each remaining line cell is represented by one trajectory up
-to stopping time $r$, so its Gram order is $r+2$ rather than $2(H+1)+2$.
-
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \scriptsize
-\setlength{\tabcolsep}{3pt}
-\caption{Frozen scaling diagnostics.  Shift rows use an exact structural
-screen; the generic row sends every cost-violating cell to Clarabel and remains
-uncertified.  Times are descriptive single runs.}
-\label{tab:scaling}
-\label{tab:generic-scaling}
-\begin{tabular}{lrrrrrl}
+\setlength{\tabcolsep}{4pt}
+\caption{Proof coverage and evidential role.  Exact coverage counts only
+consumer-verified exclusions; floating solver labels never enter this column.}
+\label{tab:proof-coverage}
+\begin{tabular}{P{0.23\linewidth}P{0.31\linewidth}P{0.36\linewidth}}
 \toprule
-Formulation & $H$ & Nominal & SDPs & Max Gram & Seconds & Proof outcome\\
+Record & Certified evidence & Role/outcome\\
 \midrule
-Dense reference & 5  & 36  & 36 & 14 & \PepDenseElapsed{} & numerical\\
-Exact shift & 10 & 121 & 10 & 12 & \PepScaleTenElapsed{} & structural exact\\
-Exact shift & 15 & 256 & 15 & 17 & \PepScaleFifteenElapsed{} & structural exact\\
-Exact shift & 20 & \PepScaleTwentyNominal{} & \PepScaleTwentySolved{} &
-  \PepScaleTwentyGram{} & \PepScaleTwentyElapsed{} & structural exact\\
-Generic non-shift & 20 & \GenericPepNominal{} & \GenericPepBadCells{} &
-  \GenericPepMaxGram{} & \GenericPepWallSeconds{} & uncertified\\
+Joint-over-marginal flagship & $H=6$: 28/28 bad cells; 448 exact pivots &
+Exact acceptance; sharp marginals reject\\
+Radius robustness & $H=6$, $\delta=7/500$: 28/28; 448 pivots &
+Exact acceptance after 40\% radius increase\\
+Nonsharing implementation & SymPy: 28/28 cells; 448 pivots &
+No shared coefficient builder or $LDL^\top$ code\\
+Balanced producer stress & $H=10$: 66/66 bad cells; 1,584 exact pivots &
+Exact acceptance; marginals also accept\\
+Generic verified baseline & PEPit: \PepitVerifiedCells{}/\PepitVerifiedAttempted{}
+cells; \PepitVerifiedPivots{} pivots & Remaining
+\PepitVerifiedUncertified{} cells are uncertified\\
+Measured heat inverse & 64 branches; full-grid oracle timed &
+Cold gate beats only the declared risk-adjusted comparator\\
+Parameterized scaling & $H=15$: 136 floating cells; no exact coverage &
+Peak memory reduced \BatchedHfifteenMemoryReduction{}; outcome uncertified\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-Thus the medium-horizon run enumerates all
-\PepScaleTwentyNominal{} nominal joint cells and sends only
-\PepScaleTwentySolved{} residual cells to an SDP solver.  This is evidence for
-structure-aware prescreening, not for generic dense $H=20$ scalability: absent
-an exact coupling identity, the quadratic cell count and the two-trajectory
-Gram blocks remain the relevant worst case.
+\subsection{Reproducibility and archival protocol}
 
-\paragraph{Generic non-shift horizon-20 audit.}
+The repository pins every Python dependency used by the numerical producer,
+the test runner, and the linter.  Frozen payloads are bound to source and
+certificate hashes; the paper macros are regenerated only after those hashes
+and all invoked consumers pass.  A short Technical Editor route replays the H6
+flagship before running focused integration tests, while the full route checks
+all payload consumers, the nonsharing SymPy rebuild, and the tampering suite.  A Linux
+$\mathtt{x86\_64}$ GitHub Actions workflow is included for Python 3.11 and runs
+\texttt{make check} plus \texttt{make te-smoke}; its status is not used as a
+mathematical acceptance condition.  The frozen producer timings remain the
+macOS arm64 measurements identified above rather than being relabeled as Linux
+benchmarks.
 
-We next remove the shift identity.  The transcript has
-$\mu=0.1$, $L=\alpha=\gamma=1$, $\norm{y-x}=0.4$,
-$\norm{y+\nabla f(x)}\leq0.08$, and a finite distance bound, but it supplies
-no trajectory coupling.  With $m=1$ and $c=0.4$, the cost-violating rule is
-$s-r+\max\{m,c\}>0$, hence exactly \GenericPepBadCells{} of the
-\GenericPepNominal{} nominal cells must be tested.  We use a
-\emph{cell-specific ragged formulation}: cell $(r,s)$ includes only the
-$r+1$ and $s+1$ trajectory prefixes needed to state its stopping times.
-By \cref{lem:ragged}, this changes neither the interpolation constraints nor
-the cell semantics.
+The public repository is the development record.  The exact submission
+snapshot---including tagged source, proof payloads, licensed data, verifiers,
+and manuscript sources---is archived immutably on Zenodo under DOI
+\href{https://doi.org/10.5281/zenodo.21964074}{\nolinkurl{10.5281/zenodo.21964074}}.
 
-All \GenericPepBadCells{} bad cells were submitted.  Clarabel returned
-\GenericPepOptimal{} optimal, \GenericPepOptimalInaccurate{}
-optimal-inaccurate, \GenericPepInfeasible{} infeasible, and
-\GenericPepInfeasibleInaccurate{} infeasible-inaccurate statuses; the largest
-Gram order was \GenericPepMaxGram{} with \GenericPepMaxConstraints{}
-affine/conic constraints.  Exactly \GenericPepPositiveCells{} returned margins
-exceed $10^{-5}$, while no finite margin lies in the ambiguity band.  These are
-unverified rejection candidates, and no inaccurate or infeasible status is an
-exclusion proof.  The proof-carrying result is therefore \emph{uncertified};
-acceptance would still require validated exclusions for all 231 bad cells.
+\subsection{Joint stopping pairs versus conditioned single-track PEPs}
+\label{sec:joint-marginal-comparison}
 
-\subsection{Natural-$H=10$ proof suite and backend benchmarks}
+This experiment isolates the paper's added query from the interpolation
+machinery.  For each row, the function class, transcript, continuation, horizon,
+stopping rule, and cost requirement are identical.  The joint computation asks
+whether a pair $(r,s)$ is attainable by one common function.  The comparator
+runs sharp conditioned single-track analyses and forms
+$[L_x,U_x]\times[L_y,U_y]$.  Consequently any decision difference is caused by
+discarding the pairing, not by using a looser function class.
+
+Across \JointMarginalTranscriptCount{} frozen transcripts, the joint method
+accepts all five.  Sharp marginals reject \JointMarginalJointOnlyCount{} and
+agree on the balanced H10 control.  The exact-shift panel in
+\cref{fig:joint-vs-marginal} makes the mechanism visible: every attainable pair
+satisfies $s=r-1$, whereas the rectangle contains cost-violating cells
+$s\geq r$ formed from incompatible marginal extremizers.  The H6 flagship is
+the nonidentity version of the same controlled reversal; all 28 bad cells are
+excluded by rational SDP duals rather than by the shift formula.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\textwidth]{../figures/joint_vs_marginal_rectangle.pdf}
+\caption{Information retained by joint and marginal conditioned PEPs.  Left:
+the exact-shift transcript has attainable cells $s=r-1$, while separate sharp
+marginals fill a rectangle containing spurious bad cells.  Right: certificate
+values on four joint-only acceptances and one agreement control.  All rows use
+the same transcript on both sides; acceptance requires a value at most zero.}
+\label{fig:joint-vs-marginal}
+\end{figure}
+
+\subsection{Unified nonzero-radius dependence flagship}
+\label{sec:h6-unified}
+
+The principal acceptance experiment makes proof production and
+joint-over-marginal value coexist.  It uses the infinite envelope
+$\cF_{3/10,1}$ with
+\begin{equation}
+ \begin{aligned}
+  &\alpha=1,\qquad \gamma=\frac{11}{10},\qquad R=\frac95,
+  \qquad \frac{27}{50}\leq\norm{y-x}\leq\frac{14}{25},\\
+  &\norm{y-x+\tfrac{11}{10}\nabla f(x)}\leq\frac1{100},
+  \qquad \eps=\frac7{25}.
+ \end{aligned}                                      \label{eq:h6-unified}
+\end{equation}
+The candidate is known at deployment, but the reusable proof intentionally
+uses only this coarser envelope; it applies to every candidate and function
+satisfying \eqref{eq:h6-unified}.  Here $D_0=59/25$ and $q=7/10$, and
+\[
+ \frac{59}{25}\left(\frac7{10}\right)^5>\frac7{25}
+ \geq\frac{59}{25}\left(\frac7{10}\right)^6,
+\]
+so the natural horizon is $H=6$.  With $c=2/5$ and $m=1$, the complete bad set
+is the 28 cells $s\geq r$.
+
+The producer submitted every bad cell without a structural prescreen.  It
+recovered \HsixJointCertificates{} rational duals, whose largest exact upper
+bound is \HsixJointUpper{}$<0$.  The standard-library consumer reconstructs up to
+\HsixJointInequalities{} inequality rows and order-\HsixJointGram{} slack
+matrices from the parameter tuple and checks \HsixJointPivots{} positive
+rational $LDL^\top$ pivots.  Weak duality excludes all $s\geq r$, while the
+witnesses below attain $s-r=-1$; hence $\Delta^*=-1$ and the joint gate accepts
+at boundary value zero.
+
+The exact separately conditioned marginals make a different decision.  The envelope
+implies
+\[
+ \frac{53}{110}\leq\norm{\nabla f(x)}\leq\frac{57}{110},
+\]
+because the residual ball and proposal band give
+\[
+ \frac{27}{50}-\frac1{100}
+ \leq\frac{11}{10}\norm{\nabla f(x)}
+ \leq\frac{14}{25}+\frac1{100}.
+\]
+Hence $L_x\geq1$.  For the exact proposal center
+$T_{11/10}x=x-(11/10)\nabla f(x)$, the averaged-Hessian argument in
+\cref{prop:horizon} gives
+\[
+ \norm{\nabla f(T_{11/10}x)}
+ \leq\frac{67}{100}\norm{\nabla f(x)}.
+\]
+The residual triangle inequality and $L=1$ therefore give
+\begin{align*}
+ \norm{\nabla f(y)}
+ \leq\frac{67}{100}\frac{57}{110}+\frac1{100}
+ &=\frac{3929}{11000},\\
+ \norm{\nabla f(y_1)}\leq\frac7{10}\frac{3929}{11000}
+ &=\frac{27503}{110000}<\frac7{25}.
+\end{align*}
+Therefore $U_y\leq1$.  Both bounds are sharp within the same declared
+envelope: the one-dimensional quadratics
+\[
+ f_1(t)=\frac12t^2+\frac12t,\quad y=-\frac{11}{20},
+ \qquad
+ f_{3/10}(t)=\frac3{20}t^2+\frac12t,\quad y=-\frac{27}{50}
+\]
+give pairs $(1,0)$ and $(2,1)$, respectively.  Thus $L_x=U_y=1$ and the
+rectangle certificate is $0+\max\{2/5,1\}=1>0$.  This is an infinite-class,
+nonzero-radius, natural-horizon instance in which the exact joint PEP accepts
+and exact marginals reject.
+
+Search and recovery took \HsixJointGenerationSeconds{} seconds.  The separate
+cost payload charges that time plus the median of
+\HsixCertificateVerifyRepeats{} complete exact replays; the resulting
+\HsixCertificateTotalSeconds{}-second proof and its reuse thresholds are
+reported in \cref{sec:cost}.  This makes the dependence result
+costable rather than presenting it as a free existence example.
+
+\subsection{Natural-$H=10$ proof-production stress test and backend benchmarks}
 \label{sec:h10-suite}
 
-The principal computational experiment uses $\mu=1/10$,
-$L=\alpha=\gamma=1$, $R=1$,
+The stress envelope uses $\mu=1/10$, $L=\alpha=\gamma=R=1$,
 $79/100\leq\norm{y-x}\leq81/100$,
-$\norm{y-x+\nabla f(x)}\leq1/10$, and $\eps=2/3$.  Here
-$D_0=181/100$ and $q=9/10$, with
-$(181/100)(9/10)^9>2/3\geq(181/100)(9/10)^{10}$, so the natural horizon is
-ten.  For $c=2/5$ and $m=1$, the bad cells are the 66 pairs $s\geq r$.
-There is no exact trajectory shift and no structural cell prescreen.
+$\norm{y-x+\nabla f(x)}\leq1/10$, and $\eps=2/3$, giving natural horizon ten
+and 66 bad cells.  Full padded cells reach Gram order \HtenDualGram{} and
+\HtenDualInequalities{} inequalities.  All 66 rational duals verify, with
+\HtenDualPivots{} positive pivots and largest upper bound
+\HtenDualUpper{}$<0$.  Three separately recovered envelopes and two exact
+homogeneous transports give \HtenFamilyExactCells{} verified exclusions in
+total.  The balanced profile's exact rectangle also accepts, so this is a
+proof-production stress test; dependence value is supplied by the H6 flagship.
 
-All 66 bad cells are solved in a full padded formulation; the largest has
-Gram order \HtenDualGram{} and \HtenDualInequalities{} inequalities.  The
-redundant bound
-$\operatorname{tr}G\leq11R^2+11(R+81/100)^2+R^2+(81/100)^2<49$ supplies
-strict dual slack without changing the feasible set.  Rational recovery and
-exact positive-definiteness checks succeeded for every cell, with largest
-verified upper bound \HtenDualUpper{}$<0$.  The frozen generation run took
-\HtenDualGenerationSeconds{} seconds, while the standard-library verifier
-separately rebuilt all SDP rows from the parameter tuple---including 506
-ordered interpolation inequalities and, at the largest cell, 28 additional
-inequalities plus the anchor equality---then reconstructed 66 stationarity
-systems, 66 rational slacks, and \HtenDualPivots{} positive $LDL^\top$ pivots.
-Weak duality therefore gives
-class-wide acceptance.  Nonemptiness is witnessed by
-$f(t)=t^2/2+(4/5)t$, $x=0$, $y=-4/5$.  This is a verified computational
-result, not a proposition inferred from solver statuses.
-
-The producer's ordered grid is
-$\{10^{-5},10^{-6}\}\times\{10^{-6},10^{-8},10^{-10},10^{-12},0\}$
-(trace regularizer $\times$ activity threshold).  The frozen run records
-\HtenRecoveryAttempts{} attempted recoveries, \HtenRecoveryFailures{} failures,
-and \HtenRecoverySuccesses{} successes; \HtenRecoveryReachedConfigs{} of the ten
-configurations were reached because the search stops at the first exact proof.
-The reported gate progress is \HtenRecoveryProgress{}.  These counts describe
-this transcript only: a failed cell would leave progress below 66/66 and force
-the aggregate outcome to \emph{uncertified}.
-
-\paragraph{Five-envelope exact family.}
-To test whether recovery is confined to one normalization, we repeat the full
-66-cell construction on two further source envelopes.  The
-``candidate-heavy'' profile uses $R=0.9$ and
-$0.89\leq\norm{y-x}\leq0.91$; the ``tight-contract'' profile keeps the
-balanced geometry but reduces the residual radius to $\delta=0.08$.  Together
-with the balanced source, all \HtenFamilyIndependentCells{} cell duals are
-recovered independently.  Their aggregate ordered searches make
-\HtenFamilyRecoveryAttempts{} attempts with \HtenFamilyRecoveryFailures{}
-failed attempts before exact success; the largest verified upper bounds for
-the two new sources are \HtenCandidateHeavyUpper{} and
-\HtenTightContractUpper{}.  Two more envelopes scale every distance,
-residual, and tolerance by $4/5$ or $6/5$, and the trace bound by the squared
-scale.  The verifier checks that dual stationarity and slack are invariant and
-that each objective scales by the square factor.  Hence the family contains
-\HtenFamilyProfiles{} exact envelopes and \HtenFamilyExactCells{} verified
-profile-cell exclusions, of which \HtenFamilyTransportedCells{} use algebraic
-transport rather than a second recovery claim.
-
-\paragraph{Flagship marginal baseline.}
-The balanced flagship does \emph{not} require joint information for
-acceptance.  A separate three-point PEP maximizes
-$\norm{\nabla f(y)}^2$ over exactly the same transcript and has exact rational
-dual upper bound \HtenMarginalGradientUpper{}$<(2/3)^2$; hence $U_y=0$.
-Conversely,
-$\norm{\nabla f(x)}\geq79/100-1/10=69/100>2/3$, so $L_x\geq1$.
-The quadratic $f(t)=(t-4/5)^2/2$, $x=0$, $y=4/5$ attains
-$(N_f(x),N_f(y))=(1,0)$, proving $L_x=1$ and $U_y=0$.  Thus the exact rectangle
-value is $-1$ and its cost gate equals
-$-1+\max\{2/5,1\}=\HtenMarginalRectangleValue{}$.  The flagship demonstrates
-moderate-horizon proof production; strict joint-over-marginal value is shown
-only by the full-class experiment in \cref{sec:full-class-joint-only}.
-
-We also benchmark the ragged numerical formulation at
-$H\in\{2,4,6,8,10\}$.  Each configuration is run five times in a fresh
-process; the complete bad-cell set is solved with four cell workers.  Times
-include model construction and solution.  At $H=10$, Clarabel and SCS have
-median wall times \ClarabelHtenWall{} and \ScsHtenWall{} seconds and median
-peak resident sets \ClarabelHtenMemory{} and \ScsHtenMemory{} MiB,
-respectively.  Clarabel reports 44 \texttt{optimal} and 22
-\texttt{optimal\_inaccurate} cells in each repeat; SCS reports all 66 as
-\texttt{optimal}.  These labels are diagnostic and do not enter the exact
-acceptance.  The full time curves, interquartile bars, memory curves, and
-$H=10$ ragged Gram-order distribution appear in
-\cref{fig:solver-benchmark}.
-
-We also feed SCS duals, rather than Clarabel duals, into the same heuristic
-rational producer on \ScsRecoveryCells{} stratified flagship cells.  Exact
-recovery succeeds on \ScsRecoverySuccesses{} and fails on
-\ScsRecoveryFailures{}; every success is replayed by the standard-library
-consumer, while any failure would leave the corresponding cell uncertified.
-This diagnostic measures producer portability and does not promote an SCS
-status to proof.
+Fresh-process benchmarks solve every cell for $H\in\{2,4,6,8,10\}$.  At
+$H=10$, Clarabel and SCS take median \ClarabelHtenWall{} and
+\ScsHtenWall{} seconds and peak at \ClarabelHtenMemory{} and
+\ScsHtenMemory{} MiB.  Clarabel labels 44 cells \texttt{optimal} and 22
+\texttt{optimal\_inaccurate}; SCS labels all 66 \texttt{optimal}; the exact
+consumer excludes 66.  The mismatch motivates the fail-closed boundary.  SCS
+duals recover exactly on \ScsRecoverySuccesses{}/\ScsRecoveryCells{} sampled
+cells; failures remain uncertified.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{../figures/generic_pep_solver_benchmark.pdf}
-\caption{Repeated generic PEP benchmark.  Left: median complete-enumeration
-wall time with interquartile bars.  Center: median process peak RSS.  Right:
-ragged Gram orders for the 66 cost-violating $H=10$ cells.  These floating
-runs measure computational behavior; the separate rational suite supplies the
-acceptance proof.}
+\caption{Clarabel 0.11.1 and SCS 3.2.11 generic PEP benchmarks for
+$H\in\{2,4,6,8,10\}$, each based on five fresh-process repetitions.  Left:
+median complete-enumeration wall seconds with interquartile bars.  Center:
+median peak resident memory in MiB.  Right: Gram-order frequencies for the 66
+cost-violating $H=10$ cells.  These floating runs measure computational
+behavior; the separate rational suite supplies the proof.}
 \label{fig:solver-benchmark}
 \end{figure}
 
-For a same-model comparison, we encoded exactly the same signed-margin cells
-in PEPit \PepitVersion{} and ran both implementations serially through the same
-CVXPY--Clarabel stack.  The optional artifact extra pins
-\texttt{PEPit==\PepitVersion{}}; the frozen environment records installer
-\texttt{uv}, the distribution metadata's tagged GitHub download URL, the PyPI
-release URL, and the official
-\url{https://pepit.readthedocs.io/en/0.5.1/} documentation.  No
-\texttt{direct\_url.json} is present, so we do not infer which package-index
-mirror served the wheel.
-
-At $H=10$, PEPit takes \PepitHtenSerialWall{} seconds versus
-\CtwoHtenSerialWall{} seconds, an end-to-end factor
-\PepitHtenEndToEndRatio{}, and both return the same maximum margin to six
-significant digits.  This is not a ``pure front-end'' ratio.  Of the
-\PepitHtenExtraWall{}-second median end-to-end gap, the corresponding median
-component differences are \PepitHtenExtraBuild{} seconds for native Python
-model assembly, \PepitHtenExtraCanonicalization{} seconds for wrapper/CVXPY
-canonicalization, and \PepitHtenExtraLoop{} seconds for loop and measurement
-overhead.  The native-minus-PEPit Clarabel-kernel difference is
-\PepitHtenExtraSolverKernel{} seconds (negative means native is faster).
-PEPit is therefore the better floating modeling
-front end in this test.  We retain the native proof path only because C2OGate's
-distinct layer requires named exact coefficient reconstruction, three-valued
-cell aggregation, rational recovery, and a solver-independent consumer.  PESTO
-is cited as the 2017 MATLAB predecessor; we do not present it as a 2022 chordal
-solver or duplicate the Python benchmark in a separate MATLAB/YALMIP
-environment.
-
-\paragraph{Independent exact-arithmetic backend.}
-As a full-load consumer cross-check, SymPy's rational matrix backend computes
-an exact $LDL^\top$ decomposition of all \SympyCrosscheckSlacks{} flagship
-dual slacks.  All \SympyCrosscheckPivots{} exact diagonal pivots are positive,
-independently confirming positive definiteness.  VSDP was not run
-because the clean artifact has neither MATLAB/Octave nor its interval stack
-(the public implementation is at
-\url{https://github.com/vsdp/vsdp-2020}); SPECTRA requires Maple and its
-official project page, \url{https://homepages.laas.fr/henrion/software/spectra/},
-states that the package is no longer maintained (accessed August 2026).
-These are toolchain limitations, not performance comparisons.
-The public payload records the executable audit and the SymPy version, while
-the standard-library consumer remains the acceptance boundary.
-
-\subsection{Full-class joint acceptance that exact marginals miss}
-\label{sec:full-class-joint-only}
-
-This experiment isolates the value of retaining dependence without restricting
-the consistency set to a finite proxy.  Take the full class
-$\cF_{1/2,1}$ consistent with
-\begin{equation}
- \begin{aligned}
-  &\alpha=1,\qquad \gamma=\frac{11}{10},\qquad R=1,
-  \qquad \frac{27}{50}\leq\norm{y-x}\leq\frac{14}{25},\\
-  &\norm{y-x+\tfrac{11}{10}\nabla f(x)}\leq\frac1{100},
-  \qquad \eps=\frac15.
- \end{aligned}                                      \label{eq:full-class-joint}
-\end{equation}
-The finite-horizon formula gives $H=3$.  With $c=2/5$ and $m=1$, all ten bad
-cells satisfy exact rational dual upper bounds, the largest being
-\FullClassJointUpper{}$<0$.  The independent standard-library verifier
-reconstructs all ten order-ten slacks and
-\FullClassJointPivots{} positive exact $LDL^\top$ pivots.  Hence every
-consistent function obeys $N_f(y)-N_f(x)\leq-1$, and the joint certificate is
-$-1+\max\{2/5,1\}=0$.
-
-The marginal rectangle can be evaluated exactly.  Contract
-\eqref{eq:full-class-joint} implies
-\[
- \frac{53}{110}\leq\norm{\nabla f(x)}\leq\frac{57}{110}.
-\]
-The lower bound exceeds $\eps$, so $L_x\geq1$.  The gradient map associated
-with the proposal step has contraction
-$\max\{|1-(11/10)(1/2)|,|1-11/10|\}=9/20$, whence
-\[
- \norm{\nabla f(y)}\leq\frac9{20}\frac{57}{110}+\frac1{100}
- =\frac{107}{440},\qquad
- \norm{\nabla f(y_1)}\leq\frac12\frac{107}{440}
- =\frac{107}{880}<\frac15.
-\]
-Thus $U_y\leq1$.  Both bounds are sharp inside the single infinite quadratic
-subfamily
-\[
- f_\lambda(t)=\frac{\lambda}{2}t^2+\frac12t,
- \qquad \lambda\in[1/2,1],\quad x=0,\quad y=-\frac{11}{20}:
-\]
-$\lambda=1/2$ gives $(N_f(x),N_f(y))=(2,1)$ and $\lambda=1$ gives $(1,0)$.
-Therefore $L_x=U_y=1$ and the rectangle certificate is
-$1-1+1=\FullClassJointRectangleValue{}>0$.  The joint PEP accepts the full
-infinite transcript class while exact independent marginals reject.  This is
-the computational existence result separating joint and marginal certificates;
-it uses neither a shift
-identity nor full Hessian revelation.
-
-The radius effect is also visible.  By
-\cref{prop:radius-monotonicity}, the exact certificate is nondecreasing in
-$\delta$.  A frozen floating diagnostic of the same ten PEPs reports maximum
-signed margins \FullClassMarginZero{}, \FullClassMarginOneHundred{},
-\FullClassMarginOneFifty{}, \FullClassMarginThreeHundred{}, and
-\FullClassMarginOneTwenty{} at
-$\delta=0,1/100,1/50,3/100,1/20$, respectively.  All ten cells remain
-negative through $1/50$, whereas the $(1,1)$ cell becomes positive by
-$3/100$.  Only the $\delta=1/100$ decision is backed by the exact rational
-suite; the other values diagnose, but do not certify, the loss of proposal
-quality as the residual ball grows.
+On the identical signed cells, PEPit \PepitVersion{} is faster: C2OGate/PEPit
+end-to-end ratios are \PepitHtwoEndToEndRatio{},
+\PepitHsixEndToEndRatio{}, and \PepitHtenEndToEndRatio{} at horizons 2, 6,
+and 10.  At $H=10$ the times are \CtwoHtenSerialWall{} versus
+\PepitHtenSerialWall{} seconds; the \PepitHtenExtraWall{}-second gap separates
+into model assembly, CVXPY canonicalization, solver-kernel, and loop components
+in the frozen payload.  C2OGate retains a native path only for stable named
+rational rows and certificate consumption; a PEPit producer adapter is an
+explicit reuse target.  That adapter is now implemented for the H6 suite:
+PEPit builds all \PepitVerifiedAttempted{} models and supplies Clarabel duals
+to the same fixed sparsification/rational-recovery rule.  The exact consumer
+certifies only \PepitVerifiedCells{} cells and marks
+\PepitVerifiedUncertified{} uncertified, versus 28/28 for the native named-row
+producer.  This is the generic verified-pipeline baseline: PEPit wins at
+floating construction, while the domain-specific representation is more
+robust at exact recovery on this suite.  A second PEPit driver rebuilds
+\PaddedCrosscheckCells{} padded cells with maximum objective discrepancy
+\PaddedCrosscheckMaxDifference{}.
 
 \subsection{Feasible regime and calibration boundary}
 \label{sec:feasible-regime}
@@ -1792,419 +1738,206 @@ interior-point method can be more expensive because its affine-constraint
 system is itself of order $H^2$.  This is a scaling diagnosis, not a solver
 complexity theorem.
 
-The experiments expose this boundary: the exact suite stops at $H=10$, whereas
-the generic $H=20$ run reaches \GenericPepBadCells{} bad cells, Gram order
-\GenericPepMaxGram{}, and remains uncertified.  The short-transcript SPX bound
+The experiments expose this boundary: the exact suite stops at $H=10$.  The
+implemented four-worker ragged builder reaches $H=15$, enumerating
+\HfifteenCells{} bad cells in \HfifteenWallSeconds{} seconds with maximum Gram
+order \HfifteenMaxGram{} and \HfifteenMaxConstraints{} constraints, but peaks
+at \HfifteenPeakRss{} MiB.  Clarabel reports \HfifteenOptimal{} optimal and
+\HfifteenInaccurate{} optimal-inaccurate cells; because neither status is an
+exact exclusion, the run is \emph{uncertified}.  At $H=20$ the generic run
+reaches \GenericPepBadCells{} bad cells and Gram order \GenericPepMaxGram{},
+and likewise remains uncertified.  The short-transcript SPX bound
 has candidate horizon \PositiveSpxShortHybridUpper{} and was not enumerated.
 Likewise, the 2,000 finite proxies are reported only as a dependence-loss audit,
 not as calibration of the infinite-class backend; their detailed horizon counts
 remain in the artifact.
 
-This also separates information from implementation: the maximality theorem
-characterizes the best deterministic decision given the exact attainable set;
+One proposed scaling mechanism is implemented rather than left as a roadmap.
+A single Disciplined Parametrized Programming model pads all 136 H15 bad cells,
+changes only terminal/survival selector parameters, reuses canonicalization,
+and warm-starts consecutive solves.  It completes in
+\BatchedHfifteenWallSeconds{} seconds at \BatchedHfifteenPeakRss{} MiB.  Against
+the frozen four-worker ragged run, peak memory falls to
+\BatchedHfifteenRssRatio{} (a \BatchedHfifteenMemoryReduction{} reduction),
+but wall time rises by \BatchedHfifteenWallRatio{} times.  Three sampled cells
+agree with separately rebuilt ragged models within
+\BatchedHfifteenMaxDifference{}.  This is a concrete cross-cell model-reuse
+tradeoff, not an exact H15 acceptance: all solver labels remain outside the
+trust boundary.
+
+This also separates information from implementation: the exact-cell optimality
+theorem characterizes the best deterministic decision given the exact
+attainable set;
 it is not a polynomial-time claim.  When the necessary cell proofs cannot be
 constructed, the implemented gate returns \emph{uncertified}.  Information-
-theoretic maximality and computational nonavailability can therefore coexist,
+theoretic optimality and computational nonavailability can therefore coexist,
 as the $H=20$ audit demonstrates.
 
 Accordingly, C2OGate is presently a moderate-horizon exact-certification
 infrastructure, not a scalable generic SDP solver.  The validated envelope is
 $H\leq10$, Gram order at most 24, and at most 534 inequalities per cell.  A
-concrete scaling program has three separately testable components: exploit the
+remaining scaling program has three separately testable components: exploit the
 interpolation graph by chordal Gram decompositions; batch coefficient assembly
 and reuse a dual basis across cells that differ only in stopping rows; and
 replace bounded-denominator rounding by validated facial reduction or interval
-residual correction on degenerate faces.  None is implemented in the reported
-acceptance path.  If the $H=10$ producer had failed, the finite SDP reduction,
+residual correction on degenerate faces.  The parameterized H15 experiment
+implements model and canonicalization reuse, but not chordal decomposition,
+dual-basis reuse, or facial reduction; it also remains outside the acceptance
+path.  If the $H=10$ producer had
+failed, the finite SDP reduction,
 three-valued kernel, and verifier would remain valid, but the principal
 moderate-horizon acceptance evidence would fall back to the $H=3$ suites.  The
 computational contribution therefore depends empirically---and transparently---
 on successful recovery at the reported scale.
 
-\subsection{A direct non-shift, nonquadratic acceptance}
-\label{sec:nonlinear-pep}
+\subsection{Measured workloads and adverse controls}
+\label{sec:measured-workloads}
 
-Consider the nonquadratic function
-\begin{equation}
- f(z)=\frac{9}{20}\norm{z}^2+
-      \frac{1}{10}\sum_{i=1}^2\log\cosh z_i\in\cF_{9/10,1},
- \qquad z\in\R^2.                                  \label{eq:nonlinear-instance}
-\end{equation}
-Set $x=(9/10,2/5)$, $\alpha=1$, $\eps=7/50$,
-$e=(3/1000,-1/250)$, and $y=x-\nabla f(x)+e$.  Thus $\norm{e}=1/200$ and no
-shift identity holds; moreover
-$\det[x,(I-\nabla f)(x)]=\NonlinearPepSpanDeterminant{}<-0.005$, so the realized
-trajectory spans $\R^2$.  The certificate uses only
-\[
- \frac{24}{25}\leq\norm{y-x}\leq\frac{97}{100},\qquad
- \norm{y-x+\nabla f(x)}\leq\frac1{100},\qquad
- \norm{x-x_*}\leq\frac65.
-\]
+Two existing replays remain deliberately adverse controls.  On the UCI WDBC
+data \citep{UCIWDBC1993}, exact rational preprocessing and class checks place
+the regularized logistic objectives in $\cF_{4/5,1}$.  The H6 gate accepts
+\UciWdbcAccepted{}/\UciWdbcAttempts{} attempted sketch proposals; the complete
+split is \UciWdbcAccepted{} accept, \UciWdbcRejected{} reject, and
+\UciWdbcUncertified{} uncertified.  All 17 uncertified cases fail the exact
+proposal band, not dual recovery.  Its
+measured warm ratio is \UciWdbcMeasuredWarmRatio{}; accepting every free
+prefilter attempt has lower ratio \UciWdbcGreedyMeasuredRatio{} and no observed
+overrun.  The \RollingLogisticEpisodes{}-episode nonlinear replay has 30
+attempts split as \RollingLogisticAccepted{} accept,
+\RollingLogisticRejected{} reject, and \RollingLogisticUncertified{}
+uncertified; all 12 uncertified cases fail the exact proposal band.  It gives
+joint-gate ratio \RollingLogisticWarmRatio{} versus prefilter ratio
+\RollingLogisticGreedyRatio{}, again with zero observed prefilter overrun.
+These facts refute any claim that certification improves mean selection on the
+two convenient workloads.  Their value is integration coverage: every class,
+proposal, residual, and distance predicate is recomputed exactly from stored
+binary64 input before the certificate is reused.
 
-These bounds imply $19/20\leq\norm{\nabla f(x)}\leq49/50$.  Since
-$I-\nabla f$ is $1/10$-Lipschitz,
-$\norm{\nabla f((I-\nabla f)x)}\leq49/450<7/50$ and
-$\norm{\nabla f(y)}\leq49/450+1/100<7/50$.  Hence every consistent function
-has stopping pair $(1,0)$.  The formula gives natural horizon $H_0=2$; a
-conservative $H=3$ audit nevertheless submits all ten bad cells to the generic
-Gram-SDP recovery path.  Ten exact duals have maximum upper bound
-$\GenericDualUpper{}<0$, and the independent consumer checks stationarity and
-\GenericDualMinors{} positive rational pivots.  No floating solver status is
-used.
+The positive cost experiment is a periodic two-dimensional heat inverse
+problem.  For two Fourier coefficients $z$, the expensive oracle evaluates a
+$640\times640$ forward heat solve for 120 explicit steps and the corresponding
+adjoint, plus a $0.3I$ ridge.  The exact-real Hessian eigenvalues are
+$0.9980596$ and $0.4417816$, so the objective lies in
+$\cF_{3/10,1}$.  A fixed $80\times80$, three-step surrogate has eigenvalues
+$0.9968984$ and $0.3728483$: it resolves the low mode but over-diffuses the
+high mode.  The full and cheap median oracle times are
+\HeatExactMedianSeconds{} and \HeatCheapMedianSeconds{} seconds, respectively;
+the maximum grid-gradient discrepancy from the diagonal Fourier formula is
+$4.0\times10^{-15}$.
 
-For $m=1$ and all-in cost $c=1/2$, the joint certificate is zero and the cost
-ratio is \NonlinearPepCostRatio{}.  Rehashed candidate, bound, cell, and ledger
-changes are rejected.  The rectangle also accepts this singleton pair, so the
-example validates nonlinear proof carrying rather than the separate
-joint-over-marginal advantage.
+Across \HeatEpisodes{} alternating-mode decisions, the free gradient prefilter
+attempts every proposal.  C2OGate accepts the \HeatAccepted{} resolved cases,
+all with stopping pair $(1,0)$, and marks \HeatUncertified{} underresolved
+cases whose residual violates the declared contract; those cases realize
+$(1,1)$.  There are \HeatRejected{} verified rejects.  The unpenalized
+prefilter and the warm gate both cost about 32.1
+exact-call units, whereas the baseline costs 64.  The distinction is ex ante:
+the prefilter makes 32 branches that fail the required one-call saving.
 
-\subsection{Rolling nonlinear calibration: acceptance from a short transcript}
-\label{sec:rolling-logistic}
+The cold ledger charges the complete measured H6 search and replay:
+\HeatCertificateUnits{} exact-call units.  With a declared penalty of 12 units
+per failed saving, the cold gate costs \HeatColdGateUnits{} units versus
+\HeatRiskPrefilterUnits{} for the prefilter, a ratio of
+\HeatGateRiskRatio{}.  The measured break-even penalty is
+\HeatBreakEvenPenalty{} and the reuse threshold is
+\HeatAmortizationEpisodes{} compatible decisions.  Against the unpenalized
+baseline, the same measured ledger instead needs
+\HeatUnpenalizedAmortizationEpisodes{} compatible decisions.  Thus the concrete
+adoption rule today is: use this frozen certificate for a repeated full-grid
+heat/PDE family only when its analytically available spectral bounds remain
+valid and either (i) at least \HeatAmortizationEpisodes{} decisions share a
+declared failed-saving penalty of at least \HeatBreakEvenPenalty{} exact-call
+units, or (ii) at least \HeatUnpenalizedAmortizationEpisodes{} decisions reuse
+the proof without such a penalty.  Below both thresholds, rational adoption is
+the unchanged baseline.  Any extra work needed to obtain $\mu,L$ must be added
+to the numerator and raises these thresholds.  This specifies when certificate
+purchase is justified while keeping the answer conditional and auditable rather than presenting the
+penalty as measured business loss.
 
-We next test the flagship proof as a reusable gate in a nonlinear repeated
-workload, rather than reveal a quadratic model to the decision rule.  The
-simulation has \RollingLogisticEpisodes{} rolling proximal logistic
-calibrations, each with \RollingLogisticSamples{} normalized feature rows and
-\RollingLogisticDimension{} parameters.  For episode $e$,
-\begin{equation}
- f_e(w)=\frac{0.8}{n}\sum_{i=1}^n
- \left[\log(1+\exp(a_i^\top w))-b_i a_i^\top w\right]
- +\frac{0.8}{2}\norm{w-u_e}^2 .                 \label{eq:rolling-logistic}
-\end{equation}
-The binary labels and normalized Gaussian features are frozen by seed; the
-regularization center $u_e$ changes direction and magnitude across episodes,
-modeling a rolling prior or proximal-center update.  Since
-$\norm{a_i}=1$ and the logistic second derivative lies in $[0,1/4]$,
-\[
- 0.8I\preceq\nabla^2 f_e(w)\preceq I.
-\]
-Thus every episode belongs to $\cF_{0.8,1}\subset\cF_{0.1,1}$ without a
-full Hessian computation.
-
-At $x=0$, the exact full-data gradient is already in the transcript.  The
-external producer scans a fresh \RollingLogisticMinibatchPercent{} minibatch,
-forms its gradient $\widetilde g_e$, and proposes $y_e=-\widetilde g_e$.  Before
-branching, the gate checks only
-\[
- 0.79\leq\norm{y_e}\leq0.81,\qquad
- \norm{y_e+\nabla f_e(0)}\leq0.1,\qquad
- \frac{\norm{\nabla f_e(0)}}{0.8}\leq1.
-\]
-The last inequality is the strong-monotonicity distance certificate
-$\norm{x-x_*}\leq\norm{\nabla f_e(x)}/0.8$.  These checks place the transcript
-inside the balanced $H=10$ envelope, so its 66 independently replayed bad-cell
-exclusions apply unchanged.  Candidate gradients, realized stopping times,
-the optimizer, and future full-data gradients are withheld until after this
-decision; they are used only for the outcome audit.
-
-The gate accepts \RollingLogisticAccepted{} of \RollingLogisticEpisodes{}
-episodes (\RollingLogisticAcceptRate{}).  In the post-decision full-model
-evaluation, every accepted episode has stopping pair $(1,0)$, so the
-\RollingLogisticAccepted{} acceptances save \RollingLogisticSavedCalls{} exact
-calls and produce \RollingLogisticViolations{} safety violations.  The
-unchanged baseline uses \RollingLogisticBaselineCalls{} remaining exact calls;
-the gated paths use \RollingLogisticGatedCalls{}.  Charging all minibatch
-queries adds \RollingLogisticCheapUnits{} exact-call units, giving prepaid-proof
-total \RollingLogisticWarmRatio{} of baseline and net saving
-\RollingLogisticWarmSaved{} units.
-
-The one-time proof is not silently removed.  Using the measured
-$H=10$ search-plus-verification charge, a 10-second exact oracle gives an
-all-in ratio \RollingLogisticColdRatioTen{} on these 256 episodes and requires
-\RollingLogisticBreakEvenTen{} episodes at the observed acceptance rate.  At
-60 seconds the corresponding values are \RollingLogisticColdRatioSixty{} and
-\RollingLogisticBreakEvenSixty{}; at 600 seconds they are
-\RollingLogisticColdRatioSixHundred{} and
-\RollingLogisticBreakEvenSixHundred{}.  Therefore this frozen batch is
-self-financing in the 60- and 600-second scenarios, but not in the 10-second
-scenario.  It does not finance a possibly rejected first decision from zero
-credit.
-
-This study closes a narrower evidence gap than a production deployment would.
-It is a reproducible synthetic generalized-linear workload, not observed
-operations data; its center-shock distribution is deliberately chosen to
-cross the certified displacement band.  It demonstrates that a nonlinear
-repeated workload can trigger the exact gate without revealing the candidate
-continuation, while leaving empirical frequency and constant acquisition in a
-real system open.
-
-\subsection{Exact rational certificates}
-
-We next instantiate \cref{prop:rational-residual} with three dense,
-non-diagonal rational Hessians.  Each Hessian is constructed as
-$Q=U\Lambda U^\top$, where $\Lambda$ is rational and $U$ is a product of
-rational plane rotations.  Hence neither diagonality in the coordinate basis
-nor a floating-point spectral decomposition is trusted by the verifier.  The
-candidate is the exact $d$-step shift $A^dx$, the required call saving is
-$m=1$, and the declared total branch cost is $c=d-\tfrac12$.
-
-The triples $(n,\alpha,d)$ are $(2,1,2)$, $(3,1/2,3)$, and $(4,1/2,4)$;
-their $(\eps^2,c)$ pairs are $(1/64,3/2)$, $(1/64,5/2)$, and
-$(1/100,7/2)$.  The exact minimum strict dual gaps are
-$\RationalMinGapTwoD$, $\RationalMinGapThreeD$, and
-$\RationalMinGapFourD$.
-
-The generator uses 110 decimal digits to propose a bounded-denominator
-rational $\nu_k$ and then constructs $Z_k=C_k-\nu_kI$ symbolically.  This
-search phase is not trusted.  A separate verifier imports only Python's
-standard library, reads the stored rational witness $x$ and candidate $y$,
-checks $x^\top x=1$ and $y=A^dx$ exactly, recomputes every $C_k$ from the
-rational transcript, checks all dual identities, proves each $Z_k\succeq0$
-through all of its principal minors, and checks $\nu_k>\eps^2$, $d\geq m$, and
-$c\leq d$.  Across
-\RationalCertificateInstances{} instances it verifies
-\RationalDualCertificates{} dual certificates and
-\RationalPrincipalMinors{} principal minors with no numerical tolerance.  Two
-integrity tests independently change a slack entry and the stored witness, recompute the
-payload hash, and confirm that the stationarity and unit-norm checks reject the
-forged bundles.
-
-These bundles prove acceptance for the reduced quadratic transcript families;
-they are not post hoc proofs for all \PepCells{} general interpolation SDPs.
-That distinction is deliberate: some full PEP cells sit on degenerate faces,
-where naively rounding an ordinary floating-point dual can be invalid.  The
-declared $c$ in these instances is a cost budget in exact-call
-units, not a wall-clock benchmark of the offline certificate generator.
-
-\subsection{Constructed finite proxy families and intermediate baselines}
-
-We next generated \TranscriptCases{} families, each containing 40 strongly
-convex quadratics in dimension 24.  Within a family, all functions share the
-current state, candidate, strong-convexity and smoothness bounds, a proposal
-contract radius, an initial-distance upper bound, and a perturbed common modal
-basis construction.  The true current gradients vary within the declared
-contract, so no cached exact gradient is assumed.  We enumerate both stopping
-times for every function, then apply the joint and rectangular gates to the
-same finite consistency class.  This is a direct finite-set audit of
-\cref{thm:maximal-gate,prop:rectangle}, not an estimator of a population
-speedup.
-
-\Cref{fig:audit} shows the structural effect.  The joint gate accepts
-\JointAcceptCount{} families versus \RectangleAcceptCount{} for the rectangle;
-\JointOnlyCount{} safe acceptances are lost by separating the stopping times,
-and the median inflation $\Delta_{\rm box}-\Delta^*$ is
-\MedianRectangleGap{} calls.  Rectangle acceptance is a subset of joint
-acceptance, as required.  Because every consistency set has only 40 constructed
-members, the \JointAcceptRate{} rate is an optimistic finite-proxy upper bound,
-not an estimate for the corresponding infinite class.
-
-We also shrink valid $R$ and $\delta$ by
-$\rho\in\{0.9,0.75,0.5,0.25\}$.  At $\rho=0.9$, the optimistic gate accepts
-\MisspecTenAcceptCount{} families and is unsafe for the full family in
-\MisspecTenFalseCount{} cases: \MisspecTenFalseConditional{} of its acceptances
-and \MisspecTenFalseOverall{} overall.  More severe shrinkage eventually empties
-the declared subclasses and fails closed; complete counts are in the artifact.
-Thus this audit quantifies contract-relative failure, not a probabilistic error
-rate.
-
-Partitioned rectangles retain progressively more dependence.  Two and four
-baseline bins accept \TwoBinAcceptCount{} and \FourBinAcceptCount{} families,
-recovering \TwoBinRecoveredDependencePct{} and
-\FourBinRecoveredDependencePct{} of the additional joint acceptances.  These
-percentages have no distribution-free rate: incompatible extrema can remain in
-one bin until distinct baseline times are isolated, and for an infinite class
-each bin extremum is itself another conditioned PEP.
-
-The separate accounting audit makes the safety--mean tradeoff explicit.  Its
-certified gate has mean cost ratio \AccountingGateMeanRatio{}, whereas querying
-the proposal unconditionally has the lower mean \AccountingAlwaysMeanRatio{}
-but exceeds the baseline cost on \AccountingAlwaysWorseRate{} of cases.  The
-paper's deterministic gate optimizes neither of those averages: it pays for a
-pointwise non-inferiority guarantee.  A risk-neutral user of this constructed
-distribution would prefer always-query; a user requiring zero audited
-overruns may prefer the conservative gate.  This is a decision criterion, not
-evidence that certification improves expected cost.
-
-\begin{figure}[H]
+\begin{table}[H]
 \centering
-\includegraphics[width=\textwidth]{../figures/transcript_pep_study.pdf}
-\caption{Left: positive-margin PEP cells in the analytic shift audit; boundary
-cells within the numerical ambiguity threshold are not colored as attainable.
-Center: acceptance coverage for one-, two-, and four-bin rectangles and the
-full joint finite proxy.  Right: the
-rectangular difference is never smaller than the joint difference and can be
-substantially larger.}
-\label{fig:audit}
-\end{figure}
+\small
+\caption{Workload conclusions.  ``Better'' compares mean unpenalized cost;
+the heat ratio includes the frozen certificate and the stated risk penalty.
+Gate decisions are accept/reject/uncertified among attempted proposals.}
+\begin{tabular}{lccc}
+\toprule
+Workload & Gate decisions & Unpenalized prefilter & Certificate conclusion\\
+\midrule
+UCI WDBC & \UciWdbcAccepted{}/0/\UciWdbcUncertified{} & Better; 0 overruns & Adverse control\\
+Rolling logistic & \RollingLogisticAccepted{}/0/\RollingLogisticUncertified{} & Better; 0 overruns & Adverse control\\
+Heat inverse & \HeatAccepted{}/0/\HeatUncertified{} & 32 failed savings & Risk ratio \HeatGateRiskRatio{}\\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{Real-SPX constant pipeline and application bridge}
-\label{sec:real-spx}
-
-To test the constant and cost interface on observed data, we use a frozen SPX
-option-chain snapshot only as a design matrix; no pricing or no-arbitrage claim
-is made \citep{Gatheral2006,GuyonHenryLabordere2014}.  A deterministic filter
-retains \RealSpxFilteredQuotes{} rows and builds a rational ten-dimensional
-regression.  The unofficial raw rows are not redistributed, so the artifact
-ships frozen derived matrices and a 20-row synthetic panel exercising the same
-map.  In a whitened negative control, the exact baseline needs only
-\RealSpxBaselineCalls{} calls and the charged candidate totals
-\RealSpxColdTotal{} units, breaking even only after \RealSpxBreakEven{} reuses.
-
-Without whitening and with ridge $10^{-4}$, exact leading-minor checks prove
-$I/400\prec Q\prec21I/5$, while integer Rayleigh witnesses give
-$\PositiveSpxConditionLower{}<\kappa(Q)<\PositiveSpxConditionUpper{}$.  With
-$\alpha=17/84$, exact continuation requires \PositiveSpxBaselineCalls{}
-full-panel gradients and the every-tenth-row candidate requires
-\PositiveSpxHybridCalls{}.  A standard-library verifier checks the rational
-sketch identity, curvature matrices, Rayleigh witnesses, and ledger, then
-certifies both stopping crossings with 110-digit directed interval powers of
-$I-\alpha Q$.  Rehashed changes to the candidate, curvature, counts, or ledger
-are rejected.
-
-The candidate adds \PositiveSpxNonexactCost{} nonexact units, for total
-\PositiveSpxCandidateTotal{}, ratio \PositiveSpxCostRatio{}, and cold-start
-slack \PositiveSpxCostSlack{}.  The three-repeat pipeline takes
-\PositiveSpxPipelineSeconds{} seconds and breaks even after
-\PositiveSpxBreakEven{} uses.  These are exact full-model ledger claims, but the
-transcript reveals $(Q,b)$; they are neither short-transcript PEP acceptance nor
-a nonlinear calibration result.
-
-Indeed, hiding $(Q,b)$ and retaining only the candidate, cached gradient,
-$\mu=1/400$, and $L=21/5$ gives merely
-$N_f(x)\geq\PositiveSpxShortBaselineLower{}$ and
-$N_f(y)\leq\PositiveSpxShortHybridUpper{}$, so the marginal screen is
-uncertified and joint enumeration was not attempted.  A frozen 27-point
-ridge/stride/tolerance audit ranges from \SpxSensitivityMinRatio{} to
-\SpxSensitivityMaxRatio{}; full matrices, sensitivity results, and the
-out-of-class SLV stress record remain in the artifact.
+Ancillary finite-family, rational-quadratic, nonlinear, and SPX records remain
+in the artifact as tampering, dependence-loss, and ledger regressions; they are
+not used as additional practical-value claims.
 
 \section{Implementation limits and extensions}
 
-The certificate is exact only relative to what is declared.  If a cheap error
-contract is false, the function lies outside $\mathfrak F(\cT)$ and the claim
-does not apply.  If the physical dimension is smaller than the Gram rank, the
-dimension-free SDP is conservative unless the rank constraint is enforced.
-If no finite distance or residual bound is available, the stopping grid may be
-unbounded.  If certificate computation costs more than the calls it certifies,
-the candidate cannot be accepted after that cost is included; an online return
-to the unchanged baseline still requires the funding condition
-\eqref{eq:fallback}.  The construction in
-\cref{prop:transcript-pipeline} makes $R,D,\delta$ auditable when a gradient and
-$\mu$ are already certified; it does not show that global curvature or interval
-constants are cheap to obtain in every application.  The real-SPX surface in
-\cref{sec:real-spx} supplies such pipelines and charges them.  The whitened
-control fails at cold start, whereas the ill-conditioned surface in
-the positive SPX run pays the full ledger immediately because the
-exact baseline has thousands of calls left.  The positive SPX transcript
-reveals the full rational $(Q,b)$.  The nonquadratic example above shows that a
-genuinely short, non-shift first-order transcript can suffice when the
-certified curvature interval is tight; its realized trajectory spans $\R^2$,
-its natural certified horizon is two, and its exact SDP audit is deliberately
-padded to horizon three.  The full-class example in
-\cref{sec:full-class-joint-only} additionally shows genuine joint-over-marginal
-acceptance, but its radius experiment confirms that this evidence degrades as
-the proposal departs from a gradient step.  A Newton-type proposal requires a
-separately certified residual or a richer interpolation model.  Obtaining
-comparably tight low-cost constants from short transcripts in large nonlinear
-applications remains the principal practical bottleneck.  The rolling
-logistic study in \cref{sec:rolling-logistic} obtains its constants from
-normalized features and explicit proximal curvature; that is a genuine
-short-transcript route, but not evidence that such structure is generic.
+The guarantee is exact only relative to the declared class, transcript, and
+cost model.  A false cheap-oracle contract places the realized function outside
+$\mathfrak F(\cT)$; a missing distance bound can make the grid unbounded; and a
+physical dimension below the Gram rank requires the rank qualification of
+\cref{thm:sdp-exact}.  The interface rejects unsupported nonlinear predicates
+rather than silently relaxing them.  The two short-transcript runners perform
+membership and class checks exactly relative to their stored binary64 inputs;
+uncertainty upstream of those stored values remains outside the guarantee.
 
-The intended operating regime is consequently narrow: high-fidelity calls
-must be expensive black-box operations, proposal and proof work must be
-prepaid or reusable, and the curvature, distance, oracle-contract, and cost
-constants must themselves be certifiable.  The architecture is not
-economically justified for a one-off branch with millisecond gradients, nor
-when obtaining global constants reveals essentially the whole model.  For the
-full-model SPX quadratic, realistic reuse could arise from repeated surfaces
-sharing a fixed feature map and maturity panel, but the present snapshot does
-not establish a production reuse distribution; its result remains a stress
-test of the accounting interface.
+Constant acquisition remains the main application bottleneck.
+\Cref{prop:transcript-pipeline} makes $R,D,\delta$ auditable when a gradient and
+$\mu$ are already certified, but it does not make global curvature cheap.
+Deployment must inflate a measured residual by its error bound and apply
+\cref{prop:radius-error}; the present H6 family certifies through $7/500$ but is
+already uncertified at $2/125$.  UCI and rolling controls have cheaper
+prefilter-only mean cost and zero observed overruns.  The heat experiment adds
+one positive, fully measured ledger, but only under a declared 12-call penalty
+per failed saving at the observed 64 decisions.  Unpenalized break-even needs
+\HeatUnpenalizedAmortizationEpisodes{} compatible decisions; neither threshold
+establishes production frequency.  The intended regime is therefore a repeated, audited PDE or
+calibration pipeline with reusable envelopes and an explicit aversion to
+pointwise cost overruns, not a one-off problem with millisecond gradients.
 
-The rolling logistic simulation lands in the flagship band in
-\RollingLogisticAcceptRate{} of its frozen episodes and quantifies rejected
-proposal cost, but it is not a real repeated workload and its shock range is
-selected to cross that band.  The five-envelope family tests mathematical and
-producer robustness across declared envelopes, not universal empirical
-frequency.  A trust-region or multifidelity model manager may make better
-practical accept/reject choices and already supplies convergence safeguards;
-C2OGate adds only a separately checkable pointwise cost claim when its stronger
-transcript and funding conditions hold.  No experiment here demonstrates that
-it changes a production trust-region decision.
+Computationally, generic $H=15$ and $H=20$ recovery remains
+\emph{uncertified}.  Parameterized cross-cell reuse is implemented and reduces
+H15 peak memory by \BatchedHfifteenMemoryReduction{}, but is
+\BatchedHfifteenWallRatio{} times slower; chordal sparsity, dual-basis reuse,
+and facial reduction remain unimplemented.  The reusable contribution is
+consequently the semantic schema, external-consumer pattern, three-valued
+aggregator, and ledger, not a claim that the producer crosses the exact
+recovery wall.
 
-The exact-shift audit in \cref{tab:scaling} reduces the residual SDP count from
-quadratic to linear in $H$.  The ragged audit in
-\cref{tab:generic-scaling} removes that identity and solves every
-cost-violating cell at $H=20$, but it is a floating-point diagnostic whose
-proof-carrying outcome is \emph{uncertified}.  Acceptance would require
-independently validated dual exclusions for all \GenericPepBadCells{} bad
-cells.  The natural-$H=10$ experiment now supplies such exclusions for all 66
-bad cells of a nonzero-radius transcript, with no prescreen, and the $H=3$
-nonlinear example remains an independent realization cross-check.  This moves
-exact generic recovery from a toy horizon to a moderate one; it does not solve
-the $H=20$ case.  Full attainable-set reconstruction, validated infeasibility
-alternatives, and exact recovery at larger horizons remain computational
-limitations.
-
-Three extensions appear especially worthwhile but are not claimed here.
-First, operator interpolation could couple primal--dual or proximal
-continuations \citep{Bousselmi2024}.  Second, a local active-face transcript
-could condition the PEP after identification, provided the face-stability
-certificate itself is exact.  Third, chordal sparsity and batched validated
-dual reconstruction could make proof-carrying certificates practical at longer
-horizons.  For prescribed low dimension, nuclear-norm surrogates or factorized
-Gram models are possible search devices, but neither gives a safe exclusion
-upper bound without an independently validated rank-constrained certificate;
-developing such a certificate is open.  We do not claim a generic cell-dominance rule: exact stopping cells
-impose different first crossings, and index order alone gives no set inclusion
-between their feasible sets.  Only proved transcript structure, such as the
-shift identity, is used for pruning.  Adaptive step sizes and line searches would additionally
-make each stopping cell depend on the realized step and acceptance history, so
-they require new interpolation variables and coupling constraints rather than
-a mechanical reuse of the fixed-step grid.  Each extension changes the
-interpolation or computational backend and is outside the verified fixed-step
-implementation studied here.
+Extensions to proximal, primal--dual, or active-manifold methods require the
+corresponding exact interpolation or identification certificate
+\citep{Bousselmi2024}.  Adaptive steps additionally make a cell depend on the
+realized acceptance history.  No generic index-dominance pruning rule is
+claimed: only proved transcript identities remove cells.  These are substantive
+new models, not mechanical uses of the present fixed-step verifier.
 
 \section{Conclusion}
 
-C2OGate turns a one-shot proposal-versus-baseline branch decision into a
-proof-carrying computational
-workflow.  The method retains the joint dependence between baseline and
-candidate stopping times, generates only the cost-violating cells, screens
-them with auditable identities, and separates numerical search from the proof
-required for acceptance.  Its consumer also rebuilds the complete finite SDP
-from declared parameters, so neither producer-side coefficient assembly nor a
-stored solver matrix is trusted.  Its three-valued output is deliberate: a witnessed
-bad cell rejects, verified exclusion of every bad cell can accept, and every
-remaining numerical or modeling uncertainty is reported as uncertified.
+C2OGate converts one continuation choice into a three-valued,
+certificate-carrying computation.  It preserves joint stopping dependence,
+reconstructs the SDP outside the numerical producer, and accepts only after
+every cost-violating cell has an exact exclusion.  The $H=6$ infinite-class
+result accepts while sharp marginals reject; a second suite enlarges the
+proposal radius by 40\%, and a nonsharing SymPy implementation plus randomized
+exact differential tests strengthen the trust boundary.  The $H=10$ suite is
+the larger proof-production load.  A generic PEPit-to-rational baseline
+certifies 5/28 H6 cells, quantifying the native representation's recovery
+advantage.  Parameterized H15 reuse reduces memory but not time.  The measured
+heat inverse gives explicit adoption thresholds of
+\HeatAmortizationEpisodes{} risk-adjusted or
+\HeatUnpenalizedAmortizationEpisodes{} unpenalized compatible decisions.
 
-For fixed-step gradient descent on $\cF_{\mu,L}$, the finite-horizon and Gram
-constructions make this workflow exact in the dimension-free setting, with a
-rank qualification for fixed dimension.  The natural-$H=10$ study now covers
-\HtenFamilyProfiles{} envelopes and \HtenFamilyExactCells{} verified
-profile-cell exclusions: \HtenFamilyIndependentCells{} are independently
-recovered across three source envelopes and \HtenFamilyTransportedCells{}
-follow by checked homogeneous transport.  For the balanced source, the
-standard-library consumer checks \HtenDualPivots{} exact positive
-$LDL^\top$ pivots, and an independent SymPy backend confirms the same number
-of positive exact pivots.  Its exact marginal rectangle also accepts,
-at boundary value zero, so this flagship study supports moderate-horizon proof
-production rather than a claim that dependence is always essential.  A
-separate exact ten-cell suite over the full infinite class $\cF_{1/2,1}$
-demonstrates strict joint-over-marginal acceptance.
-Repeated Clarabel/SCS runs, an SCS-to-rational recovery diagnostic, and a
-same-model PEPit comparison expose numerical cost rather than hiding it, while
-the contract-misspecification audit shows that optimistic declarations can
-create false acceptances relative to the full consistency class.
-The rolling proximal-logistic workload additionally exercises the frozen
-$H=10$ proof before full revelation: \RollingLogisticAccepted{} of
-\RollingLogisticEpisodes{} short transcripts accept, the held-out continuation
-audit finds zero violations, and the charged prepaid-proof ratio is
-\RollingLogisticWarmRatio{}.  Its cold ledger is favorable for the reported
-60-second exact-oracle scenario but not for the 10-second scenario.
-
-The generic horizon-20 audit nevertheless remains uncertified rather than
-promoting floating statuses to proofs.  The finite-family study is a
-constructed proxy, and the real-SPX result is a full-model constant-pipeline
-stress test whose short-transcript screen does not accept.  The evidence
-therefore does not establish a real production workload, universal
-acceleration, cheap constant
-acquisition, or scalable exact dual recovery.  It establishes a conservative
-moderate-horizon implementation pattern for making and auditing cost-dominance
-claims when the
-function class, transcript, oracle contract, dimension, funding source, and
-cost units can themselves be certified.
+This is moderate-horizon infrastructure, not a universal accelerator.  Dual
+discovery is heuristic, the consumer is still trusted code, $H=15/20$ recovery
+is uncertified, and no workload establishes production acceptance frequency.
+Within those boundaries, the method provides an exact, replayable way to claim
+pointwise cost dominance when the function class, transcript, funding source,
+and cost units can themselves be certified.
 
 \bibliographystyle{spmpsci}
 \bibliography{references}
@@ -2226,10 +1959,14 @@ approved the submitted manuscript.
 \paragraph{Data availability}
 The submission archive contains the frozen hash-bound JSON records used for
 every reported claim.  These derived records are the self-contained
-reproduction units.  Raw SPX rows are not redistributed because they originate
-from an unofficial third-party market snapshot; the expected source hash and
-the independent data-to-matrix reconstruction procedure are documented.
-A redistributable synthetic raw option panel exercises the complete
+reproduction units.  The UCI WDBC raw file is redistributed under CC BY 4.0
+from the UCI repository (DOI
+\href{https://doi.org/10.24432/C5DW2B}{10.24432/C5DW2B}); its SHA-256 is
+\nolinkurl{d606af411f3e5be8a317a5a8b652b425aaf0ff38ca683d5327ffff94c3695f4a}.
+Raw SPX rows are
+not redistributed because they originate from an unofficial third-party
+market snapshot; that ancillary record is not used for a manuscript acceptance
+claim.  A redistributable synthetic panel exercises the complete
 filter-to-rational-matrix path against frozen exact outputs.  Accordingly, a
 clean checkout supports certificate \emph{replay}, every paper/table integrity
 check, and the synthetic raw-row reconstruction, but not empirical
@@ -2244,8 +1981,12 @@ scripts are publicly available under the MIT License at
 frozen certificate and rebuild the manuscript without the raw market
 snapshot.  The documented \texttt{make check}, \texttt{make verify}, and
 \texttt{make mpc-paper} targets perform the full integrity/tampering suite,
-ten independent exact replays, and metric-bound article reconstruction,
-respectively.
+the complete exact replay set and metric-bound article reconstruction,
+respectively; \texttt{make te-smoke} gives a short flagship-first Technical
+Editor route.  The immutable release corresponding to this submission is
+archived on Zenodo under DOI
+\href{https://doi.org/10.5281/zenodo.21964074}{\nolinkurl{10.5281/zenodo.21964074}}; the
+GitHub repository remains the development record.
 
 \paragraph{Use of generative artificial intelligence}
 OpenAI Codex was used to assist with software development, computational

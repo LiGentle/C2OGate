@@ -35,7 +35,7 @@ def test_frozen_payload_hash_is_self_consistent() -> None:
     recorded = payload.pop("payload_sha256")
     assert sha256(_canonical(payload)).hexdigest() == recorded
     assert recorded == (
-        "8d64b5e68e219176a6143a399af1b9884fda7a045391ff32a11866ef9d4f478c"
+        "5564ce6270e00015d89aec54de1049a29470f94d5bd5afd4b6435737edab7fa5"
     )
 
 

@@ -1,0 +1,26 @@
+name: linux-check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install pinned test environment
+        run: python -m pip install --upgrade pip && python -m pip install -e ".[pep,certificates,dev]"
+      - name: Full integrity and unit suite
+        run: make check
+      - name: Flagship Technical Editor smoke test
+        run: make te-smoke

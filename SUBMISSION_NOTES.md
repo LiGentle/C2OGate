@@ -6,12 +6,12 @@ Full-Length Paper
 
 ## Title
 
-C2OGate: Proof-Carrying Joint Performance Estimation for Certified Branch
-Decisions
+C2OGate: Externally Checkable Joint Performance Estimation for Cost-Dominant
+Continuation Decisions
 
 ## Running title
 
-Proof-Carrying Branch Certification
+Verifiable Continuation Decisions
 
 ## Author and corresponding author
 
@@ -21,38 +21,28 @@ e0622340@u.nus.edu
 
 ## Abstract
 
-We present C2OGate, a proof-carrying method for deciding between two
-continuations after an external mechanism supplies a candidate and an
-auditable error-and-cost contract. Conditioned on a first-order transcript,
-the method couples fixed-step gradient descent from both starts on the same
-unknown smooth strongly convex function and represents every cost-violating
-joint stopping-time cell by a dimension-free Gram SDP. Acceptance requires
-independently verified exclusion of every bad cell; counterexamples reject,
-and incomplete evidence returns uncertified. The consumer rebuilds every SDP
-coefficient from the declared parameters in exact rational arithmetic before
-checking the supplied dual. We prove the finite reduction,
-its fixed-dimension rank qualification, transcript-relative maximality, and
-the possible loss from replacing the joint set by independent marginals. Five
-natural-H=10 envelopes yield 330 exact bad-cell exclusions: 198 are
-independently recovered across three source envelopes and 132 follow by
-checked homogeneous transport. The flagship profile has Gram order at most 24
-and 1,584 exact positive LDL pivots; an independent SymPy rational-arithmetic
-check confirms all 1,584 exact pivots. Its exact marginal rectangle
-also accepts, at boundary value zero. A separate nonzero-radius example over
-the full smooth strongly convex class with mu=1/2 and L=1 is accepted only by
-the joint PEP. Rational certificate construction remains heuristic
-success-or-fail; only independent verification and resulting decisions are
-guaranteed, and the generic H=20 enumeration remains uncertified. The
-deployment ledger separately charges proof construction, envelope acquisition,
-and verification. In a synthetic rolling nonlinear logistic workload, the
-frozen H=10 proof accepts 48 of 256 decisions using only short transcripts;
-post-decision full-model evaluation finds zero accepted violations and a
-prepaid-proof cost ratio of 0.863 after charging every 5% minibatch proposal.
+Consider a continuation decision between a baseline state and a paid proposal.
+Separate worst-case bounds for their remaining stopping times can combine two
+incompatible functions and therefore reject a decision that is safe on every
+single compatible function. C2OGate conditions on the observed first-order
+transcript, enumerates the joint stopping-time cells of the two fixed-step
+gradient continuations, and reduces each cost-violating cell to a Gram
+semidefinite program. A numerical producer may fail, but acceptance requires
+externally checkable rational dual exclusions for every bad cell; a
+standard-library consumer reconstructs all interpolation, stopping, and trace
+coefficients from semantic parameters before checking the dual identities.
+This gives an exact, dimension-free decision whenever cell exclusion is
+complete and returns uncertified otherwise. On the infinite class F_{3/10,1},
+a complete H=6 suite excludes all 28 bad cells with 448 exact LDL pivots and
+accepts, whereas sharp separately conditioned marginals reject. This
+controlled decision reversal is the headline result; exact recovery is
+currently demonstrated only through moderate horizons and remains heuristic
+success-or-fail.
 
 ## Keywords
 
-performance estimation; proof-carrying computation; semidefinite programming;
-certified branch decision; stopping time; evaluation cost
+performance estimation; externally checkable certificate; semidefinite programming;
+continuation decision; stopping time; evaluation cost
 
 ## MSC 2020
 
@@ -72,6 +62,9 @@ optimization, exact verification, and multifidelity optimization.
 4. Software/data file for Technical Editor review:
    `output/c2ogate_mpc_artifact.zip`.
 
+The immutable public release is archived at
+<https://doi.org/10.5281/zenodo.21964074>.
+
 The software/data archive should be classified as software, data, code, or
 ancillary material for technical review, according to the form's available
 file type. It should not be described as an optional narrative supplement: MPC
@@ -84,13 +77,15 @@ or public review repository and provide the access link.
 - Funding: no funds, grants, or other support.
 - Competing interests: none.
 - Author contributions: all roles performed by Jintao Li.
-- Data availability: frozen derived payloads included; raw unofficial SPX rows
+- Data availability: the licensed UCI WDBC raw benchmark and frozen derived
+  payloads are included; raw unofficial SPX rows
   are not redistributed; expected hashes and reconstruction procedure are
   documented; a redistributable synthetic raw-row substitute exercises the
   complete data-to-matrix path.
 - Code availability: source, tests, exact verifiers, and build scripts are
   released under the MIT License at <https://github.com/LiGentle/C2OGate> and
-  included in the technical-review artifact.
+  included in the technical-review artifact; the immutable release is at
+  <https://doi.org/10.5281/zenodo.21964074>.
 - Generative AI: OpenAI Codex assisted with software development,
   computational checking, and drafting; the author reviewed and accepts full
   responsibility.

@@ -1,0 +1,68 @@
+{
+  "declaration": {
+    "base_nonexact_cost_exact_call_units": 0.4,
+    "certificate_budget_exact_call_units": 0.6,
+    "saved_exact_calls_per_accepted_decision": 1.0,
+    "scope": "machine-specific all-in proof cost for the natural-H=6, 28-cell nonzero-radius joint-only suite",
+    "zero_credit_online_rejection_funded": false
+  },
+  "environment": {
+    "certificate_file_sha256": "0bdcde5a1c4819e6c92cff602791789378aa7663cda1b1ede8ceeaf71776845a",
+    "certificate_payload_sha256": "6a4855ee5f84f3264ad7fac9d4c36d2e369fe02d3b45b174df6fb8f3e3aab627",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.11.15 (main, Jun  2 2026, 22:36:57) [Clang 22.1.3 ]",
+    "runner_sha256": "16b1f5744e67d53d2df8f08310186a847120719ef3ea4734be4305c1a9a0a9a9",
+    "verifier_sha256": "9ccfae270ef8f7a02362d09efc542c4d5afeecc49a7fe38fb1ac43f0a8412857"
+  },
+  "measurement": {
+    "median_verification_seconds": 30.247335333377123,
+    "solver_and_rational_recovery_seconds": 50.34437091695145,
+    "total_certificate_seconds": 80.59170625032857,
+    "verification_repeats": 3,
+    "verification_seconds": [
+      29.92073183413595,
+      30.247335333377123,
+      30.950898124836385
+    ]
+  },
+  "payload_sha256": "3dff59ead5ef5c5341fde6273f9bd5c1275a054fe42d5e515cc12ffe6abb072a",
+  "scenarios": [
+    {
+      "certificate_cost_exact_call_units": 805917.0625032857,
+      "exact_oracle_seconds": 0.0001,
+      "minimum_offline_reuses": 1343196,
+      "one_shot_self_financing": false
+    },
+    {
+      "certificate_cost_exact_call_units": 80.59170625032857,
+      "exact_oracle_seconds": 1.0,
+      "minimum_offline_reuses": 135,
+      "one_shot_self_financing": false
+    },
+    {
+      "certificate_cost_exact_call_units": 8.059170625032857,
+      "exact_oracle_seconds": 10.0,
+      "minimum_offline_reuses": 14,
+      "one_shot_self_financing": false
+    },
+    {
+      "certificate_cost_exact_call_units": 1.3431951041721428,
+      "exact_oracle_seconds": 60.0,
+      "minimum_offline_reuses": 3,
+      "one_shot_self_financing": false
+    },
+    {
+      "certificate_cost_exact_call_units": 0.1343195104172143,
+      "exact_oracle_seconds": 600.0,
+      "minimum_offline_reuses": 1,
+      "one_shot_self_financing": true
+    },
+    {
+      "certificate_cost_exact_call_units": 0.022386585069535715,
+      "exact_oracle_seconds": 3600.0,
+      "minimum_offline_reuses": 1,
+      "one_shot_self_financing": true
+    }
+  ],
+  "schema": "c2o-h6-certificate-cost-study-v1"
+}

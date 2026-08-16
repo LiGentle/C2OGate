@@ -1,4 +1,4 @@
-"""Cost-certified two-oracle optimization gates."""
+"""Proof-carrying continuation decisions and exact transcript checks."""
 
 from .core import (
     CountEnvelope,
@@ -14,14 +14,6 @@ from .certificates import (
     smooth_gradient_call_lower_bound,
 )
 from .quadratic import DiagonalQuadratic
-from .active_set import (
-    ActiveRegimeCertificate,
-    box_projection_active_regime,
-    box_projection_candidate_regime,
-    reduced_matrix,
-    soft_threshold_active_regime,
-    soft_threshold_candidate_regime,
-)
 from .costs import (
     AccountedGateDecision,
     CostBreakdown,
@@ -29,25 +21,13 @@ from .costs import (
     cost_accounted_gate,
     productive_certificate_gate,
 )
-from .dynamic_certificates import (
-    BranchPointHessianSchedule,
-    ChartedIterationCertificate,
-    DynamicResidualTube,
-    LipschitzHessianSchedule,
-    branch_point_hessian_schedule_from_gradient,
-    composite_chart_jacobian_lipschitz,
-    contraction_calls_from_residual_upper,
-    dynamic_krylov_envelope,
-    lipschitz_hessian_schedule_from_gradient,
-    nonlinear_model_step_post_residual_upper,
-    sphere_retraction_defect_coefficient,
-)
-from .matrix_certificates import (
-    KrylovResidualTube,
-    MatrixUncertainty,
-    krylov_matrix_uncertainty_envelope,
-    matrix_approximate_newton_post_upper,
-    matrix_uncertainty_progress_factors,
+from .exact_membership import (
+    ExactEnvelopeMembership,
+    binary64_vector,
+    certify_h6_envelope_membership,
+    exact_linear_data_gradient,
+    exact_max_row_squared_norm,
+    rational_squared_norm,
 )
 from .transcript import (
     StoppingPair,
@@ -59,14 +39,16 @@ from .workflow import (
     CellProofStatus,
     GateOutcome,
     ProofCarryingDecision,
+    TranscriptConstraintForm,
+    TranscriptConstraintSpec,
+    TranscriptInterfaceAdmission,
+    certified_branch_workflow,
     proof_carrying_gate,
+    validate_transcript_interface,
 )
 
 __all__ = [
     "AccountedGateDecision",
-    "ActiveRegimeCertificate",
-    "BranchPointHessianSchedule",
-    "ChartedIterationCertificate",
     "CellProof",
     "CellProofStatus",
     "CountEnvelope",
@@ -74,38 +56,30 @@ __all__ = [
     "DiagonalQuadratic",
     "GateDecision",
     "GateOutcome",
-    "KrylovResidualTube",
-    "DynamicResidualTube",
-    "LipschitzHessianSchedule",
-    "MatrixUncertainty",
+    "ExactEnvelopeMembership",
     "ModalCertificate",
     "ProductiveCertificateDecision",
     "ProofCarryingDecision",
     "StoppingPair",
     "TranscriptGateDecision",
-    "box_projection_active_regime",
-    "box_projection_candidate_regime",
-    "branch_point_hessian_schedule_from_gradient",
-    "composite_chart_jacobian_lipschitz",
+    "TranscriptConstraintForm",
+    "TranscriptConstraintSpec",
+    "TranscriptInterfaceAdmission",
+    "binary64_vector",
+    "certify_h6_envelope_membership",
     "contraction_count_envelope",
     "cost_accounted_gate",
-    "contraction_calls_from_residual_upper",
-    "dynamic_krylov_envelope",
-    "krylov_matrix_uncertainty_envelope",
-    "matrix_approximate_newton_post_upper",
-    "matrix_uncertainty_progress_factors",
-    "lipschitz_hessian_schedule_from_gradient",
+    "certified_branch_workflow",
+    "exact_linear_data_gradient",
+    "exact_max_row_squared_norm",
     "modal_approximate_newton_post_upper",
     "modal_gradient_descent_envelope",
-    "nonlinear_model_step_post_residual_upper",
     "productive_certificate_gate",
     "proof_carrying_gate",
-    "reduced_matrix",
+    "rational_squared_norm",
     "relative_modal_certificate",
     "robust_cost_gate",
-    "soft_threshold_active_regime",
-    "soft_threshold_candidate_regime",
     "smooth_gradient_call_lower_bound",
-    "sphere_retraction_defect_coefficient",
     "transcript_optimal_gate",
+    "validate_transcript_interface",
 ]

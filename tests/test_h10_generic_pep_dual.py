@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+from fractions import Fraction
 from hashlib import sha256
 import json
 from pathlib import Path
@@ -69,3 +70,16 @@ def test_h10_recovery_grid_metadata_tampering_is_rejected() -> None:
     certificate["recovery"]["selected_configuration"]["active_threshold"] = "0"
     with pytest.raises(ValueError, match="selected recovery configuration"):
         _verify_certificate(certificate)
+
+
+def test_h10_class_has_exact_quadratic_witness() -> None:
+    # f(t)=t^2/2+(4/5)t, x=0, y=-4/5.  This exact witness is the
+    # nonvacuity argument used in the manuscript; the verifier's additional
+    # 80-digit nonquadratic realization is only a numerical cross-check.
+    gradient = Fraction(4, 5)
+    candidate = -Fraction(4, 5)
+    assert abs(candidate) >= Fraction(79, 100)
+    assert abs(candidate) <= Fraction(81, 100)
+    assert candidate + gradient == 0
+    assert abs(gradient) <= 1
+    assert abs(gradient) > Fraction(2, 3)

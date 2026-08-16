@@ -4,7 +4,11 @@ from c2ogate.workflow import (
     CellProof,
     CellProofStatus,
     GateOutcome,
+    TranscriptConstraintForm,
+    TranscriptConstraintSpec,
+    certified_branch_workflow,
     proof_carrying_gate,
+    validate_transcript_interface,
 )
 
 
@@ -96,3 +100,52 @@ def test_rejects_duplicate_nonbad_and_out_of_horizon_proofs():
             0.5,
             horizon=1,
         )
+
+
+def test_affine_interface_is_admitted_and_exact_lift_must_be_verified():
+    admission = validate_transcript_interface(
+        [
+            TranscriptConstraintSpec(
+                "proposal_contract", TranscriptConstraintForm.AFFINE_GRAM
+            ),
+            TranscriptConstraintSpec(
+                "lifted_relation",
+                TranscriptConstraintForm.EXACT_AFFINE_LIFT,
+                exact_lift_verified=True,
+            ),
+        ]
+    )
+    assert admission.admitted
+    failed = validate_transcript_interface(
+        [
+            TranscriptConstraintSpec(
+                "unverified_lift", TranscriptConstraintForm.EXACT_AFFINE_LIFT
+            )
+        ]
+    )
+    assert not failed.admitted
+    assert failed.rejected_constraints == ("unverified_lift",)
+
+
+def test_nonaffine_interface_fails_closed_before_proof_production():
+    producer_called = False
+
+    def producer():
+        nonlocal producer_called
+        producer_called = True
+        raise AssertionError("proof producer must not run")
+
+    decision = certified_branch_workflow(
+        [
+            TranscriptConstraintSpec(
+                "nonlinear_line_search", TranscriptConstraintForm.NONAFFINE
+            )
+        ],
+        producer,
+        0.5,
+        horizon=2,
+    )
+    assert decision.outcome is GateOutcome.UNCERTIFIED
+    assert not producer_called
+    assert decision.excluded_count == 0
+    assert "before model construction" in decision.reason

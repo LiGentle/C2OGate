@@ -31,11 +31,35 @@ JOINT_ONLY_CERTIFICATE = ROOT / "certificates" / "joint_only_shift_certificate.j
 FULL_CLASS_JOINT_ONLY_CERTIFICATE = (
     ROOT / "certificates" / "full_class_joint_only_pep_dual.json"
 )
+EXACT_SHIFT_JOINT_ONLY_H10 = (
+    ROOT / "certificates" / "exact_shift_joint_only_h10.json"
+)
+H6_JOINT_ONLY_CERTIFICATE = ROOT / "certificates" / "h6_joint_only_pep_dual.json"
+H6_MEDIUM_RADIUS_CERTIFICATE = (
+    ROOT / "certificates" / "h6_medium_radius_pep_dual.json"
+)
+H6_SYMPY_INDEPENDENT = ROOT / "results" / "h6_sympy_independent_consumer.json"
+CONSUMER_DIFFERENTIAL_FUZZ = (
+    ROOT / "results" / "consumer_differential_fuzz.json"
+)
+MEASURED_HEAT_INVERSE = ROOT / "results" / "measured_heat_inverse_benchmark.json"
 SOLVER_BENCHMARK_PAYLOAD = ROOT / "results" / "generic_pep_solver_benchmark.json"
 PEPIT_COMPARISON_PAYLOAD = ROOT / "results" / "pepit_backend_comparison.json"
 ROLLING_LOGISTIC_PAYLOAD = ROOT / "results" / "rolling_logistic_workload.json"
+UCI_WDBC_PAYLOAD = ROOT / "results" / "uci_wdbc_gate_benchmark.json"
+PADDED_MODEL_CROSSCHECK_PAYLOAD = (
+    ROOT / "results" / "padded_model_crosscheck.json"
+)
+H15_SCALING_PAYLOAD = ROOT / "results" / "h15_scaling_diagnostic.json"
+BATCHED_SCALING_PAYLOAD = ROOT / "results" / "batched_parameterized_scaling.json"
+PEPIT_VERIFIED_BASELINE = ROOT / "results" / "pepit_verified_baseline.json"
+JOINT_MARGINAL_CAPABILITY = (
+    ROOT / "results" / "joint_marginal_capability_comparison.json"
+)
+SIGNED_BOUNDARY_AUDIT = ROOT / "results" / "signed_boundary_audit.json"
 CERTIFICATE_COST_PAYLOAD = ROOT / "results" / "certificate_cost_study.json"
 H10_CERTIFICATE_COST_PAYLOAD = ROOT / "results" / "h10_certificate_cost_study.json"
+H6_CERTIFICATE_COST_PAYLOAD = ROOT / "results" / "h6_certificate_cost_study.json"
 SPX_SENSITIVITY_PAYLOAD = ROOT / "results" / "spx_sensitivity_study.json"
 SCS_RECOVERY_PAYLOAD = ROOT / "results" / "scs_recovery_diagnostic.json"
 SYMPY_CROSSCHECK_PAYLOAD = ROOT / "results" / "sympy_exact_crosscheck.json"
@@ -47,6 +71,10 @@ NONLINEAR_PEP_VERIFIER = ROOT / "tools" / "verify_nonlinear_joint_pep_acceptance
 GENERIC_DUAL_VERIFIER = ROOT / "tools" / "verify_generic_nonquadratic_pep_dual.py"
 FULL_CLASS_JOINT_ONLY_VERIFIER = (
     ROOT / "tools" / "verify_full_class_joint_only_pep_dual.py"
+)
+H6_JOINT_ONLY_VERIFIER = ROOT / "tools" / "verify_h6_joint_only_pep_dual.py"
+H6_MEDIUM_RADIUS_VERIFIER = (
+    ROOT / "tools" / "verify_h6_medium_radius_pep_dual.py"
 )
 OUTPUT = ROOT / "paper_mpc" / "generated" / "metrics.tex"
 
@@ -92,13 +120,31 @@ def main() -> None:
     full_class_joint_only_payload = _load_hashed_payload(
         FULL_CLASS_JOINT_ONLY_CERTIFICATE
     )
+    exact_shift_joint_only_payload = _load_hashed_payload(
+        EXACT_SHIFT_JOINT_ONLY_H10
+    )
+    h6_joint_only_payload = _load_hashed_payload(H6_JOINT_ONLY_CERTIFICATE)
+    h6_medium_radius_payload = _load_hashed_payload(H6_MEDIUM_RADIUS_CERTIFICATE)
+    h6_sympy_independent = _load_hashed_payload(H6_SYMPY_INDEPENDENT)
+    consumer_differential_fuzz = _load_hashed_payload(CONSUMER_DIFFERENTIAL_FUZZ)
+    measured_heat_inverse = _load_hashed_payload(MEASURED_HEAT_INVERSE)
     solver_benchmark_payload = _load_hashed_payload(SOLVER_BENCHMARK_PAYLOAD)
     pepit_comparison_payload = _load_hashed_payload(PEPIT_COMPARISON_PAYLOAD)
     rolling_logistic_payload = _load_hashed_payload(ROLLING_LOGISTIC_PAYLOAD)
+    uci_wdbc_payload = _load_hashed_payload(UCI_WDBC_PAYLOAD)
+    padded_crosscheck_payload = _load_hashed_payload(
+        PADDED_MODEL_CROSSCHECK_PAYLOAD
+    )
+    h15_scaling_payload = _load_hashed_payload(H15_SCALING_PAYLOAD)
+    batched_scaling_payload = _load_hashed_payload(BATCHED_SCALING_PAYLOAD)
+    pepit_verified_baseline = _load_hashed_payload(PEPIT_VERIFIED_BASELINE)
+    joint_marginal_capability = _load_hashed_payload(JOINT_MARGINAL_CAPABILITY)
+    signed_boundary_audit = _load_hashed_payload(SIGNED_BOUNDARY_AUDIT)
     certificate_cost_payload = _load_hashed_payload(CERTIFICATE_COST_PAYLOAD)
     h10_certificate_cost_payload = _load_hashed_payload(
         H10_CERTIFICATE_COST_PAYLOAD
     )
+    h6_certificate_cost_payload = _load_hashed_payload(H6_CERTIFICATE_COST_PAYLOAD)
     spx_sensitivity_payload = _load_hashed_payload(SPX_SENSITIVITY_PAYLOAD)
     scs_recovery_payload = _load_hashed_payload(SCS_RECOVERY_PAYLOAD)
     sympy_crosscheck_payload = _load_hashed_payload(SYMPY_CROSSCHECK_PAYLOAD)
@@ -129,8 +175,32 @@ def main() -> None:
     subprocess.run(
         [
             sys.executable,
+            str(H6_MEDIUM_RADIUS_VERIFIER),
+            str(H6_MEDIUM_RADIUS_CERTIFICATE),
+            "--root",
+            str(ROOT),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        [
+            sys.executable,
             str(FULL_CLASS_JOINT_ONLY_VERIFIER),
             str(FULL_CLASS_JOINT_ONLY_CERTIFICATE),
+            "--root",
+            str(ROOT),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    subprocess.run(
+        [
+            sys.executable,
+            str(H6_JOINT_ONLY_VERIFIER),
+            str(H6_JOINT_ONLY_CERTIFICATE),
             "--root",
             str(ROOT),
         ],
@@ -227,6 +297,11 @@ def main() -> None:
         row["exact_oracle_seconds"]: row
         for row in h10_certificate_cost_payload["scenarios"]
     }
+    h6_cost_measurement = h6_certificate_cost_payload["measurement"]
+    h6_cost_scenarios = {
+        row["exact_oracle_seconds"]: row
+        for row in h6_certificate_cost_payload["scenarios"]
+    }
     pde_fixed_seconds = 720.0 + h10_cost_measurement["total_certificate_seconds"]
     pde_break_even = ceil(pde_fixed_seconds / (0.6 * 60.0))
     pde_amortized_at_64 = pde_fixed_seconds / (64.0 * 60.0)
@@ -274,12 +349,29 @@ def main() -> None:
         for row in pepit_comparison_payload["comparison_to_pepit"]
         if row["horizon"] == 10
     )
+    pepit_ratio_by_horizon = {
+        row["horizon"]: row["end_to_end_ratio_c2ogate_over_pepit"]
+        for row in pepit_comparison_payload["comparison_to_pepit"]
+    }
     rolling_summary = rolling_logistic_payload["summary"]
     rolling_config = rolling_logistic_payload["configuration"]
     rolling_cost_scenarios = {
         row["exact_oracle_seconds"]: row
         for row in rolling_logistic_payload["cold_cost_scenarios"]
     }
+    uci_summary = uci_wdbc_payload["summary"]
+    uci_config = uci_wdbc_payload["configuration"]
+    uci_cost_scenarios = {
+        row["exact_oracle_seconds"]: row
+        for row in uci_wdbc_payload["economic_scenarios"]
+    }
+    padded_summary = padded_crosscheck_payload["summary"]
+    h15_run = h15_scaling_payload["run"]
+    batched_run = batched_scaling_payload["batched"]
+    batched_ratios = batched_scaling_payload["ratios"]
+    pepit_verified_summary = pepit_verified_baseline["summary"]
+    joint_marginal_summary = joint_marginal_capability["summary"]
+    signed_boundary_summary = signed_boundary_audit["summary"]
     contract_sensitivity = {
         row["contract_radius"]: row
         for row in full_class_joint_only_payload[
@@ -525,6 +617,137 @@ def main() -> None:
         "FullClassJointPayloadHash": full_class_joint_only_payload[
             "payload_sha256"
         ],
+        "HsixJointCertificates": str(
+            h6_joint_only_payload["summary"]["certificate_count"]
+        ),
+        "HsixJointPivots": str(
+            h6_joint_only_payload["summary"]["positive_ldl_pivot_count"]
+        ),
+        "HsixJointUpper": (
+            f"{float(Fraction(h6_joint_only_payload['summary']['maximum_certified_upper_bound'])):.6f}"
+        ),
+        "HsixJointGram": str(h6_joint_only_payload["summary"]["maximum_gram_order"]),
+        "HsixJointInequalities": str(
+            h6_joint_only_payload["summary"]["maximum_inequality_count"]
+        ),
+        "HsixJointRectangleValue": h6_joint_only_payload["marginal_certificate"][
+            "rectangle_certificate_value"
+        ],
+        "HsixJointGenerationSeconds": (
+            f"{h6_joint_only_payload['summary']['generation_wall_seconds']:.1f}"
+        ),
+        "HsixJointPayloadHash": h6_joint_only_payload["payload_sha256"],
+        "HsixMediumRadius": _tex_fraction(
+            h6_medium_radius_payload["parameters"]["contract_radius"]
+        ),
+        "HsixMediumUpper": (
+            f"{float(Fraction(h6_medium_radius_payload['summary']['maximum_certified_upper_bound'])):.7f}"
+        ),
+        "HsixMediumCertificates": str(
+            h6_medium_radius_payload["summary"]["certificate_count"]
+        ),
+        "HsixMediumPivots": str(
+            h6_medium_radius_payload["summary"]["positive_ldl_pivot_count"]
+        ),
+        "HsixIndependentSympyCells": str(
+            h6_sympy_independent["certificate_count"]
+        ),
+        "HsixIndependentSympyPivots": str(
+            h6_sympy_independent["positive_ldl_pivot_count"]
+        ),
+        "HsixIndependentSympySeconds": (
+            f"{h6_sympy_independent['wall_seconds']:.2f}"
+        ),
+        "ConsumerFuzzCases": str(consumer_differential_fuzz["case_count"]),
+        "ConsumerFuzzComparisons": (
+            f"{consumer_differential_fuzz['exact_scalar_comparisons']:,}"
+        ),
+        "JointMarginalTranscriptCount": str(
+            joint_marginal_summary["transcript_count"]
+        ),
+        "JointMarginalJointOnlyCount": str(
+            joint_marginal_summary["joint_only_accept_count"]
+        ),
+        "JointMarginalBothCount": str(
+            joint_marginal_summary["both_accept_count"]
+        ),
+        "JointMarginalPayloadHash": joint_marginal_capability["payload_sha256"],
+        "SignedBoundaryCells": str(signed_boundary_summary["cell_count"]),
+        "SignedBoundaryExactZero": str(signed_boundary_summary["exact_zero_count"]),
+        "SignedBoundaryFloatingNearZero": str(
+            signed_boundary_summary["floating_near_zero_count"]
+        ),
+        "SignedBoundaryWorkloadAccepted": str(
+            signed_boundary_summary["accepted_workload_transcript_count"]
+        ),
+        "SignedBoundaryWorkloadZero": str(
+            signed_boundary_summary["accepted_workload_zero_boundary_count"]
+        ),
+        "SignedBoundaryPayloadHash": signed_boundary_audit["payload_sha256"],
+        "HeatEpisodes": str(measured_heat_inverse["configuration"]["episode_count"]),
+        "HeatAccepted": str(measured_heat_inverse["summary"]["accepted"]),
+        "HeatProtected": str(
+            measured_heat_inverse["summary"]["prefilter_nonimproving_branches"]
+        ),
+        "HeatExactMedianSeconds": (
+            f"{measured_heat_inverse['timing_seconds']['exact_oracle']['median']:.3f}"
+        ),
+        "HeatCheapMedianSeconds": (
+            f"{measured_heat_inverse['timing_seconds']['cheap_oracle']['median']:.6f}"
+        ),
+        "HeatCertificateUnits": (
+            f"{measured_heat_inverse['ledger_exact_call_units']['certificate']:.1f}"
+        ),
+        "HeatColdGateUnits": (
+            f"{measured_heat_inverse['ledger_exact_call_units']['gate_cold_including_certificate']:.1f}"
+        ),
+        "HeatRiskPrefilterUnits": (
+            f"{measured_heat_inverse['ledger_exact_call_units']['prefilter_risk_adjusted']:.1f}"
+        ),
+        "HeatGateRiskRatio": (
+            f"{measured_heat_inverse['ledger_exact_call_units']['gate_to_risk_adjusted_prefilter_ratio']:.3f}"
+        ),
+        "HeatBreakEvenPenalty": (
+            f"{measured_heat_inverse['ledger_exact_call_units']['break_even_risk_penalty_per_overrun']:.2f}"
+        ),
+        "HeatAmortizationEpisodes": str(
+            measured_heat_inverse["summary"][
+                "amortization_episode_threshold_against_risk_adjusted_prefilter"
+            ]
+        ),
+        "HeatUnpenalizedAmortizationEpisodes": str(
+            measured_heat_inverse["summary"][
+                "amortization_episode_threshold_against_unpenalized_baseline"
+            ]
+        ),
+        "HeatRejected": str(measured_heat_inverse["summary"]["rejected"]),
+        "HeatUncertified": str(
+            measured_heat_inverse["summary"]["uncertified_by_contract"]
+        ),
+        "ShiftJointHorizon": str(
+            exact_shift_joint_only_payload["combinatorics"]["horizon"]
+        ),
+        "ShiftJointNominalCells": str(
+            exact_shift_joint_only_payload["combinatorics"][
+                "nominal_joint_cells"
+            ]
+        ),
+        "ShiftJointBadCells": str(
+            exact_shift_joint_only_payload["combinatorics"][
+                "cost_violating_cells"
+            ]
+        ),
+        "ShiftJointExcludedCells": str(
+            exact_shift_joint_only_payload["combinatorics"][
+                "structurally_excluded_cells"
+            ]
+        ),
+        "ShiftJointRectangleLower": exact_shift_joint_only_payload[
+            "marginal_rectangle"
+        ]["certificate_value_lower_bound"],
+        "ShiftJointPayloadHash": exact_shift_joint_only_payload[
+            "payload_sha256"
+        ],
         "FullClassMarginZero": (
             f"{contract_sensitivity['0']['maximum_floating_signed_margin']:.6f}"
         ),
@@ -578,6 +801,8 @@ def main() -> None:
         "PepitHtenEndToEndRatio": (
             f"{pepit_h10_comparison['end_to_end_ratio_c2ogate_over_pepit']:.2f}"
         ),
+        "PepitHtwoEndToEndRatio": f"{pepit_ratio_by_horizon[2]:.2f}",
+        "PepitHsixEndToEndRatio": f"{pepit_ratio_by_horizon[6]:.2f}",
         "PepitHtenExtraWall": (
             f"{pepit_h10_comparison['median_extra_seconds_c2ogate_minus_pepit']['wall_seconds']:.2f}"
         ),
@@ -602,6 +827,11 @@ def main() -> None:
             rolling_config["minibatch_fraction"]
         ),
         "RollingLogisticAccepted": str(rolling_summary["accepted_episode_count"]),
+        "RollingLogisticRejected": str(rolling_summary["rejected_episode_count"]),
+        "RollingLogisticUncertified": str(
+            rolling_summary["uncertified_episode_count"]
+        ),
+        "RollingLogisticAttempts": str(rolling_summary["proposal_attempt_count"]),
         "RollingLogisticAcceptRate": _pct(rolling_summary["acceptance_rate"]),
         "RollingLogisticViolations": str(
             rolling_summary["accepted_safety_violation_count"]
@@ -619,6 +849,33 @@ def main() -> None:
         "RollingLogisticWarmRatio": f"{rolling_summary['warm_cost_ratio']:.3f}",
         "RollingLogisticWarmSaved": (
             f"{rolling_summary['warm_net_saved_exact_call_units']:.1f}"
+        ),
+        "RollingLogisticMarginalRatio": (
+            f"{rolling_summary['marginal_gate_cost_ratio']:.3f}"
+        ),
+        "RollingLogisticGreedyAccepted": str(
+            rolling_summary["greedy_prefilter_accept_count"]
+        ),
+        "RollingLogisticGreedyRatio": (
+            f"{rolling_summary['greedy_prefilter_cost_ratio']:.3f}"
+        ),
+        "RollingLogisticGreedyNonimproving": str(
+            rolling_summary["greedy_prefilter_candidate_nonimprovement_count"]
+        ),
+        "RollingLogisticGreedyOverruns": str(
+            rolling_summary["greedy_prefilter_pointwise_overrun_count"]
+        ),
+        "RollingLogisticAlwaysRatio": (
+            f"{rolling_summary['always_query_cost_ratio']:.3f}"
+        ),
+        "RollingLogisticAlwaysOverruns": str(
+            rolling_summary["always_query_pointwise_overrun_count"]
+        ),
+        "RollingLogisticRiskPenalty": (
+            f"{rolling_summary['always_query_risk_break_even_penalty_exact_units_per_overrun']:.2f}"
+        ),
+        "RollingLogisticExactMembershipCount": str(
+            rolling_summary["exact_membership_decision_count"]
         ),
         "RollingLogisticBreakEvenTen": str(
             rolling_cost_scenarios[10.0]["break_even_episode_count"]
@@ -639,6 +896,101 @@ def main() -> None:
             f"{rolling_cost_scenarios[600.0]['observed_batch_all_in_cost_ratio']:.3f}"
         ),
         "RollingLogisticPayloadHash": rolling_logistic_payload["payload_sha256"],
+        "UciWdbcEpisodes": str(uci_config["episode_count"]),
+        "UciWdbcRows": str(uci_config["row_count"]),
+        "UciWdbcDimension": str(uci_config["dimension"]),
+        "UciWdbcSketchPercent": _pct(uci_config["sketch_fraction"]),
+        "UciWdbcAttempts": str(uci_summary["proposal_attempt_count"]),
+        "UciWdbcAccepted": str(uci_summary["joint_accept_count"]),
+        "UciWdbcRejected": str(uci_summary["joint_reject_count"]),
+        "UciWdbcUncertified": str(uci_summary["joint_uncertified_count"]),
+        "UciWdbcViolations": str(uci_summary["accepted_violation_count"]),
+        "UciWdbcMarginalAccepted": str(uci_summary["marginal_accept_count"]),
+        "UciWdbcBaselineCalls": str(uci_summary["baseline_exact_calls"]),
+        "UciWdbcGatedCalls": str(uci_summary["gated_exact_calls"]),
+        "UciWdbcWarmRatio": f"{uci_summary['warm_cost_ratio']:.3f}",
+        "UciWdbcMeasuredWarmRatio": (
+            f"{uci_summary['measured_time_warm_cost_ratio']:.3f}"
+        ),
+        "UciWdbcMarginalRatio": f"{uci_summary['marginal_cost_ratio']:.3f}",
+        "UciWdbcGreedyAccepted": str(
+            uci_summary["greedy_prefilter_accept_count"]
+        ),
+        "UciWdbcGreedyRatio": (
+            f"{uci_summary['greedy_prefilter_cost_ratio']:.3f}"
+        ),
+        "UciWdbcGreedyMeasuredRatio": (
+            f"{uci_summary['greedy_prefilter_measured_time_cost_ratio']:.3f}"
+        ),
+        "UciWdbcGreedyNonimproving": str(
+            uci_summary["greedy_prefilter_candidate_nonimprovement_count"]
+        ),
+        "UciWdbcGreedyOverruns": str(
+            uci_summary["greedy_prefilter_pointwise_overrun_count"]
+        ),
+        "UciWdbcAlwaysRatio": f"{uci_summary['always_query_cost_ratio']:.3f}",
+        "UciWdbcAlwaysOverruns": str(
+            uci_summary["always_query_pointwise_overrun_count"]
+        ),
+        "UciWdbcRiskPenalty": (
+            f"{uci_summary['always_query_risk_break_even_penalty_exact_units_per_overrun']:.2f}"
+        ),
+        "UciWdbcExactMembershipCount": str(
+            uci_summary["exact_membership_decision_count"]
+        ),
+        "UciWdbcProposalMeasuredRatio": (
+            f"{uci_summary['measured_proposal_exact_unit_ratio']:.3f}"
+        ),
+        "UciWdbcBreakEvenSixty": str(
+            uci_cost_scenarios[60.0]["break_even_episodes"]
+        ),
+        "UciWdbcColdRatioSixty": (
+            f"{uci_cost_scenarios[60.0]['observed_batch_all_in_ratio']:.3f}"
+        ),
+        "UciWdbcDataHash": uci_wdbc_payload["evidence"]["data_sha256"],
+        "UciWdbcPayloadHash": uci_wdbc_payload["payload_sha256"],
+        "PaddedCrosscheckSuites": str(padded_summary["suite_count"]),
+        "PaddedCrosscheckCells": str(padded_summary["cell_count"]),
+        "PaddedCrosscheckMaxDifference": (
+            f"{padded_summary['maximum_absolute_difference']:.3e}"
+        ),
+        "PaddedCrosscheckPayloadHash": (
+            padded_crosscheck_payload["payload_sha256"]
+        ),
+        "HfifteenCells": str(h15_run["bad_cell_count"]),
+        "HfifteenWallSeconds": f"{h15_run['wall_seconds']:.1f}",
+        "HfifteenPeakRss": f"{h15_run['peak_rss_mib']:.1f}",
+        "HfifteenMaxGram": str(h15_run["maximum_gram_order"]),
+        "HfifteenMaxConstraints": str(h15_run["maximum_constraint_count"]),
+        "HfifteenOptimal": str(h15_run["status_counts"]["optimal"]),
+        "HfifteenInaccurate": str(
+            h15_run["status_counts"]["optimal_inaccurate"]
+        ),
+        "HfifteenPayloadHash": h15_scaling_payload["payload_sha256"],
+        "BatchedHfifteenCells": str(batched_run["cell_count"]),
+        "BatchedHfifteenWallSeconds": f"{batched_run['enumeration_wall_seconds']:.1f}",
+        "BatchedHfifteenPeakRss": f"{batched_run['peak_rss_mib']:.1f}",
+        "BatchedHfifteenWallRatio": f"{batched_ratios['batched_over_ragged_wall']:.2f}",
+        "BatchedHfifteenRssRatio": f"{batched_ratios['batched_over_ragged_peak_rss']:.3f}",
+        "BatchedHfifteenMemoryReduction": (
+            f"{100.0 * (1.0 - batched_ratios['batched_over_ragged_peak_rss']):.1f}\\%"
+        ),
+        "BatchedHfifteenMaxDifference": (
+            f"{batched_run['maximum_sample_margin_difference']:.2e}"
+        ),
+        "BatchedHfifteenPayloadHash": batched_scaling_payload["payload_sha256"],
+        "PepitVerifiedAttempted": str(
+            pepit_verified_summary["attempted_cell_count"]
+        ),
+        "PepitVerifiedCells": str(pepit_verified_summary["certificate_count"]),
+        "PepitVerifiedUncertified": str(
+            pepit_verified_summary["uncertified_cell_count"]
+        ),
+        "PepitVerifiedPivots": str(
+            pepit_verified_summary["positive_ldl_pivot_count"]
+        ),
+        "PepitVerifiedSeconds": f"{pepit_verified_summary['generation_wall_seconds']:.1f}",
+        "PepitVerifiedPayloadHash": pepit_verified_baseline["payload_sha256"],
         "MisspecTenFalseConditional": _pct(
             misspecification["0.90"]["false_accept_rate_conditional_on_accept"]
         ),
@@ -738,6 +1090,36 @@ def main() -> None:
             h10_cost_scenarios[3600.0]["minimum_offline_reuses"]
         ),
         "HtenCertificateCostPayloadHash": h10_certificate_cost_payload[
+            "payload_sha256"
+        ],
+        "HsixCertificateSearchSeconds": (
+            f"{h6_cost_measurement['solver_and_rational_recovery_seconds']:.1f}"
+        ),
+        "HsixCertificateVerifySeconds": (
+            f"{h6_cost_measurement['median_verification_seconds']:.1f}"
+        ),
+        "HsixCertificateVerifyRepeats": str(
+            h6_cost_measurement["verification_repeats"]
+        ),
+        "HsixCertificateTotalSeconds": (
+            f"{h6_cost_measurement['total_certificate_seconds']:.1f}"
+        ),
+        "HsixCertificateBreakEvenOneSecond": str(
+            h6_cost_scenarios[1.0]["minimum_offline_reuses"]
+        ),
+        "HsixCertificateBreakEvenTenSeconds": str(
+            h6_cost_scenarios[10.0]["minimum_offline_reuses"]
+        ),
+        "HsixCertificateBreakEvenSixtySeconds": str(
+            h6_cost_scenarios[60.0]["minimum_offline_reuses"]
+        ),
+        "HsixCertificateBreakEvenSixHundredSeconds": str(
+            h6_cost_scenarios[600.0]["minimum_offline_reuses"]
+        ),
+        "HsixCertificateBreakEvenHour": str(
+            h6_cost_scenarios[3600.0]["minimum_offline_reuses"]
+        ),
+        "HsixCertificateCostPayloadHash": h6_certificate_cost_payload[
             "payload_sha256"
         ],
         "PdeIllustrationBreakEven": str(pde_break_even),

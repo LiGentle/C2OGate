@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+from collections.abc import Callable
 from typing import Iterable
 
 
@@ -26,6 +27,43 @@ class CellProofStatus(str, Enum):
     EXCLUDED = "excluded"
     ATTAINABLE = "attainable"
     UNCERTIFIED = "uncertified"
+
+
+class TranscriptConstraintForm(str, Enum):
+    """Representation exposed by one transcript constraint to the PEP layer."""
+
+    AFFINE_GRAM = "affine_gram"
+    EXACT_AFFINE_LIFT = "exact_affine_lift"
+    NONAFFINE = "nonaffine"
+
+
+@dataclass(frozen=True)
+class TranscriptConstraintSpec:
+    """Machine-checkable interface declaration for one transcript constraint.
+
+    ``AFFINE_GRAM`` constraints must have exact rational coefficients in the
+    sampled function values and Gram entries.  ``EXACT_AFFINE_LIFT`` is
+    admitted only when the caller also supplies an independently verified
+    exact lifting.  All other nonlinear predicates fail closed.
+    """
+
+    name: str
+    form: TranscriptConstraintForm
+    exact_coefficients: bool = True
+    exact_lift_verified: bool = False
+
+    def __post_init__(self) -> None:
+        if not self.name.strip():
+            raise ValueError("transcript constraint name cannot be empty")
+
+
+@dataclass(frozen=True)
+class TranscriptInterfaceAdmission:
+    """Pre-solver admission decision for a transcript interface."""
+
+    admitted: bool
+    reason: str
+    rejected_constraints: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -59,6 +97,43 @@ class ProofCarryingDecision:
     cost_exact_units: float
     minimum_saved_calls: int
     horizon: int
+
+
+def validate_transcript_interface(
+    constraints: Iterable[TranscriptConstraintSpec],
+) -> TranscriptInterfaceAdmission:
+    """Admit only exactly represented affine Gram/function-value constraints.
+
+    This check belongs before numerical model construction.  It never drops an
+    unsupported predicate: a nonaffine relation, inexact coefficient set, or
+    unverified lifting rejects the interface and leaves the continuation decision
+    ``UNCERTIFIED``.
+    """
+
+    rejected: list[str] = []
+    for constraint in constraints:
+        affine = constraint.form is TranscriptConstraintForm.AFFINE_GRAM
+        lifted = (
+            constraint.form is TranscriptConstraintForm.EXACT_AFFINE_LIFT
+            and constraint.exact_lift_verified
+        )
+        if not constraint.exact_coefficients or not (affine or lifted):
+            rejected.append(constraint.name)
+    names = tuple(rejected)
+    if names:
+        return TranscriptInterfaceAdmission(
+            admitted=False,
+            reason=(
+                "transcript interface rejected before model construction: "
+                "unsupported or nonexact constraint(s): " + ", ".join(names)
+            ),
+            rejected_constraints=names,
+        )
+    return TranscriptInterfaceAdmission(
+        admitted=True,
+        reason="every transcript constraint has an exact affine representation",
+        rejected_constraints=(),
+    )
 
 
 def _is_bad_cell(
@@ -184,4 +259,60 @@ def proof_carrying_gate(
         cost_exact_units=float(cost_exact_units),
         minimum_saved_calls=minimum_saved_calls,
         horizon=horizon,
+    )
+
+
+def certified_branch_workflow(
+    interface_constraints: Iterable[TranscriptConstraintSpec],
+    proof_producer: Callable[[], Iterable[CellProof]],
+    cost_exact_units: float,
+    *,
+    minimum_saved_calls: int = 1,
+    horizon: int,
+    cost_ledger_verified: bool = True,
+) -> ProofCarryingDecision:
+    """Run the proof producer only after the transcript passes preflight.
+
+    The callback boundary makes the fail-closed path observable: unsupported
+    nonaffine input returns ``UNCERTIFIED`` without constructing or solving an
+    SDP.  ``REJECT`` remains reserved for an independently verified attainable
+    bad cell.
+    """
+
+    if cost_exact_units < 0.0:
+        raise ValueError("cost_exact_units must be nonnegative")
+    if minimum_saved_calls < 0:
+        raise ValueError("minimum_saved_calls must be nonnegative")
+    if horizon < 0:
+        raise ValueError("horizon must be nonnegative")
+    admission = validate_transcript_interface(interface_constraints)
+    if not admission.admitted:
+        required = {
+            (baseline, candidate)
+            for baseline in range(horizon + 1)
+            for candidate in range(horizon + 1)
+            if _is_bad_cell(
+                baseline,
+                candidate,
+                cost_exact_units=cost_exact_units,
+                minimum_saved_calls=minimum_saved_calls,
+            )
+        }
+        return ProofCarryingDecision(
+            outcome=GateOutcome.UNCERTIFIED,
+            reason=admission.reason,
+            bad_cell_count=len(required),
+            excluded_count=0,
+            witnessed_count=0,
+            uncertified_count=len(required) + 1,
+            cost_exact_units=float(cost_exact_units),
+            minimum_saved_calls=minimum_saved_calls,
+            horizon=horizon,
+        )
+    return proof_carrying_gate(
+        proof_producer(),
+        cost_exact_units,
+        minimum_saved_calls=minimum_saved_calls,
+        horizon=horizon,
+        cost_ledger_verified=cost_ledger_verified,
     )

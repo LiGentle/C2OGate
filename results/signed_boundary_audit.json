@@ -1,0 +1,81 @@
+{
+  "definition": {
+    "exact_boundary": "verified rational dual upper bound equals zero",
+    "floating_near_zero_threshold": 1e-08
+  },
+  "payload_sha256": "7305decd30403031ba777d747df0de0f078709a6abf629a29cd15a94c0343028",
+  "schema": "c2o-signed-boundary-audit-v1",
+  "suite_rows": [
+    {
+      "cell_count": 10,
+      "exact_negative_count": 10,
+      "exact_zero_count": 0,
+      "floating_near_zero_count": 0,
+      "maximum_exact_upper_bound": "-124642979316057/15815699155300000",
+      "source_payload_sha256": "4015676b7a618afadb12f733808902146a210ad3cce1c6ca3e5c8466ced3c9fc",
+      "suite": "generic-nonquadratic-H3"
+    },
+    {
+      "cell_count": 10,
+      "exact_negative_count": 10,
+      "exact_zero_count": 0,
+      "floating_near_zero_count": 0,
+      "maximum_exact_upper_bound": "-3525849803435856597/1744020191709849100000",
+      "source_payload_sha256": "9848dac60c670d6ac9f3f2ca3ad57503ae75d9ac43da09b21b7cdd66d8e7acda",
+      "suite": "full-class-H3"
+    },
+    {
+      "cell_count": 28,
+      "exact_negative_count": 28,
+      "exact_zero_count": 0,
+      "floating_near_zero_count": 0,
+      "maximum_exact_upper_bound": "-1825268631621349/8639107405739850000",
+      "source_payload_sha256": "6a4855ee5f84f3264ad7fac9d4c36d2e369fe02d3b45b174df6fb8f3e3aab627",
+      "suite": "nonzero-radius-H6"
+    },
+    {
+      "cell_count": 28,
+      "exact_negative_count": 28,
+      "exact_zero_count": 0,
+      "floating_near_zero_count": 0,
+      "maximum_exact_upper_bound": "-2504037007268720461/13482958999877876000000",
+      "source_payload_sha256": "1968a4b46a7ba1b48a8cb08975025d1630ce9c725546e523e44f89cf253d5e7b",
+      "suite": "wider-radius-H6"
+    },
+    {
+      "cell_count": 66,
+      "exact_negative_count": 66,
+      "exact_zero_count": 0,
+      "floating_near_zero_count": 0,
+      "maximum_exact_upper_bound": "-2693592609075017/86428512490950000",
+      "source_payload_sha256": "657a8b91d025ab66d610251981e3d1e0604baea6385f1682c640f864c616700f",
+      "suite": "stress-H10"
+    }
+  ],
+  "summary": {
+    "accepted_workload_transcript_count": 46,
+    "accepted_workload_zero_boundary_count": 0,
+    "cell_count": 142,
+    "exact_zero_count": 0,
+    "floating_near_zero_count": 0,
+    "suite_count": 5
+  },
+  "workload_rows": [
+    {
+      "accepted_transcript_count": 28,
+      "accepted_transcripts_using_zero_boundary_suite": 0,
+      "attempted_transcript_count": 45,
+      "qualification": "every acceptance reuses the strict nonzero-radius H=6 suite; nonmembers are uncertified before cell replay",
+      "source_payload_sha256": "79b294541e83794ac8305ec8e4213633d898f56d113e880e170a1d02949eca72",
+      "workload": "UCI-WDBC"
+    },
+    {
+      "accepted_transcript_count": 18,
+      "accepted_transcripts_using_zero_boundary_suite": 0,
+      "attempted_transcript_count": 30,
+      "qualification": "every acceptance reuses the strict nonzero-radius H=6 suite; nonmembers are uncertified before cell replay",
+      "source_payload_sha256": "a4bb72c3e707b302538bd58b92fb2f97dd801281581af03691cfcec193834d97",
+      "workload": "rolling-logistic"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 \documentclass[10pt]{letter}
 
-\usepackage[letterpaper,margin=0.65in]{geometry}
+\usepackage[letterpaper,margin=0.78in]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{microtype}
@@ -8,17 +8,16 @@
 \usepackage{parskip}
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.28em}
+\setlength{\parskip}{0.38em}
 \pagestyle{empty}
 
 \begin{document}
-\fontsize{9.3}{10.8}\selectfont
 
 \begin{flushright}
 Jintao Li\\
 NUS (Chongqing) Research Institute\\
 \href{mailto:e0622340@u.nus.edu}{e0622340@u.nus.edu}\\[0.4em]
-August 15, 2026
+August 16, 2026
 \end{flushright}
 
 Editor-in-Chief and Area Editors\\
@@ -27,63 +26,73 @@ Mathematical Optimization Society and Springer Nature
 
 Dear Editors,
 
-I am pleased to submit the manuscript
-``C2OGate: Proof-Carrying Joint Performance Estimation for Certified Branch
-Decisions'' for consideration in \textit{Mathematical Programming Computation}.
+I am pleased to submit ``C2OGate: Externally Checkable Joint Performance Estimation
+for Cost-Dominant Continuation Decisions'' for consideration as a Full-Length
+Paper in \textit{Mathematical Programming Computation}.
 
-The manuscript presents a proof-carrying architecture for one certified branch
-decision. Given a proposed state and an auditable error-and-cost contract,
-C2OGate couples two fixed-step gradient continuations on the same unknown
-smooth strongly convex function, enumerates their joint stopping-time cells,
-and reduces every cost-violating cell to a Gram SDP. Verified exclusions can
-accept, an attainable bad cell rejects, and every unresolved status returns
-\emph{uncertified}. The paper proves the finite-horizon and exact
-dimension-free reductions, states the fixed-dimension rank qualification, and
-quantifies the loss from replacing joint stopping times by separate marginals.
+The manuscript's central contribution is computational: a numerical producer
+searches for semidefinite exclusions of cost-violating joint stopping-time
+cells, while a separate standard-library consumer reconstructs every SDP
+coefficient from semantic parameters using exact rational arithmetic.  The
+consumer then checks multiplier signs, stationarity, the objective identity,
+and positive rational $LDL^\top$ pivots.  Acceptance requires a verified
+exclusion for every bad cell; a witnessed bad cell rejects, and every missing
+or invalid record is \emph{uncertified}.  Thus neither solver status nor stored
+producer matrices are trusted.
 
-The flagship natural-$H=10$ study covers five nonzero-radius envelopes and 330
-verified profile-cell exclusions: 198 rational duals are recovered
-independently and 132 follow by checked homogeneous transport. For the balanced
-source, a standard-library verifier accepts no stored SDP matrices; it rebuilds
-every interpolation, transcript, stopping, margin, anchor, and trace
-coefficient from parameters in exact rational arithmetic, then checks
-stationarity, objectives, slack matrices, and 1,584 positive $LDL^\top$ pivots.
-Thus both the numerical solver and producer-side coefficient assembly are
-outside the trusted boundary. Rational recovery is explicitly heuristic
-success-or-fail, and the generic $H=20$ study remains \emph{uncertified}.
+The horizon-six flagship is an infinite-class, nonzero-radius case in which 28
+rational duals and 448 exact pivots make the joint rule accept while sharp
+conditioned marginals reject.  A controlled five-transcript comparison holds
+the class and transcript fixed: the joint and marginal decisions differ on
+four rows and agree on one retained control.  A second complete 28-cell suite remains strict
+after a 40\% enlargement of the proposal radius.  A nonsharing SymPy consumer
+reconstructs all flagship coefficients and factorizations without importing
+the producer or the standard-library verifier; a deterministic differential
+fuzz audit compares 1,956,318 exact scalar coefficients across 32 legal
+parameter/cell instances.  A horizon-ten suite supplies the larger
+proof-production stress.  Dense horizon-fifteen and horizon-twenty attempts
+remain uncertified.  A parameterized H15 implementation reuses one canonical
+model across all 136 cells and reduces peak memory by 66.4\%, although it is
+3.46 times slower.  Rational discovery is explicitly heuristic
+success-or-fail; exact verification is the guaranteed component.
 
-The revision also addresses the relationship to PEPit directly. PEPit 0.5.1
-encodes the same cells and is faster in the matched experiment. The reported
-$1.54\times$ gap is end-to-end, with Python assembly, CVXPY canonicalization,
-Clarabel kernel time, and residual overhead separated. The payload records the
-pinned distribution, installer, and public source metadata. C2OGate does not
-use PEPit as its acceptance boundary because the independent consumer requires
-stable named rational rows without importing PEPit, CVXPY, or a solver; a
-future PEPit producer adapter could emit the same proof schema.
+The relationship to PEPit is evaluated rather than asserted.  PEPit 0.5.1 is
+the faster floating modeling front end in matched tests.  I implemented an
+adapter that maps its Clarabel duals into the same rational recovery and exact
+consumer: it certifies 5 of 28 H6 cells, whereas the native named-row producer
+certifies 28 of 28.  A separate PEPit builder reconstructs nine complete padded
+cells at horizons 3, 6, and 10.  The manuscript therefore quantifies both the
+generic front end's speed advantage and the domain-specific representation's
+recovery advantage.
 
-To exercise the reusable proof on a nonlinear short-transcript workload, the
-manuscript includes 256 rolling proximal-logistic calibration episodes with
-40,000 normalized records and a charged 5\% minibatch proposal. Before seeing
-any candidate or future full-data gradient, the gate accepts 48 episodes.
-Held-out continuation finds zero accepted violations and 48 exact-call
-savings. Charging every minibatch gives a prepaid-proof ratio of 0.863; the
-cold ledger gives ratio 0.951 and break-even 165 episodes for a 60-second exact
-oracle, but ratio 1.392 at 10 seconds. We identify this as a realistic
-synthetic workload whose shock distribution crosses the certified envelope,
-not as real production evidence or a way to finance a rejected first decision.
+The reusable horizon-six certificate is also charged against a measured
+periodic heat-inverse workload.  One exact $640^2$ forward--adjoint oracle takes
+0.241 seconds in the frozen run.  Across 64 decisions, the gate accepts 32
+resolved proposals and marks 32 underresolved proposals uncertified.  After the
+entire frozen certificate cost and an explicit 12-call penalty per failed
+pointwise saving are charged, its cold risk-adjusted ratio is 0.881 and breaks
+even after 56 compatible decisions.  Without that penalty, the measured reuse
+threshold is 671 decisions; UCI
+and rolling-logistic replays are likewise reported as adverse mean-cost
+controls.  The empirical claim is therefore a measured, auditable condition
+under which certification is worth paying for, not universal acceleration.
 
-The accompanying MIT-licensed artifact contains source, frozen hash-bound
-inputs, ten standard-library exact verifiers, tests, adversarial rehash checks,
-and rebuild scripts. Exact proof replay is separated from optional solver
-regeneration, allowing an MPC Technical Editor to inspect acceptance without
-trusting the search solver. This combination of stopping-cell computation,
-exact certification, honest cost accounting, and evaluation-ready software is
-the reason I believe the manuscript fits \textit{Mathematical Programming
-Computation}.
+The MIT-licensed artifact, archived immutably at
+\href{https://doi.org/10.5281/zenodo.21964074}{10.5281/zenodo.21964074},
+contains source, licensed data, frozen hash-bound
+payloads, a shared-core standard-library verifier family, the nonsharing SymPy
+consumer, exact differential tests, and rebuild scripts.  A documented
+reusability contract shows the minimal path for a new stopping rule, and
+\texttt{make te-smoke} gives the Technical Editor a
+flagship-first path before the longer \texttt{make verify} replay.  I believe
+this combination of a new optimization-specific certification architecture,
+exact replayable evidence, explicit failure semantics, and evaluation-ready
+software fits MPC's emphasis on significant computational developments and
+technical verification.
 
 The manuscript is original, is not under consideration elsewhere, and is
-self-contained; it does not rely on an unpublished companion paper. I am the
-sole author and approve the submission. Thank you for your consideration.
+self-contained; it does not rely on an unpublished companion paper.  I am the
+sole author and approve the submission.  Thank you for your consideration.
 
 Sincerely,\\[0.4em]
 Jintao Li\\

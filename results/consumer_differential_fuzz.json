@@ -1,0 +1,682 @@
+{
+  "case_count": 32,
+  "exact_scalar_comparisons": 1956318,
+  "payload_sha256": "f6d45fb83df8bcffd720e8897850e6ff03ce34a6c5fcc47d78899166d2a878a3",
+  "rows": [
+    {
+      "case": 0,
+      "cell": [
+        4,
+        4
+      ],
+      "constraint_count": 227,
+      "exact_scalar_comparisons": 61971,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 1,
+      "cell": [
+        0,
+        1
+      ],
+      "constraint_count": 220,
+      "exact_scalar_comparisons": 60060,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 2,
+      "cell": [
+        0,
+        3
+      ],
+      "constraint_count": 222,
+      "exact_scalar_comparisons": 60606,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "1/4",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 3,
+      "cell": [
+        1,
+        4
+      ],
+      "constraint_count": 224,
+      "exact_scalar_comparisons": 61152,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "1/4",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 4,
+      "cell": [
+        2,
+        2
+      ],
+      "constraint_count": 223,
+      "exact_scalar_comparisons": 60879,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "1/4",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 5,
+      "cell": [
+        3,
+        3
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 6,
+      "cell": [
+        0,
+        4
+      ],
+      "constraint_count": 223,
+      "exact_scalar_comparisons": 60879,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 7,
+      "cell": [
+        1,
+        1
+      ],
+      "constraint_count": 221,
+      "exact_scalar_comparisons": 60333,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "1/4",
+        "tolerance": "3/10"
+      }
+    },
+    {
+      "case": 8,
+      "cell": [
+        1,
+        5
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "1/4",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 9,
+      "cell": [
+        0,
+        0
+      ],
+      "constraint_count": 219,
+      "exact_scalar_comparisons": 59787,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "2/5",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 10,
+      "cell": [
+        3,
+        6
+      ],
+      "constraint_count": 228,
+      "exact_scalar_comparisons": 62244,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 11,
+      "cell": [
+        4,
+        5
+      ],
+      "constraint_count": 228,
+      "exact_scalar_comparisons": 62244,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 12,
+      "cell": [
+        0,
+        1
+      ],
+      "constraint_count": 220,
+      "exact_scalar_comparisons": 60060,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 13,
+      "cell": [
+        3,
+        5
+      ],
+      "constraint_count": 227,
+      "exact_scalar_comparisons": 61971,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "1/4",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 14,
+      "cell": [
+        1,
+        5
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "2/5",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 15,
+      "cell": [
+        0,
+        6
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "3/10",
+        "tolerance": "3/10"
+      }
+    },
+    {
+      "case": 16,
+      "cell": [
+        0,
+        0
+      ],
+      "constraint_count": 219,
+      "exact_scalar_comparisons": 59787,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "3/10",
+        "tolerance": "3/10"
+      }
+    },
+    {
+      "case": 17,
+      "cell": [
+        2,
+        4
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "2/5",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 18,
+      "cell": [
+        0,
+        1
+      ],
+      "constraint_count": 220,
+      "exact_scalar_comparisons": 60060,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 19,
+      "cell": [
+        0,
+        2
+      ],
+      "constraint_count": 221,
+      "exact_scalar_comparisons": 60333,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "3/10",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 20,
+      "cell": [
+        0,
+        4
+      ],
+      "constraint_count": 223,
+      "exact_scalar_comparisons": 60879,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 21,
+      "cell": [
+        1,
+        5
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "1/4",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 22,
+      "cell": [
+        1,
+        1
+      ],
+      "constraint_count": 221,
+      "exact_scalar_comparisons": 60333,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "3/10"
+      }
+    },
+    {
+      "case": 23,
+      "cell": [
+        3,
+        3
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 24,
+      "cell": [
+        1,
+        2
+      ],
+      "constraint_count": 222,
+      "exact_scalar_comparisons": 60606,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "2/5",
+        "tolerance": "7/25"
+      }
+    },
+    {
+      "case": 25,
+      "cell": [
+        2,
+        4
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 26,
+      "cell": [
+        5,
+        5
+      ],
+      "constraint_count": 229,
+      "exact_scalar_comparisons": 62517,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "1/4",
+        "tolerance": "3/10"
+      }
+    },
+    {
+      "case": 27,
+      "cell": [
+        3,
+        3
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "4/5",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 28,
+      "cell": [
+        0,
+        5
+      ],
+      "constraint_count": 224,
+      "exact_scalar_comparisons": 61152,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "9/5",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "11/10",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "2/5",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 29,
+      "cell": [
+        1,
+        6
+      ],
+      "constraint_count": 226,
+      "exact_scalar_comparisons": 61698,
+      "parameters": {
+        "contract_radius": "3/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    },
+    {
+      "case": 30,
+      "cell": [
+        4,
+        6
+      ],
+      "constraint_count": 229,
+      "exact_scalar_comparisons": 62517,
+      "parameters": {
+        "contract_radius": "1/200",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "3/2",
+        "proposal_norm_lower": "1/2",
+        "proposal_norm_upper": "14/25",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "3/10",
+        "tolerance": "3/10"
+      }
+    },
+    {
+      "case": 31,
+      "cell": [
+        0,
+        6
+      ],
+      "constraint_count": 225,
+      "exact_scalar_comparisons": 61425,
+      "parameters": {
+        "contract_radius": "1/100",
+        "derived_trace_bound": "100",
+        "initial_distance_upper": "2",
+        "proposal_norm_lower": "27/50",
+        "proposal_norm_upper": "3/5",
+        "proposal_step": "1",
+        "smoothness": "1",
+        "step_size": "1",
+        "strong_convexity": "3/10",
+        "tolerance": "1/4"
+      }
+    }
+  ],
+  "schema": "c2o-consumer-differential-fuzz-v1",
+  "scope": "exact coefficient equality between the CVXPY producer builder and the nonsharing SymPy consumer over randomized legal rational tuples",
+  "seed": 20260816
+}

@@ -1,12 +1,13 @@
 cff-version: 1.2.0
 message: "If you use C2OGate, please cite the software and the accompanying manuscript."
-title: "C2OGate: Proof-Carrying Joint Performance Estimation for Certified Branch Decisions"
+title: "C2OGate: Externally Checkable Joint Performance Estimation for Cost-Dominant Continuation Decisions"
 type: software
 authors:
   - family-names: Li
     given-names: Jintao
     email: e0622340@u.nus.edu
 repository-code: "https://github.com/LiGentle/C2OGate"
+doi: 10.5281/zenodo.21964074
 license: MIT
-version: 0.7.0
-date-released: 2026-08-15
+version: 0.9.0
+date-released: 2026-08-16

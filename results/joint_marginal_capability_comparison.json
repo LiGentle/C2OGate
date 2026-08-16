@@ -1,0 +1,76 @@
+{
+  "declaration": {
+    "comparison": "the joint stopping-pair PEP and sharp separately conditioned single-track marginals use the same transcript and function class",
+    "control": "the balanced H=10 row is retained because both methods accept; the comparison is not selected to force a joint advantage",
+    "interpretation": "marginalization preserves each endpoint but discards whether the two endpoints are attainable by the same function"
+  },
+  "figure_sha256": {
+    "pdf": "2476237c440ea88632b1914a437fda3663cf07a128e6a75609d825a72cc1c110",
+    "png": "3082c5b9f9a107ca66ae3e3928dbe0e1bbedc4ac4373697907bc13ce40933a6c"
+  },
+  "payload_sha256": "6e1cf3b140d62496e1655189c6327c30a966df563d94ab5f621d8b9c0c2f0688",
+  "rows": [
+    {
+      "conditioned_marginal_rectangle_value": "1",
+      "conditioned_marginals_accept": false,
+      "horizon": 3,
+      "joint_accept": true,
+      "joint_bad_cell_count": 10,
+      "joint_bad_cells_excluded": 10,
+      "joint_certificate_value": "0",
+      "source_payload_sha256": "9848dac60c670d6ac9f3f2ca3ad57503ae75d9ac43da09b21b7cdd66d8e7acda",
+      "transcript": "full-class H=3"
+    },
+    {
+      "conditioned_marginal_rectangle_value": "1",
+      "conditioned_marginals_accept": false,
+      "horizon": 6,
+      "joint_accept": true,
+      "joint_bad_cell_count": 28,
+      "joint_bad_cells_excluded": 28,
+      "joint_certificate_value": "0",
+      "source_payload_sha256": "6a4855ee5f84f3264ad7fac9d4c36d2e369fe02d3b45b174df6fb8f3e3aab627",
+      "transcript": "nonzero-radius H=6"
+    },
+    {
+      "conditioned_marginal_rectangle_value": "1",
+      "conditioned_marginals_accept": false,
+      "horizon": 6,
+      "joint_accept": true,
+      "joint_bad_cell_count": 28,
+      "joint_bad_cells_excluded": 28,
+      "joint_certificate_value": "0",
+      "source_payload_sha256": "1968a4b46a7ba1b48a8cb08975025d1630ce9c725546e523e44f89cf253d5e7b",
+      "transcript": "40% wider H=6"
+    },
+    {
+      "conditioned_marginal_rectangle_value": "4",
+      "conditioned_marginals_accept": false,
+      "horizon": 10,
+      "joint_accept": true,
+      "joint_bad_cell_count": 66,
+      "joint_bad_cells_excluded": 66,
+      "joint_certificate_value": "0",
+      "source_payload_sha256": "f0ad6a2982e1069a1cad3e79f6b75e34711b758c274bd1ee1c9a80d079661697",
+      "transcript": "exact-shift H=10"
+    },
+    {
+      "conditioned_marginal_rectangle_value": "0",
+      "conditioned_marginals_accept": true,
+      "horizon": 10,
+      "joint_accept": true,
+      "joint_bad_cell_count": 66,
+      "joint_bad_cells_excluded": 66,
+      "joint_certificate_value": "0",
+      "marginal_payload_sha256": "609e1f8e45e2e5225cabbc69bdf0ad867dafaa99fa1e77d8503f416eecbea0e4",
+      "source_payload_sha256": "657a8b91d025ab66d610251981e3d1e0604baea6385f1682c640f864c616700f",
+      "transcript": "balanced H=10 control"
+    }
+  ],
+  "schema": "c2o-joint-marginal-capability-v1",
+  "summary": {
+    "both_accept_count": 1,
+    "joint_only_accept_count": 4,
+    "transcript_count": 5
+  }
+}

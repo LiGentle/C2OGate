@@ -1,0 +1,77 @@
+{
+  "batched": {
+    "build_seconds": 0.41288304096087813,
+    "cell_count": 136,
+    "enumeration_wall_seconds": 360.55366712482646,
+    "horizon": 15,
+    "maximum_sample_margin_difference": 1.6971649474673e-08,
+    "metadata": {
+      "atom_count": 34,
+      "constraint_count": 1067,
+      "deactivation_constant": 3.386389921600624,
+      "is_dpp": true,
+      "trace_bound": 105.32000000000001,
+      "value_count": 33
+    },
+    "peak_rss_mib": 422.078125,
+    "sample_crosscheck": [
+      {
+        "absolute_difference": 1.6971649474673e-08,
+        "batched_margin": -0.3436100769378627,
+        "cell": [
+          0,
+          0
+        ],
+        "ragged_margin": -0.34361005996621324
+      },
+      {
+        "absolute_difference": 2.561375722631709e-09,
+        "batched_margin": -0.14590117255362572,
+        "cell": [
+          4,
+          14
+        ],
+        "ragged_margin": -0.14590116999225
+      },
+      {
+        "absolute_difference": 4.013543108971618e-10,
+        "batched_margin": -0.14601388565086243,
+        "cell": [
+          15,
+          15
+        ],
+        "ragged_margin": -0.14601388605221674
+      }
+    ],
+    "status_counts": {
+      "optimal": 33,
+      "optimal_inaccurate": 103
+    },
+    "summed_solver_seconds": 361.86495817699995
+  },
+  "declaration": {
+    "implemented_mechanism": "one DPP parameterized padded model reuses canonicalization and warm-start state across every stopping cell",
+    "scope": "floating scaling evidence; neither solver status nor warm-start state is an acceptance certificate"
+  },
+  "environment": {
+    "clarabel": "0.11.1",
+    "cvxpy": "1.9.2",
+    "numpy": "2.4.6",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.11.15 (main, Jun  2 2026, 22:36:57) [Clang 22.1.3 ]",
+    "ragged_payload_sha256": "24a3253828446a0415e06a5600f7c03ba3acfc55ec8e4d4f27db04bb1398af98",
+    "runner_sha256": "15e8e4297f49b5fc2950a21603d6e41e32dbb254100f4b4e2a4bde57a8879486"
+  },
+  "payload_sha256": "753d8d2fdc63df13ddc078e08aec3723ad4b10241cad1e5c8149420cbba9f9f4",
+  "ragged_frozen_comparator": {
+    "cell_count": 136,
+    "peak_rss_mib": 1255.265625,
+    "wall_seconds": 104.25605691736564,
+    "worker_count": 4
+  },
+  "ratios": {
+    "batched_over_ragged_peak_rss": 0.3362460634576845,
+    "batched_over_ragged_wall": 3.4583474359729984
+  },
+  "schema": "c2o-batched-parameterized-scaling-v1"
+}
